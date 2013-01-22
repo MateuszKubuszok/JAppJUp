@@ -1,4 +1,4 @@
-Project for an Automatic Updater's library, client and server's repository.
+Project of an automatic updater's library, client and server's repository.
 ===========
 
 Project of an updater application/library written in Java. Concerns development
