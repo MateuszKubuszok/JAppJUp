@@ -1,0 +1,1 @@
+include 'JSDPU', 'AutoUpdaterCommons', 'AutoUpdaterLibrary', 'AutoUpdaterInstaller', 'AutoUpdaterGuiClient'

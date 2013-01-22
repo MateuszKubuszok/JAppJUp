@@ -1,0 +1,80 @@
+//----------------------------------------------------------------------------
+//                           GENERAL CONFIGURATION
+//----------------------------------------------------------------------------
+
+System.properties['http.proxyHost'] = '10.144.1.10'
+System.properties['http.proxyPort'] =  '8080'
+
+def installDir = file(new File('./AutoUpdater').getCanonicalPath())
+
+subprojects {
+    apply plugin : 'java'
+    apply plugin : 'eclipse-wtp'
+
+    sourceCompatibility = 1.7
+    targetCompatibility = 1.7
+
+    sourceSets {
+        main {
+			java {
+				srcDirs 'src'
+				srcDirs 'resources'
+			}
+            resources {
+				srcDir 'src'
+				srcDir 'resources'
+			}
+        }
+		/*
+        test {
+			java {
+				srcDir 'src'
+				srcDir 'resources'
+				srcDir 'test/unit'
+                srcDir 'test/functional'
+			}
+            resources {
+				srcDir 'src'
+				srcDir 'resources'
+				srcDir 'test/unit'
+                srcDir 'test/functional'
+            }
+        }
+		*/
+    }
+	
+	test {
+		dependsOn(compileJava, compileTestJava)
+	
+		jvmArgs '-Xms128m', '-Xmx512m', '-XX:MaxPermSize=128m'
+			
+		beforeTest { descriptor ->
+			logger.lifecycle("Running test: " + descriptor)
+		}
+		onOutput { descriptor, event ->
+			logger.lifecycle("Test: " + descriptor + " produced standard out/err: " + event.message )
+		}
+	}
+	
+	task copyToLib(type: Copy) {
+		from configurations.compile
+		into "$installDir/libraries"
+		
+		doLast {
+			ant.delete file: "$installDir/libraries/AutoUpdaterCommons.jar"
+			ant.delete file: "$installDir/libraries/AutoUpdaterLibrary.jar"
+			ant.delete file: "$installDir/libraries/JSDPU.jar"
+		}
+	}
+	
+	jar {
+		dependsOn(compileJava, copyToLib)
+		destinationDir = installDir
+		baseName = project.name.equals('AutoUpdaterGuiClient') ? 'Client' : project.name.equals('AutoUpdaterInstaller') ? 'Installer' : project.name
+		from sourceSets.main.java
+		from sourceSets.main.output
+	}
+}
+
+apply from: './dependencies.gradle'
+apply from: './projects.gradle'

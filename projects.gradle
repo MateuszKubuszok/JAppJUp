@@ -1,0 +1,52 @@
+//----------------------------------------------------------------------------
+//                            PROJECTS CONFIGURATION
+//----------------------------------------------------------------------------
+
+project(':JSDPU') {
+}
+
+project(':AutoUpdaterCommons') {
+}
+
+project(':AutoUpdaterLibrary') {
+	dependsOn(':JSDPU')
+	dependsOn(':AutoUpdaterCommons')
+	
+	dependencies {
+		compile project(':JSDPU')
+		testCompile project(':JSDPU')
+		
+		compile project(':AutoUpdaterCommons')
+	}
+}
+
+project(':AutoUpdaterInstaller') {
+	dependsOn(':JSDPU')
+	dependsOn(':AutoUpdaterCommons')
+
+	dependencies {
+		compile project(':JSDPU')
+		testCompile project(':JSDPU')
+		
+		compile project(':AutoUpdaterCommons')
+	}
+	
+	jar { manifest { attributes "Main-Class": "com.autoupdater.installer.Main" } }
+}
+
+project(':AutoUpdaterGuiClient') {
+	dependsOn(':AutoUpdaterLibrary')
+	dependsOn(':AutoUpdaterInstaller')
+
+	dependencies {
+		compile project(':JSDPU')
+		testCompile project(':JSDPU')
+		
+		compile project(':AutoUpdaterCommons')
+		
+		compile project(':AutoUpdaterLibrary')
+		testCompile project(':AutoUpdaterLibrary')
+	}
+	
+	jar { manifest { attributes "Main-Class": "com.autoupdater.gui.main.Main" } }
+}

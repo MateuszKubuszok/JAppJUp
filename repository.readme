@@ -1,0 +1,76 @@
+--------------------------------------------------------------------------------
+
+	Repository's readme
+
+--------------------------------------------------------------------------------
+
+	Content:
+
+	1.	Building and deployment
+	2.	Database configuration
+	3.	Initial configuration
+	4. 	API for clients
+
+--------------------------------------------------------------------------------
+
+	1.	Building and deployment
+
+	Repository is build by a pom.xml with use of maven. It should be
+	exported into WAR archive containing all dependancies and then it is
+	possible to deploy it to the server.
+
+--------------------------------------------------------------------------------
+
+	2.	Database configuration
+
+	By default it use MySQL5 database at localhost:3306 with:
+		- username = `mysql_admin`,
+		- password = `pass`,
+		- schema's name = `updater`.
+	It can be changed by edition of /WEB-INF/classes/JDBC.properties
+	and /WEB-INF/classes/Hibernate.properties files.
+	
+	Application require that schema is already present in target database.
+	All neccessary tables will be created at deployment.
+
+--------------------------------------------------------------------------------
+
+	3.	Initial configuration
+
+	To manage repository it is required to log in. Files
+	/sql/init_users.my.sql and sql/init_users.postgre.sql provide initial
+	entries with administrative account:
+		- login = `root`,
+		- password = `password
+	for MySQL5 and PostgreSQL respectively.
+	
+	Default password should be changed as soon as possible. Change of
+	an username is also recommended (via database edition or creation
+	of new admin with other username and deletion of old one).
+
+--------------------------------------------------------------------------------
+
+	4. 	API for clients
+	
+	4.1	Listing programs and packages
+
+		Command: GET /server_address/api/list_repo
+
+	4.2	Listing bugs for a specific program
+
+		Command: GET /server_address/api/list_bugs/{programID}
+
+	4.3	Listing newest updates (release and development) for a specific
+		package
+
+		Command: GET /server_address/api/list_updates/{packageID}
+
+	4.4	Listing changelogs for a specific package
+
+		Command: GET /server_address/api/list_changes/{packageID}
+
+	4.5	Downloading a specific updateW
+
+		Command: GET /server_address/api/download/{updateID}
+	
+	

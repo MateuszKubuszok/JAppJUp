@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:security="http://www.springframework.org/schema/security"
+    xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+						http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+				        http://www.springframework.org/schema/context
+						http://www.springframework.org/schema/context/spring-context-3.1.xsd
+						http://www.springframework.org/schema/security 
+						http://www.springframework.org/schema/security/spring-security-3.1.xsd
+						http://www.springframework.org/schema/util
+						http://www.springframework.org/schema/util/spring-util-3.1.xsd">
+ 
+ 	<!-- Security configuration -->
+    <security:http auto-config="false" use-expressions="true" entry-point-ref="authenticationEntryPoint"> 
+        <!-- defines access to corresponding pages: 
+             - common user got only ROLE_USER,
+             - package admin got ROLE_USER, and ROLE_PACKAGE_ADMIN,
+             - admin got ROLE_USER, ROLE_PACKAGE_ADMIN and ROLE_ADMIN,
+             - not logged in haven't got any roles -->
+             
+        <!-- Data User specific -->
+        <security:intercept-url pattern="/sign_in"				method="GET"   access="permitAll" />  
+        <security:intercept-url pattern="/changepw"     		method="GET"   access="isAuthenticated()" />
+        
+        <!-- Home page -->
+        <security:intercept-url pattern="/"		       			method="GET"   access="permitAll" />
+        
+        <!-- Data shown to Clients -->
+        <security:intercept-url pattern="/api/*"    			method="GET"   access="permitAll" />
+        
+        <!-- Data shown to common user -->
+        <security:intercept-url pattern="/programs" 			method="GET"   access="isAuthenticated()" />
+        <security:intercept-url pattern="/packages/*"  			method="GET"   access="isAuthenticated()" />
+        <security:intercept-url pattern="/updates/*"  			method="GET"   access="isAuthenticated()" />
+        <security:intercept-url pattern="/bugs/*"  				method="GET"   access="isAuthenticated()" />
+        
+        <!-- Data shown to Package Administrators -->
+        <security:intercept-url pattern="/programs/add" 		method="POST"  access="hasRole('ROLE_PACKAGE_ADMIN')" />
+        <security:intercept-url pattern="/programs/add/*" 		method="GET"   access="hasRole('ROLE_PACKAGE_ADMIN')" />
+        <security:intercept-url pattern="/programs/edit" 		method="POST"  access="hasRole('ROLE_PACKAGE_ADMIN')" />
+        <security:intercept-url pattern="/programs/edit/*" 		method="GET"   access="hasRole('ROLE_PACKAGE_ADMIN')" />
+        <security:intercept-url pattern="/programs/delete/*"	method="GET"   access="hasRole('ROLE_PACKAGE_ADMIN')" />
+        <security:intercept-url pattern="/packages/add" 		method="POST"  access="hasRole('ROLE_PACKAGE_ADMIN')" />
+        <security:intercept-url pattern="/packages/add/*" 		method="GET"   access="hasRole('ROLE_PACKAGE_ADMIN')" />
+        <security:intercept-url pattern="/packages/edit" 		method="POST"  access="hasRole('ROLE_PACKAGE_ADMIN')" />
+        <security:intercept-url pattern="/packages/edit/*" 		method="GET"   access="hasRole('ROLE_PACKAGE_ADMIN')" />
+        <security:intercept-url pattern="/packages/delete/*"	method="GET"   access="hasRole('ROLE_PACKAGE_ADMIN')" />
+        <security:intercept-url pattern="/updates/add"			method="POST"  access="hasRole('ROLE_PACKAGE_ADMIN')" />
+        <security:intercept-url pattern="/updates/add/*"		method="GET"   access="hasRole('ROLE_PACKAGE_ADMIN')" />
+        <security:intercept-url pattern="/updates/edit/"		method="POST"  access="hasRole('ROLE_PACKAGE_ADMIN')" />
+        <security:intercept-url pattern="/updates/edit/*"		method="GET"   access="hasRole('ROLE_PACKAGE_ADMIN')" />
+        <security:intercept-url pattern="/updates/delete/*"		method="GET"   access="hasRole('ROLE_PACKAGE_ADMIN')" />
+        <security:intercept-url pattern="/bugs/add" 			method="POST"  access="hasRole('ROLE_PACKAGE_ADMIN')" />
+        <security:intercept-url pattern="/bugs/add/*" 			method="GET"   access="hasRole('ROLE_PACKAGE_ADMIN')" />
+        <security:intercept-url pattern="/bugs/edit" 			method="POST"  access="hasRole('ROLE_PACKAGE_ADMIN')" />
+        <security:intercept-url pattern="/bugs/edit/*" 			method="GET"   access="hasRole('ROLE_PACKAGE_ADMIN')" />
+        <security:intercept-url pattern="/bugs/delete/*"		method="GET"   access="hasRole('ROLE_PACKAGE_ADMIN')" />
+        
+        <!-- Data shown to Administrators -->
+        <security:intercept-url pattern="/users"     			method="GET"   access="hasRole('ROLE_ADMIN')" />
+        <security:intercept-url pattern="/users/add"    		method="POST"  access="hasRole('ROLE_ADMIN')" />
+        <security:intercept-url pattern="/users/add/*"    		method="GET"   access="hasRole('ROLE_ADMIN')" />
+        <security:intercept-url pattern="/users/edit"    		method="POST"  access="hasRole('ROLE_ADMIN')" />
+        <security:intercept-url pattern="/users/edit/*"    		method="GET"   access="hasRole('ROLE_ADMIN')" />
+        <security:intercept-url pattern="/users/delete/*"  		method="GET"   access="hasRole('ROLE_ADMIN')" />
+        
+        <!-- form is used to sign in -->
+        <security:custom-filter ref="authenticationFilter" position="FORM_LOGIN_FILTER"/>
+         
+        <!-- /logout url is used to sign out -->
+        <security:logout logout-success-url="/" logout-url="/logout" />
+    </security:http>
+    
+    <bean id="authenticationFilter"
+    	class="org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter"
+    	p:authenticationManager-ref="bCryptAuthenticationManager"
+    	p:authenticationFailureHandler-ref="customAuthenticationFailureHandler"
+    	p:authenticationSuccessHandler-ref="customAuthenticationSuccessHandler" />
+    	
+    <!-- defines BCryptAuthenticationManager as authentication manager -->
+    <bean id="bCryptAuthenticationManager"
+    	class="com.autoupdater.server.utils.authentication.BCryptAuthenticationManager" />
+   		
+   	<!-- defines which page is used as sign in form -->
+   	<bean id="authenticationEntryPoint"
+   		class="org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint">
+   		<constructor-arg value="/sign_in" />
+   	</bean>
+		
+	<!-- defines which page is displayed on sign in success-->
+    <bean id="customAuthenticationSuccessHandler" 
+    	class="org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler"
+    	p:defaultTargetUrl="/programs" />
+    
+    <!-- defines which page is displayed on sign in error -->
+    <bean id="customAuthenticationFailureHandler"
+    	class="org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler"
+    	p:defaultFailureUrl="/sign_in?error=true" />
+		
+	<security:authentication-manager />
+</beans>

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:task="http://www.springframework.org/schema/task"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:util="http://www.springframework.org/schema/util"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+				        http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+				        http://www.springframework.org/schema/context
+						http://www.springframework.org/schema/context/spring-context-3.1.xsd
+						http://www.springframework.org/schema/mvc
+						http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd
+						http://www.springframework.org/schema/task
+						http://www.springframework.org/schema/task/spring-task-3.1.xsd
+						http://www.springframework.org/schema/tx
+						http://www.springframework.org/schema/tx/spring-tx-3.1.xsd
+						http://www.springframework.org/schema/util
+						http://www.springframework.org/schema/util/spring-util-3.1.xsd">
+		
+    <!-- Loads properties used in configurations -->
+    <context:property-placeholder location="classpath:JDBC.properties" />
+    
+    <!-- Configuration of a repo application -->
+    <util:properties id="repoProperties" location="classpath:ServerRepoApplication.properties" />
+    
+    
+    <!-- Enables annotation -->
+    <context:component-scan base-package="com.autoupdater.server" />
+	<context:annotation-config />
+	
+	
+	<!-- MVC related configuration -->
+	
+	<!-- Defines ValidatorFactory that allows service injection into validators -->
+    <bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean" />
+	<bean class="org.springframework.validation.beanvalidation.MethodValidationInterceptor">
+	    <constructor-arg ref="validator" />
+	</bean>
+	<bean class="org.springframework.validation.beanvalidation.MethodValidationPostProcessor">
+	    <property name="validator" ref="validator" />
+	</bean>
+	
+	<!-- Changes the locale when a 'locale' request parameter is sent; e.g. /?locale=de -->
+	<mvc:interceptors>
+		<bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor" />
+	</mvc:interceptors>
+	
+	<!-- DispatcherServlet Context: defines this servlet's request-processing infrastructure -->
+	<mvc:default-servlet-handler />
+	
+	<!-- Enables the Spring MVC programming model (@Controller, @Service, @Component ...) -->
+	<mvc:annotation-driven validator="validator" />
+	
+	
+	<!-- Hibernate configuration -->
+	
+	<!-- Obtains Hibernate configuration -->
+	<util:properties id="hibernateProperties" location="classpath:Hibernate.properties" />
+    
+    <!-- Specifies dataSource object managing connections to database -->  
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource"> 
+ 		<property name="driverClassName" value="${jdbc.driver}" /> 
+        <property name="url" value="${jdbc.url}" /> 
+        <property name="username" value="${jdbc.user}" /> 
+        <property name="password" value="${jdbc.password}" />
+    </bean>
+    
+    <!-- Defines SessionFactory -->
+    <bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+    	<property name="dataSource" ref="dataSource" />
+    	<property name="packagesToScan" value="com.autoupdater.server.models" />
+    	<property name="hibernateProperties" ref="hibernateProperties" />
+    </bean>
+    
+    <!-- Defines TransactionManager -->
+    <bean id="transactionManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+    	<property name="sessionFactory" ref="sessionFactory" />
+    </bean>
+    
+    <!-- Enables @Transactional in context -->
+	<tx:annotation-driven transaction-manager="transactionManager" />
+</beans>
