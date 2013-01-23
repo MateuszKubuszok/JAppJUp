@@ -3,9 +3,25 @@
 //----------------------------------------------------------------------------
 
 project(':JSDPU') {
+	sourceSets {
+        main {
+			java {
+				srcDir 'src'
+				srcDir 'resources'
+			}
+            resources { srcDir 'resources' }
+        }
+        test { java {
+			srcDir 'test/unit'
+            srcDir 'test/run'
+		} }
+    }
 }
 
 project(':AutoUpdaterCommons') {
+	sourceSets {
+        main { java { srcDir 'src' } }
+    }
 }
 
 project(':AutoUpdaterLibrary') {
@@ -14,10 +30,18 @@ project(':AutoUpdaterLibrary') {
 	
 	dependencies {
 		compile project(':JSDPU')
-		testCompile project(':JSDPU')
+		testCompile project(':JSDPU').sourceSets.test.output
 		
 		compile project(':AutoUpdaterCommons')
 	}
+	
+	sourceSets {
+        main { java { srcDir 'src' } }
+        test { java {
+			srcDir 'test/unit'
+			srcDir 'test/functional'
+		} }
+    }
 }
 
 project(':AutoUpdaterInstaller') {
@@ -26,12 +50,17 @@ project(':AutoUpdaterInstaller') {
 
 	dependencies {
 		compile project(':JSDPU')
-		testCompile project(':JSDPU')
+		testCompile project(':JSDPU').sourceSets.test.output
 		
 		compile project(':AutoUpdaterCommons')
 	}
 	
 	jar { manifest { attributes "Main-Class": "com.autoupdater.installer.Main" } }
+	
+	sourceSets {
+        main { java { srcDir 'src' } }
+        test { java { srcDir 'test/functional' } }
+    }
 }
 
 project(':AutoUpdaterGuiClient') {
@@ -40,13 +69,24 @@ project(':AutoUpdaterGuiClient') {
 
 	dependencies {
 		compile project(':JSDPU')
-		testCompile project(':JSDPU')
+		testCompile project(':JSDPU').sourceSets.test.output
 		
 		compile project(':AutoUpdaterCommons')
 		
 		compile project(':AutoUpdaterLibrary')
-		testCompile project(':AutoUpdaterLibrary')
+		testCompile project(':AutoUpdaterLibrary').sourceSets.test.output
 	}
 	
 	jar { manifest { attributes "Main-Class": "com.autoupdater.gui.main.Main" } }
+	
+	sourceSets { main {
+		java {
+			srcDir 'src'
+			srcDir 'resources'
+		}
+		resources {
+			srcDir 'src'
+			srcDir 'resources'
+		}
+    } }
 }
