@@ -1,5 +1,6 @@
 package com.autoupdater.client.models;
 
+import static com.autoupdater.client.models.VersionNumber.version;
 import static org.fest.assertions.api.Assertions.assertThat;
 
 import java.util.ArrayList;
@@ -33,6 +34,6 @@ public class TestProgram {
                 .isNotNull().isEqualTo(packageName);
         assertThat(ppackages.get(0).getVersionNumber())
                 .as("Constructor should set version number properly").isNotNull()
-                .isEqualTo(new VersionNumber(1, 0, 0, 0));
+                .isEqualTo(version(1, 0, 0, 0));
     }
 }

@@ -13,35 +13,6 @@ subprojects {
 
     sourceCompatibility = 1.7
     targetCompatibility = 1.7
-
-    sourceSets {
-        main {
-			java {
-				srcDirs 'src'
-				srcDirs 'resources'
-			}
-            resources {
-				srcDir 'src'
-				srcDir 'resources'
-			}
-        }
-		/*
-        test {
-			java {
-				srcDir 'src'
-				srcDir 'resources'
-				srcDir 'test/unit'
-                srcDir 'test/functional'
-			}
-            resources {
-				srcDir 'src'
-				srcDir 'resources'
-				srcDir 'test/unit'
-                srcDir 'test/functional'
-            }
-        }
-		*/
-    }
 	
 	test {
 		dependsOn(compileJava, compileTestJava)
