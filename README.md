@@ -48,6 +48,4 @@ Development
  * considering creating separate repository for *Java's System-Dependent
  Process Utils* (JSDPU) project (quite a big name as for something so trivial
  and unimpressive...),
- * improve the way UAC handling displays results - real time text display
- instead of buffered would be nice, recognition between std out and std err,
  * not give up too soon.

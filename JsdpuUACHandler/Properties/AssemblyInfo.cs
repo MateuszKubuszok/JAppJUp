@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("UACPerformer")]
+[assembly: AssemblyTitle("UACHandler")]
 [assembly: AssemblyDescription("Runs commands with administrative priviledges.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("UACPerformer")]
-[assembly: AssemblyCopyright("Copyright © 2013")]
+[assembly: AssemblyProduct("UACHandler")]
+[assembly: AssemblyCopyright("Copyright ©  2013")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("99e994d8-3564-42a1-9921-2d81df89acd9")]
+[assembly: Guid("ae1f8826-27c2-4aae-9364-bc6268a2633e")]
 
 // Version information for an assembly consists of the following four values:
 //

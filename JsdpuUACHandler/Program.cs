@@ -1,10 +1,10 @@
 ﻿using System;
-using System.IO;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Diagnostics;
 using System.ComponentModel;
+using System.Diagnostics;
+using System.IO;
+using System.IO.Pipes;
+using System.Linq;
 
 namespace UACHandler
 {
@@ -17,20 +17,38 @@ namespace UACHandler
             ProcessStartInfo psInfo = new ProcessStartInfo();
             psInfo.FileName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "UACPerformer.exe");
             psInfo.Arguments = parseArguments(commands);
+            psInfo.CreateNoWindow = true;
             psInfo.UseShellExecute = true;
+            psInfo.WindowStyle = ProcessWindowStyle.Hidden;
 
             try
             {
                 Process process = Process.Start(psInfo);
-                process.WaitForExit();
-                System.IO.StreamReader inputFile = new System.IO.StreamReader(System.IO.Path.GetTempPath() + getIdentifier());
-                Console.Write(inputFile.ReadToEnd());
-                inputFile.Close();
-                System.IO.File.Delete(System.IO.Path.GetTempPath() + getIdentifier());
+
+                do
+                {
+
+                    NamedPipeServerStream outServer = new NamedPipeServerStream(getIdentifier() + ".out", PipeDirection.In);
+                    outServer.WaitForConnection();
+                    StreamReader outReader = new StreamReader(outServer);
+                    Console.Out.Write(outReader.ReadToEnd());
+                    outReader.Close();
+                    outServer.Close();
+
+                    NamedPipeServerStream errServer = new NamedPipeServerStream(getIdentifier() + ".err", PipeDirection.In);
+                    errServer.WaitForConnection();
+                    StreamReader errReader = new StreamReader(errServer);
+                    Console.Error.Write(errReader.ReadToEnd());
+                    errReader.Close();
+                    errServer.Close();
+
+                    System.Threading.Thread.Sleep(500);
+                }
+                while (!process.HasExited);
             }
             catch (Win32Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                Console.Error.WriteLine(ex.Message);
             }
         }
 
@@ -47,7 +65,7 @@ namespace UACHandler
             foreach (string command in commands) {
                 args.Add("\"" + command.Replace('"', '\"') + "\"");
             }
-            return String.Join(" ", args);
+            return String.Join(" ", args.ToArray());
         }
     }
 }

@@ -1,30 +1,29 @@
 ﻿using System;
-using System.Diagnostics;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
+using System.IO;
+using System.IO.Pipes;
 
+/**
+ * 
+ */
 namespace UACPerformer {
     class Executor {
-        private static System.IO.StreamWriter outputFile;
+        private static string identifier;
 
         static void Main(string[] commands) {
             if (commands.Length == 0)
+            {
                 return;
+            }
 
-            openOutput(commands[0]);
+            identifier = commands[0];
 
             for (int i = 1; i < commands.Length; i++)
+            {
                 parseCommand(commands[i]);
-
-            closeOutput();
-        }
-
-        private static void openOutput(String fileName) {
-            System.IO.File.Delete(System.IO.Path.GetTempPath() + fileName);
-            outputFile = new System.IO.StreamWriter(System.IO.Path.GetTempPath() + fileName);
-        }
-
-        private static void closeOutput() {
-            outputFile.Close();
+            }
         }
 
         private static void parseCommand(String command) {
@@ -42,18 +41,68 @@ namespace UACPerformer {
             psInfo.UseShellExecute = false;
             psInfo.RedirectStandardOutput = true;
             psInfo.RedirectStandardError = true;
+            psInfo.CreateNoWindow = true;
+            psInfo.WindowStyle = ProcessWindowStyle.Hidden;
 
             try
             {
                 Process process = Process.Start(psInfo);
-                outputFile.Write(process.StandardOutput.ReadToEnd());
-                outputFile.Write(process.StandardError.ReadToEnd());
-                process.WaitForExit();
+
+                NamedPipeClientStream outClient = new NamedPipeClientStream(".", identifier + ".out", PipeDirection.Out);
+                outClient.Connect();
+                StreamWriter outWriter = new StreamWriter(outClient);
+                outWriter.Write(process.StandardOutput.ReadToEnd());
+                outWriter.Close();
+                outClient.Close();
+
+                NamedPipeClientStream errClient = new NamedPipeClientStream(".", identifier + ".err", PipeDirection.Out);
+                errClient.Connect();
+                StreamWriter errWriter = new StreamWriter(errClient);
+                errWriter.Write(process.StandardError.ReadToEnd());
+                errWriter.Close();
+                errClient.Close();
             }
             catch (Win32Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                Console.Error.WriteLine(ex.Message);
             }
+        }
+    }
+
+    internal class ArgumentsHandler
+    {
+        private String command;
+        private String program;
+        private String arguments;
+
+        public ArgumentsHandler(string command)
+        {
+            this.command = command;
+        }
+
+        public String Program
+        {
+            get { return program; }
+        }
+
+        public String Arguments
+        {
+            get { return arguments; }
+        }
+
+        public bool ParseArguments()
+        {
+            string[] argumentsArray = command.Split(' ');
+            if (argumentsArray.Length > 0)
+            {
+                program = argumentsArray[0];
+
+                List<String> argumentsList = new List<String>(argumentsArray);
+                argumentsList.RemoveAt(0);
+                arguments = String.Join(" ", argumentsList.ToArray());
+            }
+
+            return !String.IsNullOrEmpty(program);
         }
     }
 }
