@@ -58,7 +58,7 @@ public class MultiCaller {
      */
     public static void main(String[] args) {
         try {
-            for (String[] command : convertConsoleCommands(args)) {
+            for (String[] command : convertMultipleConsoleCommands(args)) {
                 try {
                     Process process = new ProcessBuilder(command).start();
 

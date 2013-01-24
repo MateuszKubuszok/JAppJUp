@@ -1,5 +1,9 @@
 package com.autoupdater.gui.window;
 
+import static com.autoupdater.gui.mocks.MockModels.getInstalledPrograms;
+import static com.autoupdater.gui.window.ETrayStrategy.resolve;
+import static javax.swing.JOptionPane.showMessageDialog;
+
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -28,13 +32,11 @@ import javax.swing.JTabbedPane;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 
-
 import com.autoupdater.client.environment.EnvironmentData;
 import com.autoupdater.client.models.Program;
 import com.autoupdater.client.models.Update;
 import com.autoupdater.gui.Resources;
 import com.autoupdater.gui.config.GuiConfiguration;
-import com.autoupdater.gui.mocks.MockModels;
 import com.autoupdater.gui.tabs.installed.ProgramTabContentContainer;
 import com.autoupdater.gui.tabs.settings.SettingsTabContentContainer;
 import com.autoupdater.gui.tabs.updates.UpdateInformationPanel;
@@ -72,7 +74,7 @@ public class GuiClientWindow extends JFrame {
         contentPane = new JPanel();
         programsTabs = new ArrayList<ProgramTabContentContainer>();
 
-        this.programs = MockModels.getInstalledPrograms();
+        this.programs = getInstalledPrograms();
 
         initialize();
     }
@@ -94,22 +96,21 @@ public class GuiClientWindow extends JFrame {
         if (trayIcon != null)
             trayIcon.displayMessage(title, message, TrayIcon.MessageType.INFO);
         else
-            JOptionPane.showMessageDialog(this, message, title, JOptionPane.INFORMATION_MESSAGE);
+            showMessageDialog(this, message, title, JOptionPane.INFORMATION_MESSAGE);
     }
 
     public void reportWarning(String title, String message) {
         if (trayIcon != null)
             trayIcon.displayMessage(title, message, TrayIcon.MessageType.WARNING);
         else
-            JOptionPane.showMessageDialog(this, message, title, JOptionPane.WARNING_MESSAGE);
+            showMessageDialog(this, message, title, JOptionPane.WARNING_MESSAGE);
     }
 
     public void reportError(String title, String message) {
         if (trayIcon != null)
             trayIcon.displayMessage(title, message, TrayIcon.MessageType.ERROR);
         else
-            JOptionPane
-                    .showMessageDialog(this, message, "Error occured", JOptionPane.ERROR_MESSAGE);
+            showMessageDialog(this, message, "Error occured", JOptionPane.ERROR_MESSAGE);
     }
 
     public void refresh() {
@@ -165,7 +166,7 @@ public class GuiClientWindow extends JFrame {
         cancelDownloadButton.setEnabled(state.isCancelDownloadButtonEnabled());
         if (cancelDownload != null)
             cancelDownload.setEnabled(state.isCancelDownloadButtonEnabled());
-        ETrayStrategy.resolve().configureWindowBehaviour(this, state);
+        resolve().configureWindowBehaviour(this, state);
     }
 
     public void setStatusMessage(String message) {
@@ -223,7 +224,7 @@ public class GuiClientWindow extends JFrame {
         initializeTabs();
         initializeControlPanel();
 
-        ETrayStrategy.resolve().initializeTrayIfPossible(this);
+        resolve().initializeTrayIfPossible(this);
         setStatus(EWindowStatus.UNINITIALIZED);
         setProgressBarInactive();
     }

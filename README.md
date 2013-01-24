@@ -43,7 +43,6 @@ Development
  * introduce functionality to install archival updates and *lock* updates (so
  that program won't be updated to version higher or equal to some defined),
  * add some documentation to Client's project,
- * resolve bugs with no refreshing after some of the actions in Client's GUI,
  * introducing ability to install updates on Mac OS and others systems,
  * considering creating separate repository for *Java's System-Dependent
  Process Utils* (JSDPU) project (quite a big name as for something so trivial

@@ -48,7 +48,7 @@ public class TestCommands {
                     "\"some program\" \"Client.jar\"" };
 
             // when
-            List<String[]> result = Commands.convertConsoleCommands(commands);
+            List<String[]> result = Commands.convertMultipleConsoleCommands(commands);
 
             // then
             assertThat(result)

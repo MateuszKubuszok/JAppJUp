@@ -16,6 +16,6 @@ public class ExecuteInstallationStrategy implements IInstallationStrategy {
     public void process(File ignoredFile, String executedCommand) throws IOException,
             InvalidCommandException {
         EOperatingSystem.current().getProcessExecutor()
-                .execute(Commands.convertConsoleCommands(executedCommand)).rewind();
+                .execute(Commands.convertMultipleConsoleCommands(executedCommand)).rewind();
     }
 }

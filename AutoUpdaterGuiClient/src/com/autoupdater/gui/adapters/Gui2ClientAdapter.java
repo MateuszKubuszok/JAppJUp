@@ -113,7 +113,7 @@ public class Gui2ClientAdapter {
                                             .current()
                                             .getProcessExecutor()
                                             .execute(
-                                                    convertConsoleCommands(wrapArgument(programSettings
+                                                    convertMultipleConsoleCommands(wrapArgument(programSettings
                                                             .getPathToProgram())));
                                     String result;
                                     while ((result = queueReader.getNextOutput()) != null)

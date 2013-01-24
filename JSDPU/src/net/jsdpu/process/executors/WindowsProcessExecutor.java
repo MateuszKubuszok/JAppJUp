@@ -27,9 +27,9 @@ public class WindowsProcessExecutor extends AbstractProcessExecutor {
         if (isVistaOrLater()) {
             String uacHandlerPath = getUACHandlerPath();
             List<String> command = new ArrayList<String>();
-            command.add(wrapArgument(uacHandlerPath));
+            command.add(uacHandlerPath);
             for (String[] subCommand : commands)
-                command.add(wrapArgument(joinArguments(subCommand)));
+                command.add(joinArguments(subCommand));
             return convertSingleCommand(command);
         }
         // Windows systems prior to Vista didn't require process elevation

@@ -1,5 +1,7 @@
 package net.jsdpu.process.executors;
 
+import static net.jsdpu.process.executors.Commands.secureMultipleCommands;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,12 +29,12 @@ import java.util.List;
 public abstract class AbstractProcessExecutor implements IProcessExecutor {
     @Override
     public ExecutionQueueReader execute(List<String[]> commands) throws IOException {
-        return executeCommands(Commands.wrapCommands(commands));
+        return executeCommands(secureMultipleCommands(commands));
     }
 
     @Override
     public ExecutionQueueReader executeRoot(List<String[]> commands) throws IOException {
-        return executeCommands(rootCommand(Commands.wrapCommands(commands)));
+        return executeCommands(rootCommand(secureMultipleCommands(commands)));
     }
 
     @Override
@@ -53,8 +55,7 @@ public abstract class AbstractProcessExecutor implements IProcessExecutor {
      */
     private ExecutionQueueReader executeCommands(List<String[]> commands) throws IOException {
         List<ProcessBuilder> processBuilders = new ArrayList<ProcessBuilder>();
-
-        for (String[] command : commands)
+        for (String[] command : secureMultipleCommands(commands))
             processBuilders.add(new ProcessBuilder(command));
 
         return new ExecutionQueueReader(new ProcessQueue(processBuilders));

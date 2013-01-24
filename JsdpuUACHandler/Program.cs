@@ -5,6 +5,8 @@ using System.Diagnostics;
 using System.IO;
 using System.IO.Pipes;
 using System.Linq;
+using System.Threading;
+using System.Text.RegularExpressions;
 
 /// <summary>
 /// Runs commands with elevation via UACPerformer.exe.
@@ -17,6 +19,9 @@ namespace UACHandler
         /// Identifier used for communication with UACPerformer via NamedPipes. 
         /// </summary>
         private static int identifier = 0;
+
+        private static bool outRead = false;
+        private static bool errRead = false;
 
         /// <summary>
         /// Runs passed commands with elevation and redirects results on standard Out and standard Error.
@@ -44,28 +49,22 @@ namespace UACHandler
 
             try
             {
+                new Thread(new ThreadStart(handleOut)).Start();
+                new Thread(new ThreadStart(handleErr)).Start();
+
                 Process process = Process.Start(psInfo);
 
-                do
+                while (!outRead || !errRead)
                 {
-                    NamedPipeServerStream outServer = new NamedPipeServerStream(getIdentifier() + ".out", PipeDirection.In);
-                    outServer.WaitForConnection();
-                    redirect(outServer, Console.Out);
-                    outServer.Close();
-
-                    NamedPipeServerStream errServer = new NamedPipeServerStream(getIdentifier() + ".err", PipeDirection.In);
-                    errServer.WaitForConnection();
-                    redirect(errServer, Console.Error);
-                    errServer.Close();
-
-                    System.Threading.Thread.Sleep(500);
+                    Thread.Sleep(1);
                 }
-                while (!process.HasExited);
             }
             catch (Win32Exception ex)
             {
                 Console.Error.WriteLine(ex.Message);
             }
+
+            Environment.Exit(0);
         }
 
         /// <summary>
@@ -97,9 +96,51 @@ namespace UACHandler
             args.Add(getIdentifier().ToString());
             foreach (string command in commands)
             {
-                args.Add("\"" + command.Replace('"', '\"') + "\"");
+                Console.Out.WriteLine("->:"+command);
+                args.Add(wrapCommand(command));
+                Console.Out.WriteLine("<-:" + args.Last());
             }
             return String.Join(" ", args.ToArray());
+        }
+
+        /// <summary>
+        /// Escapes command (to review).
+        /// </summary>
+        /// <param name="command">
+        /// command to escae
+        /// </param>
+        /// <returns>
+        /// escaped command
+        /// </returns>
+        private static string escapeCommand(string command)
+        {
+            Regex matcher = new Regex("(" + Regex.Escape("\\") + ")*" + Regex.Escape("\""));
+            Match result = matcher.Match(command);
+
+            while (result.Success)
+            {
+                int replacementSize = (result.Groups[1].Length + 1) * 2 - 1;
+                Console.Out.WriteLine("?" + result.Groups[0].Value + ":" + result.Groups[1].Length + "->" + replacementSize);
+                string replacement = new String('\\', replacementSize) + "?*:%";
+                command = command.Replace(result.Groups[0].Value, replacement);
+                result = matcher.Match(command);
+            }
+
+            return command.Replace("?*:%", "\"");
+        }
+
+        /// <summary>
+        /// Wraps command with quotation marks.
+        /// </summary>
+        /// <param name="command">
+        /// command to wrap
+        /// </param>
+        /// <returns>
+        /// wrapped command
+        /// </returns>
+        private static string wrapCommand(String command)
+        {
+            return '"' + escapeCommand(command) + '"';
         }
 
         /// <summary>
@@ -120,6 +161,29 @@ namespace UACHandler
                 _out.WriteLine(tmp);
             }
             reader.Close();
+        }
+
+        /// <summary>
+        /// Function for new thread responsible for redirecting output into pipe.
+        /// </summary>
+        private static void handleOut() {
+            NamedPipeServerStream outServer = new NamedPipeServerStream(getIdentifier() + ".out", PipeDirection.In);
+            outServer.WaitForConnection();
+            redirect(outServer, Console.Out);
+            outServer.Close();
+            outRead = true;
+        }
+
+        /// <summary>
+        /// Function for new thread responsible for redirecting error into pipe.
+        /// </summary>
+        private static void handleErr()
+        {
+            NamedPipeServerStream errServer = new NamedPipeServerStream(getIdentifier() + ".err", PipeDirection.In);
+            errServer.WaitForConnection();
+            redirect(errServer, Console.Error);
+            errServer.Close();
+            errRead = true;
         }
     }
 }

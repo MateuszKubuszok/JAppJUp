@@ -1,7 +1,7 @@
 package net.jsdpu.process.executors;
 
 import static com.google.common.base.Strings.repeat;
-import static java.util.regex.Matcher.quoteReplacement;
+import static java.lang.Math.max;
 import static java.util.regex.Pattern.*;
 
 import java.util.ArrayList;
@@ -99,7 +99,7 @@ public class Commands {
      * Converts commands in form passed into console to a form suitable for
      * execute methods.
      * 
-     * @see #convertConsoleCommands(String...)
+     * @see #convertSingleConsoleCommands(String...)
      * 
      * @param commands
      *            commands to convert
@@ -107,7 +107,7 @@ public class Commands {
      * @throws InvalidCommandException
      *             thrown when there is error in shape of command
      */
-    public static List<String[]> convertConsoleCommands(String... commands)
+    public static List<String[]> convertMultipleConsoleCommands(String... commands)
             throws InvalidCommandException {
         List<String[]> results = new ArrayList<String[]>();
 
@@ -115,6 +115,23 @@ public class Commands {
             results.add(convertSingleConsoleCommand(command));
 
         return results;
+    }
+
+    /**
+     * Converts commands in form passed into console to a form suitable for
+     * execute methods.
+     * 
+     * @see #convertSingleConsoleCommands(String...)
+     * 
+     * @param commands
+     *            commands to convert
+     * @return command in form suitable for execution
+     * @throws InvalidCommandException
+     *             thrown when there is error in shape of command
+     */
+    public static List<String[]> convertMultipleConsoleCommands(List<String> commands)
+            throws InvalidCommandException {
+        return convertMultipleConsoleCommands(commands.toArray(new String[0]));
     }
 
     /**
@@ -159,28 +176,32 @@ public class Commands {
         return result;
     }
 
+    /**
+     * Escapes single argument.
+     * 
+     * @param argument
+     *            argument to escape
+     * @return escaped argument
+     */
     public static String escapeArgument(String argument) {
+        if (!argument.contains("\""))
+            return argument;
+
         String result = argument;
-        Matcher matcher;
-        while ((matcher = escapePattern.matcher(result)).find()) {
-            int groupSize = matcher.group(1) != null ? matcher.group(1).length() : 0;
-            int replacementSize = (groupSize + 1) * 2 - 1;
-            String replacement = quoteReplacement(repeat("\\", replacementSize) + quoteReplacement);
-            result = matcher.replaceAll(replacement);
+        Matcher matcher = escapePattern.matcher(result);
+        int longestFound = 0;
+        while (matcher.find())
+            if (matcher.group(1) != null)
+                longestFound = max(longestFound, matcher.group(1).length());
+
+        for (int i = longestFound; i >= 0; i--) {
+            int replacementSize = (i + 1) * 2 - 1;
+            String original = repeat("\\", i) + "\"";
+            String replacement = repeat("\\", replacementSize) + quoteReplacement;
+            result = result.replace(original, replacement);
         }
+
         return result.replace(quoteReplacement, "\"");
-    }
-
-    public static String[] escapeCommand(String[] command) {
-        for (int i = 0; i < command.length; i++)
-            command[i] = escapeArgument(command[i]);
-        return command;
-    }
-
-    public static List<String[]> escapeCommands(List<String[]> commands) {
-        for (String[] command : commands)
-            escapeCommand(command);
-        return commands;
     }
 
     /**
@@ -195,11 +216,13 @@ public class Commands {
      * @return argument wrapped in quotation mark
      */
     public static String wrapArgument(String argument) {
-        return "\"" + escapeArgument(argument) + "\"";
+        if (argument.contains(" "))
+            return "\"" + escapeArgument(argument) + "\"";
+        return argument;
     }
 
     /**
-     * Wraps command in quotation marks.
+     * Wraps parameters in quotation marks for one command.
      * 
      * <p>
      * If command contains quotation marks, they will be escaped.
@@ -209,14 +232,15 @@ public class Commands {
      *            program's command (program name and arguments)
      * @return command wrapped in quotation mark
      */
-    public static String[] wrapCommand(String[] command) {
+    public static String[] secureSingleCommand(String... command) {
+        String[] wrappedCommand = new String[command.length];
         for (int i = 0; i < command.length; i++)
-            command[i] = wrapArgument(command[i]);
-        return command;
+            wrappedCommand[i] = wrapArgument(command[i]);
+        return wrappedCommand;
     }
 
     /**
-     * Wraps command in quotation marks.
+     * Wraps parameters in quotation marks for multiple command.
      * 
      * <p>
      * If command contains quotation marks, they will be escaped.
@@ -226,10 +250,11 @@ public class Commands {
      *            program's command (program name and arguments)
      * @return command wrapped in quotation mark
      */
-    public static List<String[]> wrapCommands(List<String[]> commands) {
+    public static List<String[]> secureMultipleCommands(List<String[]> commands) {
+        List<String[]> wrappedCommands = new ArrayList<String[]>();
         for (String[] command : commands)
-            wrapCommand(command);
-        return commands;
+            wrappedCommands.add(secureSingleCommand(command));
+        return wrappedCommands;
     }
 
     /**
@@ -241,10 +266,10 @@ public class Commands {
      *            arguments to join
      * @return arguments wrapped and joined into one string
      */
-    public static String joinArguments(String[] arguments) {
+    public static String joinArguments(String... arguments) {
         String[] wrappedArguments = new String[arguments.length];
         for (int i = 0; i < arguments.length; i++)
-            wrappedArguments[i] = wrapArgument(arguments[i]);
+            wrappedArguments[i] = arguments[i];
         return argJoiner.join(wrappedArguments);
     }
 }

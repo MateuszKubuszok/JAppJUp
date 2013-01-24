@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.IO.Pipes;
+using System.Threading;
 
 /// <summary>
 /// Performs commands passed from UACHandler with elevation..
@@ -14,6 +15,36 @@ namespace UACPerformer {
         /// Identifier used for communication with UACPerformer via NamedPipes. 
         /// </summary>
         private static string identifier;
+
+        /// <summary>
+        /// Pipe to send output from process.
+        /// </summary>
+        private static NamedPipeClientStream outClient;
+        /// <summary>
+        /// Pipe to send error from process.
+        /// </summary>
+        private static NamedPipeClientStream errClient;
+        /// <summary>
+        /// Writer to send output from process.
+        /// </summary>
+        private static StreamWriter outWriter;
+        /// <summary>
+        /// Writer to send error from process.
+        /// </summary>
+        private static StreamWriter errWriter;
+
+        /// <summary>
+        /// Currently run process .
+        /// </summary>
+        private static Process currentProcess;
+        /// <summary>
+        /// Whether output from current process was already written.
+        /// </summary>
+        private static bool outWritten;
+        /// <summary>
+        /// Whether error from current process was already written.
+        /// </summary>
+        private static bool errWritten;
 
         /// <summary>
         /// Runs passed commands with elevation and redirects results on standard Out and standard Error.
@@ -29,16 +60,27 @@ namespace UACPerformer {
         /// </param>
         static void Main(string[] commands) {
             if (commands.Length == 0)
-            {
                 return;
-            }
 
             identifier = commands[0];
+            outClient = new NamedPipeClientStream(".", identifier + ".out", PipeDirection.Out);
+            outClient.Connect();
+            outWriter = new StreamWriter(outClient);
+            errClient = new NamedPipeClientStream(".", identifier + ".err", PipeDirection.Out);
+            errClient.Connect();
+            errWriter = new StreamWriter(errClient);
 
             for (int i = 1; i < commands.Length; i++)
             {
+                outWriter.WriteLine("D:" + commands[i]);
                 parseCommand(commands[i]);
             }
+
+            outWriter.Close();
+            outClient.Close();
+            errWriter.Close();
+            errClient.Close();
+            Environment.Exit(0);
         }
 
         /// <summary>
@@ -51,9 +93,7 @@ namespace UACPerformer {
             ArgumentsHandler argumentsHandler = new ArgumentsHandler(command);
 
             if (argumentsHandler.ParseArguments())
-            {
                 runCommand(argumentsHandler);
-            }
         }
 
         /// <summary>
@@ -66,6 +106,8 @@ namespace UACPerformer {
             ProcessStartInfo psInfo = new ProcessStartInfo();
             psInfo.FileName = argumentsHandler.Program;
             psInfo.Arguments = argumentsHandler.Arguments;
+            //outWriter.WriteLine("P:" + argumentsHandler.Program);
+            //outWriter.WriteLine("A:" + argumentsHandler.Arguments);
 
             psInfo.UseShellExecute = false;
             psInfo.RedirectStandardOutput = true;
@@ -75,17 +117,15 @@ namespace UACPerformer {
 
             try
             {
-                Process process = Process.Start(psInfo);
+                currentProcess = Process.Start(psInfo);
+                outWritten = false;
+                errWritten = false;
 
-                NamedPipeClientStream outClient = new NamedPipeClientStream(".", identifier + ".out", PipeDirection.Out);
-                outClient.Connect();
-                redirect(process.StandardOutput, outClient);
-                outClient.Close();
+                new Thread(new ThreadStart(handleOut)).Start();
+                new Thread(new ThreadStart(handleErr)).Start();
 
-                NamedPipeClientStream errClient = new NamedPipeClientStream(".", identifier + ".err", PipeDirection.Out);
-                errClient.Connect();
-                redirect(process.StandardError, errClient);
-                errClient.Close();
+                while (!outWritten || !errWritten)
+                    Thread.Sleep(1);
             }
             catch (Win32Exception ex)
             {
@@ -102,15 +142,29 @@ namespace UACPerformer {
         /// <param name="_out">
         /// outgoing NamedPipe
         /// </param>
-        private static void redirect(StreamReader _in, NamedPipeClientStream _out)
+        private static void redirect(StreamReader _in, StreamWriter _out)
         {
-            StreamWriter writer = new StreamWriter(_out);
             string tmp;
             while ((tmp = _in.ReadLine()) != null)
-            {
-                writer.WriteLine(tmp);
-            }
-            writer.Close();
+                _out.WriteLine(tmp);
+        }
+
+        /// <summary>
+        /// Function passed into new thread used for redirecting output.
+        /// </summary>
+        private static void handleOut()
+        {
+            redirect(currentProcess.StandardOutput, outWriter);
+            outWritten = true;
+        }
+
+        /// <summary>
+        /// Function passed into new thread used for redirecting errors.
+        /// </summary>
+        private static void handleErr()
+        {
+            redirect(currentProcess.StandardError, errWriter);
+            errWritten = true;
         }
     }
 

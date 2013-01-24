@@ -1,7 +1,10 @@
 package com.autoupdater.gui.settings.editor;
 
+import static com.autoupdater.gui.mocks.MockModels.getProgramsSettings;
 import static java.awt.BorderLayout.*;
 import static javax.swing.JFileChooser.DIRECTORIES_ONLY;
+import static javax.swing.JOptionPane.showMessageDialog;
+import static javax.swing.UIManager.setLookAndFeel;
 
 import java.awt.BorderLayout;
 import java.awt.Container;
@@ -22,14 +25,12 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
-import javax.swing.UIManager;
 
 import com.autoupdater.client.environment.ClientEnvironmentException;
 import com.autoupdater.client.environment.EnvironmentData;
 import com.autoupdater.client.environment.settings.ProgramSettings;
 import com.autoupdater.client.environment.settings.ProgramSettingsBuilder;
 import com.autoupdater.gui.config.GuiConfiguration;
-import com.autoupdater.gui.mocks.MockModels;
 import com.google.common.base.Joiner;
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.layout.FormLayout;
@@ -47,7 +48,7 @@ public class EditorWindow extends JFrame {
      */
     public EditorWindow() {
         environmentData = null;
-        programsSettings = MockModels.getProgramsSettings();
+        programsSettings = getProgramsSettings();
         initialize();
     }
 
@@ -59,7 +60,7 @@ public class EditorWindow extends JFrame {
 
     private void initialize() {
         try {
-            UIManager.setLookAndFeel(GuiConfiguration.LOOK_AND_FEEL);
+            setLookAndFeel(GuiConfiguration.LOOK_AND_FEEL);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -201,6 +202,8 @@ public class EditorWindow extends JFrame {
                 addedSettings.dispose();
                 initializeTable();
                 table.repaint();
+                revalidate();
+                repaint();
             }
         });
 
@@ -208,7 +211,7 @@ public class EditorWindow extends JFrame {
     }
 
     private void reportError(Container container, List<String> errors) {
-        JOptionPane.showMessageDialog(container, Joiner.on("\n").join(errors), "Wrong input",
+        showMessageDialog(container, Joiner.on("\n").join(errors), "Wrong input",
                 JOptionPane.ERROR_MESSAGE);
     }
 }

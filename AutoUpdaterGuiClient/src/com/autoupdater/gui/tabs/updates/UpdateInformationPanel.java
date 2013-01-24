@@ -66,6 +66,7 @@ public class UpdateInformationPanel extends JPanel {
                         progressBar.setMaximum((int) progressMessage.getOverallAmount());
                         add(progressBar);
                         progressBarUsed = true;
+                        parent.revalidate();
                         parent.repaint();
                     }
                 } else {
@@ -74,6 +75,7 @@ public class UpdateInformationPanel extends JPanel {
                         removeAll();
                         add(label);
                         progressBarUsed = false;
+                        parent.revalidate();
                         parent.repaint();
                     }
                 }
