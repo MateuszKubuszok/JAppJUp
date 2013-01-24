@@ -23,8 +23,8 @@ public class Resources {
     }
 
     /**
-     * Installs UACHandler.exe and UACPerformer.exe allowing priviledge
-     * elevation on Windows.
+     * Installs UACHandler.exe and UACPerformer.exe allowing privilege elevation
+     * on Windows.
      */
     public static void installWindowsWrappers() {
         if (tmpDir == null) {

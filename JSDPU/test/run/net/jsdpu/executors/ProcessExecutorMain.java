@@ -1,5 +1,7 @@
 package net.jsdpu.executors;
 
+import static java.lang.System.*;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -18,22 +20,22 @@ public class ProcessExecutorMain {
     private static ExecutionQueueReader resultReader;
 
     public static void main(String[] args) throws IOException {
-        System.out.println("For testing ProcessExecutor type:");
-        System.out.println("[prog arg1 arg2...][enter][prog2 arg1 arg2...][enter]...[exec][enter]");
-        System.out.println("\t - to execute program(s) with given arguments");
-        System.out.println("[program][enter][argu1][enter]...[execute][enter]");
-        System.out.println("\t - to execute program with given arguments");
-        System.out.println("[program][enter][argu1][enter]...[sudo execute][enter]");
-        System.out.println("\t - to execute program with given arguments with elevation");
-        System.out.println("exit - to quit tester");
+        out.println("For testing ProcessExecutor type:");
+        out.println("[prog arg1 arg2...][enter][prog2 arg1 arg2...][enter]...[exec][enter]");
+        out.println("\t - to execute program(s) with given arguments");
+        out.println("[program][enter][argu1][enter]...[execute][enter]");
+        out.println("\t - to execute program with given arguments");
+        out.println("[program][enter][argu1][enter]...[sudo execute][enter]");
+        out.println("\t - to execute program with given arguments with elevation");
+        out.println("exit - to quit tester");
 
-        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        BufferedReader reader = new BufferedReader(new InputStreamReader(in));
 
         List<String> commands = new ArrayList<String>();
         while (true) {
             String command = reader.readLine();
 
-            if (command.equals("exec")) {
+            if (command.equals("exec"))
                 try {
                     resultReader = processExecutor.execute(Commands.convertSingleCommand(commands));
                     displayResults();
@@ -41,7 +43,7 @@ public class ProcessExecutorMain {
                 } catch (InvalidCommandException e) {
                     e.printStackTrace();
                 }
-            } else if (command.equals("execute")) {
+            else if (command.equals("execute"))
                 try {
                     resultReader = processExecutor.execute(Commands.convertConsoleCommands(commands
                             .toArray(new String[0])));
@@ -50,7 +52,7 @@ public class ProcessExecutorMain {
                 } catch (InvalidCommandException e) {
                     e.printStackTrace();
                 }
-            } else if (command.equals("sudo execute")) {
+            else if (command.equals("sudo execute"))
                 try {
                     resultReader = processExecutor.executeRoot(Commands
                             .convertConsoleCommands(commands.toArray(new String[0])));
@@ -59,7 +61,7 @@ public class ProcessExecutorMain {
                 } catch (InvalidCommandException e) {
                     e.printStackTrace();
                 }
-            } else if (command.equals("exit"))
+            else if (command.equals("exit"))
                 return;
             else
                 commands.add(command);
@@ -70,9 +72,9 @@ public class ProcessExecutorMain {
         try {
             String line;
             while ((line = resultReader.getNextOutput()) != null)
-                System.out.println("\t" + line);
+                out.println("\t" + line);
         } finally {
-            System.out.println("----------------");
+            out.println("----------------");
         }
     }
 }

@@ -1,11 +1,11 @@
 //----------------------------------------------------------------------------
 //                           GENERAL CONFIGURATION
 //----------------------------------------------------------------------------
-
 System.properties['http.proxyHost'] = '10.144.1.10'
-System.properties['http.proxyPort'] =  '8080'
+System.properties['http.proxyPort'] = '8080'
 
 def installDir = file(new File('./AutoUpdater').getCanonicalPath())
+ext.noEclipseTask = !getGradle().startParameter.getTaskNames().contains('eclipse')
 
 subprojects {
     apply plugin : 'java'

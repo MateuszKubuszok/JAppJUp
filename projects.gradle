@@ -30,7 +30,9 @@ project(':AutoUpdaterLibrary') {
 	
 	dependencies {
 		compile project(':JSDPU')
-		testCompile project(':JSDPU').sourceSets.test.output
+		if (noEclipseTask) {
+			testCompile project(':JSDPU').sourceSets.test.output
+		}
 		
 		compile project(':AutoUpdaterCommons')
 	}
@@ -50,7 +52,9 @@ project(':AutoUpdaterInstaller') {
 
 	dependencies {
 		compile project(':JSDPU')
-		testCompile project(':JSDPU').sourceSets.test.output
+		if (noEclipseTask) {
+			testCompile project(':JSDPU').sourceSets.test.output
+		}
 		
 		compile project(':AutoUpdaterCommons')
 	}
@@ -69,12 +73,16 @@ project(':AutoUpdaterGuiClient') {
 
 	dependencies {
 		compile project(':JSDPU')
-		testCompile project(':JSDPU').sourceSets.test.output
+		if (noEclipseTask) {
+			testCompile project(':JSDPU').sourceSets.test.output
+		}
 		
 		compile project(':AutoUpdaterCommons')
 		
 		compile project(':AutoUpdaterLibrary')
-		testCompile project(':AutoUpdaterLibrary').sourceSets.test.output
+		if (noEclipseTask) {
+			testCompile project(':AutoUpdaterLibrary').sourceSets.test.output
+		}
 	}
 	
 	jar { manifest { attributes "Main-Class": "com.autoupdater.gui.main.Main" } }

@@ -15,6 +15,7 @@ public class TestWindowsProcessExecutor {
     public void testRootCommand() {
         try {
             // given
+            WindowsProcessExecutor executor = new WindowsProcessExecutor();
             List<String[]> command = Commands.convertSingleCommand("java", "-jar",
                     "Some Installer.jar");
             Method rootCommand = WindowsProcessExecutor.class.getDeclaredMethod("rootCommand",
@@ -23,17 +24,19 @@ public class TestWindowsProcessExecutor {
 
             // when
             @SuppressWarnings("unchecked")
-            List<String[]> result = (List<String[]>) rootCommand.invoke(
-                    new WindowsProcessExecutor(), command);
+            List<String[]> result = (List<String[]>) rootCommand.invoke(executor, command);
 
             // then
-            assertThat(result).as("").isNotNull().hasSize(1);
+            assertThat(result).as("rootCommand() should return root command").isNotNull()
+                    .hasSize(1);
             assertThat(result.get(0))
-                    .as("")
+                    .as("rootCommand() should return correct root command")
                     .isNotNull()
                     .isEqualTo(
-                            new String[] { wrapArgument(getUACHandlerPath()),
-                                    "\"\\\"java\\\" \\\"-jar\\\" \\\"Some Installer.jar\\\"\"" });
+                            executor.isVistaOrLater() ? new String[] {
+                                    wrapArgument(getUACHandlerPath()),
+                                    "\"\\\"java\\\" \\\"-jar\\\" \\\"Some Installer.jar\\\"\"" }
+                                    : command.toArray(new String[0]));
         } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException
                 | NoSuchMethodException | SecurityException e) {
             fail("No exception should be thrown");

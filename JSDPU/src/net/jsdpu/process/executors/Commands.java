@@ -198,12 +198,34 @@ public class Commands {
         return "\"" + escapeArgument(argument) + "\"";
     }
 
+    /**
+     * Wraps command in quotation marks.
+     * 
+     * <p>
+     * If command contains quotation marks, they will be escaped.
+     * </p>
+     * 
+     * @param command
+     *            program's command (program name and arguments)
+     * @return command wrapped in quotation mark
+     */
     public static String[] wrapCommand(String[] command) {
         for (int i = 0; i < command.length; i++)
             command[i] = wrapArgument(command[i]);
         return command;
     }
 
+    /**
+     * Wraps command in quotation marks.
+     * 
+     * <p>
+     * If command contains quotation marks, they will be escaped.
+     * </p>
+     * 
+     * @param command
+     *            program's command (program name and arguments)
+     * @return command wrapped in quotation mark
+     */
     public static List<String[]> wrapCommands(List<String[]> commands) {
         for (String[] command : commands)
             wrapCommand(command);
@@ -220,8 +242,9 @@ public class Commands {
      * @return arguments wrapped and joined into one string
      */
     public static String joinArguments(String[] arguments) {
+        String[] wrappedArguments = new String[arguments.length];
         for (int i = 0; i < arguments.length; i++)
-            arguments[i] = wrapArgument(arguments[i]);
-        return argJoiner.join(arguments);
+            wrappedArguments[i] = wrapArgument(arguments[i]);
+        return argJoiner.join(wrappedArguments);
     }
 }
