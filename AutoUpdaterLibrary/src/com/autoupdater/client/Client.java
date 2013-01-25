@@ -1,5 +1,9 @@
 package com.autoupdater.client;
 
+import static com.autoupdater.client.download.ConnectionConfiguration.DOWNLOAD_DIRECTORY;
+import static com.autoupdater.commons.installer.configuration.InstallerConfiguration.BACKUP_DIRECTORY;
+
+import java.io.File;
 import java.io.IOException;
 import java.util.SortedSet;
 
@@ -334,5 +338,46 @@ public class Client {
     public AggregatedInstallationService createInstallationAggregatedService(
             SortedSet<Update> updatesToInstall) {
         return installationServiceManager.createInstallationAggregatedService(updatesToInstall);
+    }
+
+    /**
+     * Cleans up backup directory.
+     */
+    public void cleanBackup() {
+        delete(new File(BACKUP_DIRECTORY));
+    }
+
+    /**
+     * Cleans up download directory.
+     */
+    public void cleanDownloaded() {
+        delete(new File(DOWNLOAD_DIRECTORY));
+    }
+
+    /**
+     * Cleans up all temporally files.
+     * 
+     * @see com.autoupdater.client.ClientcleanBackup()
+     * @see com.autoupdater.client.Client#cleanDownloaded()
+     */
+    public void cleanTemp() {
+        cleanBackup();
+        cleanDownloaded();
+    }
+
+    /**
+     * Deletes file or deletes directory recursively.
+     * 
+     * @param file
+     *            file/directory to delete
+     */
+    private void delete(File file) {
+        if (file == null || !file.exists())
+            return;
+        if (file.isDirectory())
+            for (File child : file.listFiles())
+                delete(child);
+        if (file.isDirectory() || file.isFile())
+            file.delete();
     }
 }

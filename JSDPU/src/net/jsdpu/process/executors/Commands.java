@@ -36,14 +36,36 @@ import com.google.common.base.Joiner;
 public class Commands {
     private static Joiner argJoiner = Joiner.on(" ");
 
-    private static String qm = quote("\""); // quotation mark for Pattern
-    private static String s = quote("\\"); // slash for Pattern
+    /**
+     * Quotation mark for Pattern.
+     */
+    private static String qm = quote("\"");
+    /**
+     * Slash for Pattern.
+     */
+    private static String s = quote("\\");
 
+    /**
+     * Starting and ending with quotation mark with no quotation mark
+     * not-escaped in the middle.
+     */
     private static Pattern singleWrapped = compile("^" + qm + "(" + s + qm + "|[^" + qm + "])*"
             + qm + "$");
+    /**
+     * Only beginning with not-escaped quotation mark.
+     */
     private static Pattern beginningOfGroup = compile("^" + qm);
+    /**
+     * Ending with not-escaped quotation mark.
+     */
     private static Pattern endOfGroup = compile("^(.*[^" + s + "])?" + qm + "$");
+    /**
+     * All quotation marks with optional escape slash.
+     */
     private static Pattern escapePattern = compile("(" + s + ")*" + qm);
+    /**
+     * Temporally replaces quotation mark during escaping.
+     */
     private static String quoteReplacement = "?*:%";
 
     /**

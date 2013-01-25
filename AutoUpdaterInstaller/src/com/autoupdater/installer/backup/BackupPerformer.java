@@ -1,5 +1,9 @@
 package com.autoupdater.installer.backup;
 
+import static com.autoupdater.commons.installer.configuration.InstallerConfiguration.BACKUP_DIRECTORY;
+import static com.google.common.io.Files.*;
+import static java.io.File.separator;
+
 import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
@@ -7,8 +11,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import com.autoupdater.commons.error.codes.EErrorCode;
-import com.autoupdater.commons.installer.configuration.InstallerConfiguration;
-import com.google.common.io.Files;
 
 /**
  * Creates backup for given file/directory.
@@ -35,9 +37,8 @@ public class BackupPerformer {
     public EErrorCode createBackup(String id, String source) {
         DateFormat date = new SimpleDateFormat("YMdHms");
         File sourceFile = new File(source);
-        String backupDestinationPath = InstallerConfiguration.backupDirectory + File.separator
-                + date.format(new Date()) + File.separator + id + File.separator
-                + sourceFile.getName();
+        String backupDestinationPath = BACKUP_DIRECTORY + separator + date.format(new Date())
+                + separator + id + separator + sourceFile.getName();
         File backupDestination = new File(backupDestinationPath);
 
         return sourceFile.isDirectory() ? copyDirectory(sourceFile, backupDestination) : copyFile(
@@ -61,7 +62,7 @@ public class BackupPerformer {
             return EErrorCode.INVALID_ARGUMENT;
 
         for (File file : from.listFiles()) {
-            File newFile = new File(to.getAbsoluteFile() + File.separator + file.getName());
+            File newFile = new File(to.getAbsoluteFile() + separator + file.getName());
             if (file.isFile()) {
                 if (copyFile(file, newFile) != EErrorCode.SUCCESS)
                     return EErrorCode.BACKUP_ERROR;
@@ -86,8 +87,8 @@ public class BackupPerformer {
             if (!from.exists())
                 return EErrorCode.SUCCESS;
 
-            Files.createParentDirs(to);
-            Files.copy(from, to);
+            createParentDirs(to);
+            copy(from, to);
 
             return EErrorCode.SUCCESS;
         } catch (IOException e) {

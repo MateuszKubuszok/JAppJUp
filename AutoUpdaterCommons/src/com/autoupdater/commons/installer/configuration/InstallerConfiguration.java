@@ -15,12 +15,12 @@ public class InstallerConfiguration {
     /**
      * Path to Installer's backup directory.
      */
-    public static String backupDirectory;
+    public final static String BACKUP_DIRECTORY;
     static {
         String dir = System.getProperty("java.io.tmpdir");
         if (dir.endsWith("\\") || dir.endsWith("/"))
             dir = dir.substring(0, dir.length() - 1);
         dir += File.separator + "AutoUpdater" + File.separator + "Backup";
-        backupDirectory = dir;
+        BACKUP_DIRECTORY = dir;
     }
 }

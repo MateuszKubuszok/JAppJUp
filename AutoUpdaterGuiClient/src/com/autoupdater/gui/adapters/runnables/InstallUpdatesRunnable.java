@@ -61,6 +61,7 @@ public class InstallUpdatesRunnable implements Runnable {
             adapter.setState(EWindowStatus.IDLE);
         } finally {
             if (filterUpdateNotInstalled(adapter.getAvailableUpdates()).isEmpty()) {
+                adapter.cleanTemp();
                 adapter.reportInfo("Installation finished",
                         "All updates were installed successfully.");
                 adapter.setState(EWindowStatus.UNINITIALIZED);

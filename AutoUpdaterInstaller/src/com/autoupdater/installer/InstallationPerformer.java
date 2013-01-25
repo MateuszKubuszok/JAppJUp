@@ -46,8 +46,8 @@ public class InstallationPerformer {
 
         info(ID, EInstallerMessage.PREPARING_INSTALLATION);
 
-        IInstallationStrategy downloadProcessor;
-        if ((downloadProcessor = resolveExecutionDelegate(updateStrategy)) == null)
+        IInstallationStrategy updateInstallationStrategy;
+        if ((updateInstallationStrategy = resolveExecutionDelegate(updateStrategy)) == null)
             return EErrorCode.INVALID_ARGUMENT;
 
         info(ID, EInstallerMessage.BACKUP_STARTED);
@@ -66,7 +66,7 @@ public class InstallationPerformer {
         }
 
         try {
-            downloadProcessor.process(source, destinationPath);
+            updateInstallationStrategy.process(source, destinationPath);
         } catch (IOException e) {
             error(ID, EInstallerMessage.INSTALLATION_FAILED);
             return EErrorCode.IO_ERROR;

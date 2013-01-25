@@ -1,6 +1,8 @@
 package com.autoupdater.client.download;
 
-import java.io.File;
+import static java.io.File.separator;
+import static java.nio.charset.Charset.availableCharsets;
+
 import java.nio.charset.Charset;
 
 /**
@@ -25,13 +27,19 @@ public final class ConnectionConfiguration {
     /**
      * Defines charset used by parsers.
      */
-    public static final Charset XML_ENCODING = Charset.availableCharsets().get(XML_ENCODING_NAME);
+    public static final Charset XML_ENCODING = availableCharsets().get(XML_ENCODING_NAME);
 
     /**
      * Defines directory where downloaded updates should be stored.
      */
-    public static final String FILE_DOWNLOAD_DIR = System.getProperty("java.io.tmpdir")
-            + "AutoUpdater" + File.separator + "Updates";
+    public static final String DOWNLOAD_DIRECTORY;
+    static {
+        String dir = System.getProperty("java.io.tmpdir");
+        if (dir.endsWith("\\") || dir.endsWith("/"))
+            dir = dir.substring(0, dir.length() - 1);
+        dir += separator + "AutoUpdater" + separator + "Updates";
+        DOWNLOAD_DIRECTORY = dir;
+    }
 
     /**
      * Defines default number of maximal amount of parallel downloads.

@@ -1,6 +1,7 @@
 package com.autoupdater.client.download;
 
-import java.io.File;
+import static java.io.File.separator;
+
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.util.SortedSet;
@@ -305,9 +306,9 @@ public class DownloadServiceFactory {
         for (Update update : downloadedUpdates) {
             ProgramSettings programSettings = environmentData.findProgramSettingsForUpdate(update);
 
-            String downloadDestinationPath = ConnectionConfiguration.FILE_DOWNLOAD_DIR
-                    + File.separator + programSettings.getServerAddress().hashCode()
-                    + File.separator + update.getID() + ".update";
+            String downloadDestinationPath = ConnectionConfiguration.DOWNLOAD_DIRECTORY + separator
+                    + programSettings.getServerAddress().hashCode() + separator + update.getID()
+                    + ".update";
 
             HttpURLConnection connection = connectionFactory.getPerProgramConnectionFactory(
                     programSettings).createFileConnection(update.getID());

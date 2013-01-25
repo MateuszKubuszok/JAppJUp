@@ -295,4 +295,8 @@ public class Gui2ClientAdapter {
                 getUpdateInformationPanel(update).setDownloadService(downloadService);
         }
     }
+
+    public void cleanTemp() {
+        client.cleanTemp();
+    }
 }
