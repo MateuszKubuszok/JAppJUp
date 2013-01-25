@@ -1,9 +1,12 @@
 package com.autoupdater.client.download.runnables;
 
+import static com.autoupdater.client.download.FileCache.*;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 
+import com.autoupdater.client.download.EDownloadStatus;
 import com.autoupdater.client.download.runnables.post.download.strategies.FilePostDownloadStrategy;
 import com.autoupdater.client.download.runnables.post.download.strategies.IPostDownloadStrategy;
 
@@ -33,6 +36,22 @@ public class FileDownloadRunnable extends AbstractDownloadRunnable<File> {
      */
     public FileDownloadRunnable(HttpURLConnection connection, String fileDestinationPath) {
         super(connection, fileDestinationPath);
+    }
+
+    @Override
+    public void run() {
+        if (isFileDownloaded(getFileDestinationPath())) {
+            result = new File(getFileDestinationPath());
+            try {
+                reportChange("File retrived from cache", EDownloadStatus.PROCESSED);
+            } catch (InterruptedException e) {
+                reportCancelled();
+            }
+        } else {
+            super.run();
+            if (getState() == EDownloadStatus.PROCESSED)
+                setFileDownloaded(getFileDestinationPath());
+        }
     }
 
     @Override

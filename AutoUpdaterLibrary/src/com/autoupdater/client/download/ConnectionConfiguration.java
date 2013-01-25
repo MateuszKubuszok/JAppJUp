@@ -42,6 +42,11 @@ public final class ConnectionConfiguration {
     }
 
     /**
+     * Defines path to file that stores cache.
+     */
+    public static final String CACHE_INFO_FILE = DOWNLOAD_DIRECTORY + separator + "cache.dat";
+
+    /**
      * Defines default number of maximal amount of parallel downloads.
      */
     public static final int DEFAULT_MAX_PARALLEL_DOWNLOADS_NUMBER = 4;

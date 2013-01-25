@@ -9,6 +9,7 @@ subprojects {
 }
 
 def cglib     = 'cglib:cglib-nodep:2.2@jar'
+def codec     = 'commons-codec:commons-codec:1.5@jar'
 def festCore  = 'org.easytesting:fest-assert-core:2.0M8@jar'
 def festTest  = 'org.easytesting:fest-test:2.1.0@jar'
 def festUtil  = 'org.easytesting:fest-util:1.2.3@jar'
@@ -86,6 +87,7 @@ project(':AutoUpdaterLibrary') {
 				
 		testCompile(
 			cglib,
+			codec,
 			festCore,
             festTest,
 			festUtil,

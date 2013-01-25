@@ -76,4 +76,7 @@ public class CorrectXMLExamples {
     public static final String bugsInfo = xmlHeader
             + ("<bugs>" + ("<bug programID=\"1\">" + Values.Bug.description + "</bug>")
                     + ("<bug programID=\"1\">" + Values.Bug2.description + "</bug>") + "</bugs>");
+    public static final String fileCache = xmlHeader
+            + ("<files>" + ("<file path=\"/file1\" hash=\"1234567890\" />")
+                    + ("<file path=\"/file2\" hash=\"0987654321\" />") + "</files>");
 }

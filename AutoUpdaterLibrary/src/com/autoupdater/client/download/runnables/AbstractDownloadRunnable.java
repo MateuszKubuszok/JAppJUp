@@ -39,11 +39,11 @@ import com.autoupdater.client.utils.services.ObservableService;
 public abstract class AbstractDownloadRunnable<Result> extends
         ObservableService<DownloadServiceMessage> implements Runnable {
     private HttpURLConnection httpURLConnection;
-    private Result result;
     private EDownloadStatus state;
     private String fileDestinationPath;
     private IPostDownloadStrategy<Result> downloadStrategy;
     private long contentLength = -1;
+    protected Result result;
 
     /**
      * Creates AbstractDownloadRunnable instance.
@@ -255,7 +255,7 @@ public abstract class AbstractDownloadRunnable<Result> extends
     /**
      * Sent message that download was cancelled.
      */
-    private void reportCancelled() {
+    protected void reportCancelled() {
         state = EDownloadStatus.CANCELLED;
         hasChanged();
         notifyObservers(new DownloadServiceMessage(this, EDownloadStatus.CANCELLED.getMessage()));
@@ -285,7 +285,7 @@ public abstract class AbstractDownloadRunnable<Result> extends
      * @throws InterruptedException
      *             thrown if thread was interrupted (cancelled)
      */
-    private void reportChange(String message, EDownloadStatus state) throws InterruptedException {
+    protected void reportChange(String message, EDownloadStatus state) throws InterruptedException {
         checkInterruption();
         this.state = state;
         hasChanged();

@@ -2,7 +2,6 @@
 .metadata/
 .settings/
 .svn/
-AutoUpdater/
 bin/
 out/
 target/
