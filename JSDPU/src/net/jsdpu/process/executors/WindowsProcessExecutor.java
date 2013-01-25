@@ -1,5 +1,7 @@
 package net.jsdpu.process.executors;
 
+import static java.lang.Integer.valueOf;
+import static java.lang.System.getProperty;
 import static net.jsdpu.process.executors.Commands.*;
 import static net.jsdpu.resources.Resources.*;
 
@@ -29,7 +31,7 @@ public class WindowsProcessExecutor extends AbstractProcessExecutor {
             List<String> command = new ArrayList<String>();
             command.add(uacHandlerPath);
             for (String[] subCommand : commands)
-                command.add(joinArguments(subCommand));
+                command.add(wrapArgument(joinArguments(secureSingleCommand(subCommand))));
             return convertSingleCommand(command);
         }
         // Windows systems prior to Vista didn't require process elevation
@@ -42,9 +44,9 @@ public class WindowsProcessExecutor extends AbstractProcessExecutor {
      * @return true is Vista or later, false otherwise
      */
     public boolean isVistaOrLater() {
-        String major = System.getProperty("os.version").split("\\.")[0];
+        String major = getProperty("os.version").split("\\.")[0];
         try {
-            return Integer.valueOf(major) >= windowsVistaMajorVersion;
+            return valueOf(major) >= windowsVistaMajorVersion;
         } catch (NumberFormatException e) {
             return false;
         }

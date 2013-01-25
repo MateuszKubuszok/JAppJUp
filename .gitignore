@@ -1,2 +1,9 @@
-/.metadata/
-/.svn/
+.gradle/
+.metadata/
+.settings/
+.svn/
+bin/
+out/
+target/
+.classpath
+.project

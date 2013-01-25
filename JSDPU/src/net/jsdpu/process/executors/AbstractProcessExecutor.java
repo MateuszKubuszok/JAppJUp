@@ -29,12 +29,12 @@ import java.util.List;
 public abstract class AbstractProcessExecutor implements IProcessExecutor {
     @Override
     public ExecutionQueueReader execute(List<String[]> commands) throws IOException {
-        return executeCommands(secureMultipleCommands(commands));
+        return executeCommands(commands);
     }
 
     @Override
     public ExecutionQueueReader executeRoot(List<String[]> commands) throws IOException {
-        return executeCommands(rootCommand(secureMultipleCommands(commands)));
+        return executeCommands(rootCommand(commands));
     }
 
     @Override

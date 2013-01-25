@@ -11,6 +11,8 @@ using System.Text.RegularExpressions;
 /// <summary>
 /// Runs commands with elevation via UACPerformer.exe.
 /// </summary>
+/// 
+/// Returned code is a result of the last executed command.
 namespace UACHandler
 {
     class Executor
@@ -20,8 +22,23 @@ namespace UACHandler
         /// </summary>
         private static int identifier = 0;
 
+        /// <summary>
+        /// Whether all output was read.
+        /// </summary>
         private static bool outRead = false;
+        /// <summary>
+        /// Whether all errors were read.
+        /// </summary>
         private static bool errRead = false;
+
+        /// <summary>
+        /// Pattern used for escaping quotations and slashes.
+        /// </summary>
+        private static Regex escapePattern = new Regex("(" + Regex.Escape("\\") + ")*" + Regex.Escape("\""));
+        /// <summary>
+        /// Temporary replacement t for a quotatin mark during escaping.
+        /// </summary>
+        private static string quoteReplacement = "?*:%";
 
         /// <summary>
         /// Runs passed commands with elevation and redirects results on standard Out and standard Error.
@@ -35,25 +52,34 @@ namespace UACHandler
         /// </param>
         static void Main(string[] commands)
         {
+            // don'r run elevation for no command
             if (commands.Length == 0)
             {
                 return;
             }
 
             ProcessStartInfo psInfo = new ProcessStartInfo();
+            // assumes that UACPerformer.exe is in the same directory as UACHandler.exe
             psInfo.FileName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "UACPerformer.exe");
+            // secures format of commands (escapes quotations and slashes)
             psInfo.Arguments = parseArguments(commands);
+            // ensures no new window would be created during elevation
             psInfo.CreateNoWindow = true;
             psInfo.UseShellExecute = true;
             psInfo.WindowStyle = ProcessWindowStyle.Hidden;
 
             try
             {
+                // creates new threads that will handle redirecting output and errors
                 new Thread(new ThreadStart(handleOut)).Start();
                 new Thread(new ThreadStart(handleErr)).Start();
 
+                // creates UACPerformer.exe child process
                 Process process = Process.Start(psInfo);
+                process.WaitForExit();
+                Environment.ExitCode = process.ExitCode;
 
+                // wait till all output and errors are read
                 while (!outRead || !errRead)
                 {
                     Thread.Sleep(1);
@@ -62,9 +88,8 @@ namespace UACHandler
             catch (Win32Exception ex)
             {
                 Console.Error.WriteLine(ex.Message);
+                Environment.ExitCode = -1;
             }
-
-            Environment.Exit(0);
         }
 
         /// <summary>
@@ -96,9 +121,7 @@ namespace UACHandler
             args.Add(getIdentifier().ToString());
             foreach (string command in commands)
             {
-                Console.Out.WriteLine("->:"+command);
                 args.Add(wrapCommand(command));
-                Console.Out.WriteLine("<-:" + args.Last());
             }
             return String.Join(" ", args.ToArray());
         }
@@ -114,19 +137,17 @@ namespace UACHandler
         /// </returns>
         private static string escapeCommand(string command)
         {
-            Regex matcher = new Regex("(" + Regex.Escape("\\") + ")*" + Regex.Escape("\""));
-            Match result = matcher.Match(command);
+            Match result = escapePattern.Match(command);
 
             while (result.Success)
             {
                 int replacementSize = (result.Groups[1].Length + 1) * 2 - 1;
-                Console.Out.WriteLine("?" + result.Groups[0].Value + ":" + result.Groups[1].Length + "->" + replacementSize);
-                string replacement = new String('\\', replacementSize) + "?*:%";
+                string replacement = new String('\\', replacementSize) + quoteReplacement;
                 command = command.Replace(result.Groups[0].Value, replacement);
-                result = matcher.Match(command);
+                result = escapePattern.Match(command);
             }
 
-            return command.Replace("?*:%", "\"");
+            return command.Replace(quoteReplacement, "\"");
         }
 
         /// <summary>
@@ -157,9 +178,7 @@ namespace UACHandler
             StreamReader reader = new StreamReader(_in);
             string tmp;
             while ((tmp = reader.ReadLine()) != null)
-            {
                 _out.WriteLine(tmp);
-            }
             reader.Close();
         }
 

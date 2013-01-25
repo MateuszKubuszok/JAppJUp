@@ -1,6 +1,6 @@
 package net.jsdpu.process.executors;
 
-import static net.jsdpu.process.executors.Commands.secureSingleCommand;
+import static java.util.Arrays.asList;
 import static net.jsdpu.resources.Resources.getUACHandlerPath;
 import static org.fest.assertions.api.Assertions.*;
 
@@ -18,9 +18,8 @@ public class TestWindowsProcessExecutor {
             // given
             WindowsProcessExecutor executor = new WindowsProcessExecutor();
             List<String[]> command = new ArrayList<String[]>();
-            command.add(secureSingleCommand("java", "-jar", "Some Installer.jar"));
-            Method rootCommand = WindowsProcessExecutor.class.getDeclaredMethod("rootCommand",
-                    List.class);
+            command.add((String[]) asList("java", "-jar", "Some Installer.jar").toArray());
+            Method rootCommand = executor.getClass().getDeclaredMethod("rootCommand", List.class);
             rootCommand.setAccessible(true);
 
             // when
@@ -35,7 +34,7 @@ public class TestWindowsProcessExecutor {
                     .isNotNull()
                     .isEqualTo(
                             executor.isVistaOrLater() ? new String[] { getUACHandlerPath(),
-                                    "java -jar \"Some Installer.jar\"" } : command
+                                    "\"java -jar \\\"Some Installer.jar\\\"\"" } : command
                                     .toArray(new String[0]));
         } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException
                 | NoSuchMethodException | SecurityException e) {

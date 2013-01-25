@@ -35,10 +35,15 @@ import com.google.common.base.Joiner;
  */
 public class Commands {
     private static Joiner argJoiner = Joiner.on(" ");
-    private static Pattern singleWrapped = compile("^\".*\"$");
-    private static Pattern beginningOfGroup = compile("^\"");
-    private static Pattern endOfGroup = compile("^(.*[^/])?\"$");
-    private static Pattern escapePattern = compile("(" + quote("\\") + ")*" + quote("\""));
+
+    private static String qm = quote("\""); // quotation mark for Pattern
+    private static String s = quote("\\"); // slash for Pattern
+
+    private static Pattern singleWrapped = compile("^" + qm + "(" + s + qm + "|[^" + qm + "])*"
+            + qm + "$");
+    private static Pattern beginningOfGroup = compile("^" + qm);
+    private static Pattern endOfGroup = compile("^(.*[^" + s + "])?" + qm + "$");
+    private static Pattern escapePattern = compile("(" + s + ")*" + qm);
     private static String quoteReplacement = "?*:%";
 
     /**
@@ -65,26 +70,23 @@ public class Commands {
      */
     public static String[] convertSingleConsoleCommand(String command)
             throws InvalidCommandException {
-        boolean isString = false;
         List<String> preparedResult = new ArrayList<String>();
         String tmp = null;
 
         for (String currentlyCheckedString : command.split(" ")) {
-            if (isString) {
+            if (tmp != null) {
                 tmp += " " + currentlyCheckedString;
                 if (endOfGroup.matcher(currentlyCheckedString).find()) {
                     preparedResult.add(tmp.substring(0, tmp.length() - 1));
                     tmp = null;
-                    isString = false;
                 }
             } else {
                 if (singleWrapped.matcher(currentlyCheckedString).find())
                     preparedResult.add(currentlyCheckedString.substring(1,
                             currentlyCheckedString.length() - 1));
-                else if (beginningOfGroup.matcher(currentlyCheckedString).find()) {
+                else if (beginningOfGroup.matcher(currentlyCheckedString).find())
                     tmp = currentlyCheckedString.substring(1);
-                    isString = true;
-                } else if (!currentlyCheckedString.isEmpty())
+                else if (!currentlyCheckedString.isEmpty())
                     preparedResult.add(currentlyCheckedString);
             }
         }
@@ -216,7 +218,7 @@ public class Commands {
      * @return argument wrapped in quotation mark
      */
     public static String wrapArgument(String argument) {
-        if (argument.contains(" "))
+        if (argument.contains(" ") && !singleWrapped.matcher(argument).find())
             return "\"" + escapeArgument(argument) + "\"";
         return argument;
     }
@@ -258,18 +260,13 @@ public class Commands {
     }
 
     /**
-     * Wraps arguments and join them into one command.
-     * 
-     * @see #wrapArgument(String)
+     * Join arguments into one command (doesn't secure them!).
      * 
      * @param arguments
      *            arguments to join
-     * @return arguments wrapped and joined into one string
+     * @return arguments joined into one string
      */
     public static String joinArguments(String... arguments) {
-        String[] wrappedArguments = new String[arguments.length];
-        for (int i = 0; i < arguments.length; i++)
-            wrappedArguments[i] = arguments[i];
-        return argJoiner.join(wrappedArguments);
+        return argJoiner.join(arguments);
     }
 }

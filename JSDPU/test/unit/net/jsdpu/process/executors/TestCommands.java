@@ -1,13 +1,9 @@
 package net.jsdpu.process.executors;
 
-import static org.fest.assertions.api.Assertions.assertThat;
-import static org.fest.assertions.api.Assertions.fail;
+import static org.fest.assertions.api.Assertions.*;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import net.jsdpu.process.executors.Commands;
-import net.jsdpu.process.executors.InvalidCommandException;
 
 import org.junit.Test;
 
@@ -43,7 +39,6 @@ public class TestCommands {
     public void testConvertConsoleCommands() {
         try {
             // given
-            System.out.println("stahp");
             String[] commands = { "java -jar \"Some Installer.jar\"",
                     "\"some program\" \"Client.jar\"" };
 
@@ -141,6 +136,6 @@ public class TestCommands {
 
         // then
         assertThat(result).as("joinArguments(String[]) should properly join arguments").isNotNull()
-                .isEqualTo("\"some \\\"argument\\\"\" \"some other argument\"");
+                .isEqualTo("some \"argument\" some other argument");
     }
 }

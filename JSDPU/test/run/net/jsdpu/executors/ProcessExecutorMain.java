@@ -73,6 +73,8 @@ public class ProcessExecutorMain {
                 }
             else if (command.equals("exit"))
                 return;
+            else if (command.equals("reset"))
+                commands.clear();
             else
                 commands.add(command);
         }

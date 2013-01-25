@@ -1,5 +1,6 @@
 package net.jsdpu.process.executors;
 
+import static java.util.Arrays.asList;
 import static net.jsdpu.process.executors.Commands.convertSingleCommand;
 import static net.jsdpu.process.executors.MultiCaller.prepareCommand;
 import static org.fest.assertions.api.Assertions.*;
@@ -17,9 +18,9 @@ public class TestLinuxProcessExecutor {
         try {
             // given
             LinuxProcessExecutor executor = new LinuxProcessExecutor();
-            List<String[]> command = convertSingleCommand("java", "-jar", "Some Installer.jar");
-            Method rootCommand = LinuxProcessExecutor.class.getDeclaredMethod("rootCommand",
-                    List.class);
+            List<String[]> command = new ArrayList<String[]>();
+            command.add((String[]) asList("java", "-jar", "Some Installer.jar").toArray());
+            Method rootCommand = executor.getClass().getDeclaredMethod("rootCommand", List.class);
             rootCommand.setAccessible(true);
 
             // when

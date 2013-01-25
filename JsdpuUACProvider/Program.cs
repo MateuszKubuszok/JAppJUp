@@ -5,10 +5,13 @@ using System.Diagnostics;
 using System.IO;
 using System.IO.Pipes;
 using System.Threading;
+using System.Text.RegularExpressions;
 
 /// <summary>
 /// Performs commands passed from UACHandler with elevation..
 /// </summary>
+/// 
+/// Returned code is a result of the last executed command.
 namespace UACPerformer {
     class Executor {
         /// <summary>
@@ -71,16 +74,12 @@ namespace UACPerformer {
             errWriter = new StreamWriter(errClient);
 
             for (int i = 1; i < commands.Length; i++)
-            {
-                outWriter.WriteLine("D:" + commands[i]);
                 parseCommand(commands[i]);
-            }
 
             outWriter.Close();
             outClient.Close();
             errWriter.Close();
             errClient.Close();
-            Environment.Exit(0);
         }
 
         /// <summary>
@@ -106,9 +105,8 @@ namespace UACPerformer {
             ProcessStartInfo psInfo = new ProcessStartInfo();
             psInfo.FileName = argumentsHandler.Program;
             psInfo.Arguments = argumentsHandler.Arguments;
-            //outWriter.WriteLine("P:" + argumentsHandler.Program);
-            //outWriter.WriteLine("A:" + argumentsHandler.Arguments);
 
+            // ensures no new window would be created
             psInfo.UseShellExecute = false;
             psInfo.RedirectStandardOutput = true;
             psInfo.RedirectStandardError = true;
@@ -118,11 +116,12 @@ namespace UACPerformer {
             try
             {
                 currentProcess = Process.Start(psInfo);
-                outWritten = false;
-                errWritten = false;
 
                 new Thread(new ThreadStart(handleOut)).Start();
                 new Thread(new ThreadStart(handleErr)).Start();
+
+                currentProcess.WaitForExit();
+                Environment.ExitCode = currentProcess.ExitCode;
 
                 while (!outWritten || !errWritten)
                     Thread.Sleep(1);
@@ -154,6 +153,7 @@ namespace UACPerformer {
         /// </summary>
         private static void handleOut()
         {
+            outWritten = false;
             redirect(currentProcess.StandardOutput, outWriter);
             outWritten = true;
         }
@@ -163,6 +163,7 @@ namespace UACPerformer {
         /// </summary>
         private static void handleErr()
         {
+            errWritten = false;
             redirect(currentProcess.StandardError, errWriter);
             errWritten = true;
         }
@@ -173,6 +174,10 @@ namespace UACPerformer {
     /// </summary>
     internal class ArgumentsHandler
     {
+        private static Regex singleWrapped = new Regex("^" + '"' + "(" + '\\' + '"' + "|[^" + '"' + "])*" + '"' + "$");
+        private static Regex beginingOfGroup = new Regex("^" + '"');
+        private static Regex endOfGroup = new Regex("^(.*[^" + '\\' + "\\" + "])?" + '"' + "$");
+
         /// <summary>
         /// Contains original command.
         /// </summary>
@@ -223,17 +228,39 @@ namespace UACPerformer {
         /// </returns>
         public bool ParseArguments()
         {
-            string[] argumentsArray = command.Split(' ');
-            if (argumentsArray.Length > 0)
-            {
-                program = argumentsArray[0];
+            List<string> preparedResult = new List<string>();
+            String tmp = null;
 
-                List<String> argumentsList = new List<String>(argumentsArray);
-                argumentsList.RemoveAt(0);
-                arguments = String.Join(" ", argumentsList.ToArray());
+            foreach (string currentlyCheckedString in command.Split(' '))
+            {
+                if (tmp != null)
+                {
+                    tmp += " " + currentlyCheckedString;
+                    if (endOfGroup.Match(currentlyCheckedString).Success)
+                    {
+                        preparedResult.Add(tmp);
+                        tmp = null;
+                    }
+                }
+                else
+                {
+                    if (singleWrapped.Match(currentlyCheckedString).Success)
+                        preparedResult.Add(currentlyCheckedString);
+                    else if (beginingOfGroup.Match(currentlyCheckedString).Success)
+                        tmp = currentlyCheckedString;
+                    else if (currentlyCheckedString.Length > 0)
+                        preparedResult.Add(currentlyCheckedString);
+                }
             }
 
-            return !String.IsNullOrEmpty(program);
+            if (tmp != null || preparedResult.Count == 0)
+                return false;
+
+            program = preparedResult[0];
+            preparedResult.RemoveAt(0);
+            arguments = String.Join(" ", preparedResult.ToArray());
+
+            return true;
         }
     }
 }
