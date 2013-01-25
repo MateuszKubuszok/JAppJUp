@@ -23,6 +23,11 @@ namespace UACHandler
         private static int identifier = 0;
 
         /// <summary>
+        /// Process settings.
+        /// </summary>
+        private static ProcessStartInfo psInfo;
+
+        /// <summary>
         /// Whether all output was read.
         /// </summary>
         private static bool outRead = false;
@@ -54,11 +59,9 @@ namespace UACHandler
         {
             // don'r run elevation for no command
             if (commands.Length == 0)
-            {
                 return;
-            }
 
-            ProcessStartInfo psInfo = new ProcessStartInfo();
+            psInfo = new ProcessStartInfo();
             // assumes that UACPerformer.exe is in the same directory as UACHandler.exe
             psInfo.FileName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "UACPerformer.exe");
             // secures format of commands (escapes quotations and slashes)
@@ -68,6 +71,13 @@ namespace UACHandler
             psInfo.UseShellExecute = true;
             psInfo.WindowStyle = ProcessWindowStyle.Hidden;
 
+            Thread thread = new Thread(new ThreadStart(execute));
+            thread.Start();
+            thread.Join();
+        }
+
+        private static void execute()
+        {
             try
             {
                 // creates new threads that will handle redirecting output and errors
@@ -81,9 +91,7 @@ namespace UACHandler
 
                 // wait till all output and errors are read
                 while (!outRead || !errRead)
-                {
                     Thread.Sleep(1);
-                }
             }
             catch (Win32Exception ex)
             {

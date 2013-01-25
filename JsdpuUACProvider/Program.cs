@@ -37,17 +37,21 @@ namespace UACPerformer {
         private static StreamWriter errWriter;
 
         /// <summary>
+        /// Settings of a current process.
+        /// </summary>
+        private static ProcessStartInfo psInfo;
+        /// <summary>
         /// Currently run process .
         /// </summary>
         private static Process currentProcess;
         /// <summary>
-        /// Whether output from current process was already written.
+        /// Locks output (output not read).
         /// </summary>
-        private static bool outWritten;
+        private static bool outRead;
         /// <summary>
-        /// Whether error from current process was already written.
+        /// Locks error (output not read).
         /// </summary>
-        private static bool errWritten;
+        private static bool errRead;
 
         /// <summary>
         /// Runs passed commands with elevation and redirects results on standard Out and standard Error.
@@ -102,33 +106,47 @@ namespace UACPerformer {
         /// handler with a program to run
         /// </param>
         private static void runCommand(ArgumentsHandler argumentsHandler) {
-            ProcessStartInfo psInfo = new ProcessStartInfo();
+            psInfo = new ProcessStartInfo();
             psInfo.FileName = argumentsHandler.Program;
             psInfo.Arguments = argumentsHandler.Arguments;
 
-            // ensures no new window would be created
+            // ensures data will bea read from output and error
             psInfo.UseShellExecute = false;
             psInfo.RedirectStandardOutput = true;
             psInfo.RedirectStandardError = true;
+            // ensures no new window would be created
             psInfo.CreateNoWindow = true;
             psInfo.WindowStyle = ProcessWindowStyle.Hidden;
 
+            Thread thread = new Thread(new ThreadStart(execute));
+            thread.Start();
+            thread.Join();
+        }
+
+        /// <summary>
+        /// Executes current thread.
+        /// </summary>
+        private static void execute()
+        {
             try
             {
                 currentProcess = Process.Start(psInfo);
 
+                outRead = false;
                 new Thread(new ThreadStart(handleOut)).Start();
+                outRead = false;
                 new Thread(new ThreadStart(handleErr)).Start();
 
                 currentProcess.WaitForExit();
                 Environment.ExitCode = currentProcess.ExitCode;
 
-                while (!outWritten || !errWritten)
+                while (!outRead || !errRead)
                     Thread.Sleep(1);
             }
             catch (Win32Exception ex)
             {
                 Console.Error.WriteLine(ex.Message);
+                Environment.ExitCode = -1;
             }
         }
 
@@ -153,9 +171,8 @@ namespace UACPerformer {
         /// </summary>
         private static void handleOut()
         {
-            outWritten = false;
             redirect(currentProcess.StandardOutput, outWriter);
-            outWritten = true;
+            outRead = true;
         }
 
         /// <summary>
@@ -163,9 +180,8 @@ namespace UACPerformer {
         /// </summary>
         private static void handleErr()
         {
-            errWritten = false;
             redirect(currentProcess.StandardError, errWriter);
-            errWritten = true;
+            errRead = true;
         }
     }
 
