@@ -80,6 +80,7 @@ project(':AutoUpdaterLibrary') {
 	
 	dependencies {
 		compile(
+			codec,
 			guava,
 			jaxen
 		)
@@ -87,7 +88,6 @@ project(':AutoUpdaterLibrary') {
 				
 		testCompile(
 			cglib,
-			codec,
 			festCore,
             festTest,
 			festUtil,
@@ -103,7 +103,7 @@ project(':AutoUpdaterLibrary') {
 		compile project(':AutoUpdaterCommons')
 	}
 	
-	jar { manifest { attributes "Class-Path": "./AutoUpdaterCommons.jar ./JSDPU.jar                      ./libraries/dom4j-2.0.0-ALPHA-2.jar ./libraries/guava-13.0.1.jar     ./libraries/jaxen-1.1.4.jar" } }
+	jar { manifest { attributes "Class-Path": "./AutoUpdaterCommons.jar ./JSDPU.jar                      ./libraries/dom4j-2.0.0-ALPHA-2.jar ./libraries/guava-13.0.1.jar     ./libraries/jaxen-1.1.4.jar ./libraries/commons-codec-1.5.jar" } }
 }
 
 project(':AutoUpdaterGuiClient') {
