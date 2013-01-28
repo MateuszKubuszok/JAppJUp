@@ -1,5 +1,7 @@
 package com.autoupdater.client.installation.runnable;
 
+import static java.util.regex.Pattern.compile;
+
 import java.io.IOException;
 import java.util.SortedSet;
 import java.util.regex.Matcher;
@@ -28,6 +30,9 @@ import com.google.common.base.Objects;
  * @see com.autoupdater.client.installation.runnable.InstallationRunnable
  */
 class InstallersOutputParser {
+    private static Pattern INFO_PATTERN = compile("^\\[info\\] ([^:]+): (.+)$");
+    private static Pattern ERROR_PATTERN = compile("^\\[error\\] ([^:]+): (.+)$");
+
     private final EnvironmentData environmentData;
 
     InstallersOutputParser() {
@@ -48,9 +53,6 @@ class InstallersOutputParser {
      *            source of installer's log output
      */
     public void parseInstallersOutput(SortedSet<Update> updates, ExecutionQueueReader reader) {
-        Pattern infoPattern = Pattern.compile("^\\[info\\] ([^:]+): (.+)$");
-        Pattern errorPattern = Pattern.compile("^\\[error\\] ([^:]+): (.+)$");
-
         String result;
 
         while (true) {
@@ -58,20 +60,17 @@ class InstallersOutputParser {
                 if ((result = reader.getNextOutput()) == null)
                     return;
 
-                Matcher infoMatcher = infoPattern.matcher(result);
+                Matcher infoMatcher = INFO_PATTERN.matcher(result);
                 if (infoMatcher.find()) {
                     parseInfoResult(updates, infoMatcher);
                     continue;
                 }
 
-                Matcher errorMatcher = errorPattern.matcher(result);
+                Matcher errorMatcher = ERROR_PATTERN.matcher(result);
                 if (errorMatcher.find()) {
                     parseErrorResult(updates, errorMatcher);
                     continue;
                 }
-
-                System.err.print("Unexpected message: ");
-                System.err.print(result);
             } catch (InvalidCommandException e) {
                 continue;
             }

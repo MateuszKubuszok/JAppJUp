@@ -1,14 +1,13 @@
 package com.autoupdater.gui.adapters.runnables;
 
 import static com.autoupdater.client.environment.AvailabilityFilter.filterUpdateNotInstalled;
+import static com.autoupdater.gui.window.EWindowStatus.*;
 
 import com.autoupdater.client.download.DownloadResultException;
 import com.autoupdater.client.download.aggregated.services.FileAggregatedDownloadService;
-import com.autoupdater.client.installation.EInstallationStatus;
 import com.autoupdater.client.installation.aggregated.services.AggregatedInstallationService;
 import com.autoupdater.gui.adapters.Gui2ClientAdapter;
 import com.autoupdater.gui.adapters.listeners.InstallationNotificationListener;
-import com.autoupdater.gui.window.EWindowStatus;
 
 public class InstallUpdatesRunnable implements Runnable {
     private final Gui2ClientAdapter adapter;
@@ -28,7 +27,7 @@ public class InstallUpdatesRunnable implements Runnable {
         try {
             if (aggregatedDownloadService.getServices() == null
                     || aggregatedDownloadService.getServices().isEmpty()) {
-                adapter.setState(EWindowStatus.UNINITIALIZED);
+                adapter.setState(UNINITIALIZED);
                 adapter.setInstallationInactive();
                 adapter.setStatusMessage("There are no updates available to install");
                 return;
@@ -47,29 +46,31 @@ public class InstallUpdatesRunnable implements Runnable {
             aggregatedInstallationService.getNotifier().addObserver(
                     new InstallationNotificationListener(adapter, aggregatedInstallationService));
 
-            adapter.setState(EWindowStatus.INSTALLING_UPDATES);
+            adapter.setState(INSTALLING_UPDATES);
             adapter.reportInfo("Installation in progress", "Updates are being installed");
             aggregatedInstallationService.start();
             aggregatedInstallationService.joinThread();
             aggregatedInstallationService.getResult();
-
-            adapter.setState(aggregatedInstallationService.getState() == EInstallationStatus.INSTALLED ? EWindowStatus.UNINITIALIZED
-                    : EWindowStatus.IDLE);
         } catch (DownloadResultException e) {
             adapter.setStatusMessage("Error occured: " + e.getMessage());
             adapter.reportError("Error occured during installation", e.getMessage());
-            adapter.setState(EWindowStatus.IDLE);
+            adapter.setState(IDLE);
         } finally {
-            if (filterUpdateNotInstalled(adapter.getAvailableUpdates()).isEmpty()) {
+            if (hasAllUpdatesInstalledSuccessfully()) {
                 adapter.cleanTemp();
                 adapter.reportInfo("Installation finished",
                         "All updates were installed successfully.");
-                adapter.setState(EWindowStatus.UNINITIALIZED);
+                adapter.setState(UNINITIALIZED);
             } else {
                 adapter.reportError("Installation failed",
-                        "Not all updates were installed successfully, check details for more inforamtion.");
+                        "Not all updates were installed successfully, check details for more information.");
+                adapter.setState(IDLE);
             }
             adapter.refreshGUI();
         }
+    }
+
+    private boolean hasAllUpdatesInstalledSuccessfully() {
+        return filterUpdateNotInstalled(adapter.getAvailableUpdates()).isEmpty();
     }
 }

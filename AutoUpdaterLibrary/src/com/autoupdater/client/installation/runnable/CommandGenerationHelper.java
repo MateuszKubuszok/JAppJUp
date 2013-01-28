@@ -48,7 +48,8 @@ class CommandGenerationHelper {
             throws ProgramSettingsNotFoundException, InvalidCommandException {
         List<String[]> commands = new ArrayList<String[]>();
         for (Update update : updates)
-            if (update != null && update.getStatus().isIntendedToBeChanged())
+            if (update != null && update.getStatus().isIntendedToBeChanged()
+                    && update.getFile() != null)
                 commands.add(getSingleUpdateExecutionCommand(update));
         return commands;
     }
