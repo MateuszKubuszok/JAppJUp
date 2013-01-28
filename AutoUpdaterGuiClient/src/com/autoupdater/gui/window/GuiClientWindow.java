@@ -8,6 +8,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.MenuItem;
+import java.awt.SplashScreen;
 import java.awt.SystemTray;
 import java.awt.TrayIcon;
 import java.awt.event.ActionListener;
@@ -227,6 +228,8 @@ public class GuiClientWindow extends JFrame {
         resolve().initializeTrayIfPossible(this);
         setStatus(EWindowStatus.UNINITIALIZED);
         setProgressBarInactive();
+
+        hideSplashScreen();
     }
 
     private void initializeWindow() {
@@ -268,7 +271,6 @@ public class GuiClientWindow extends JFrame {
                 if (showHideGUI != null)
                     showHideGUI.setLabel("Show");
             }
-
         });
     }
 
@@ -323,5 +325,12 @@ public class GuiClientWindow extends JFrame {
 
         progressBar = new JProgressBar();
         controlPanel.add(progressBar, "1, 6, 7, 1, fill, fill");
+    }
+
+    private void hideSplashScreen() {
+        SplashScreen splash = SplashScreen.getSplashScreen();
+        if (splash != null) {
+            splash.close();
+        }
     }
 }

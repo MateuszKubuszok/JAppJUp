@@ -49,3 +49,9 @@ subprojects {
 
 apply from: './dependencies.gradle'
 apply from: './projects.gradle'
+
+project(':AutoUpdaterGuiClient') {
+	jar {
+		manifest { attributes "SplashScreen-Image": "com/autoupdater/gui/gfx/AutoUpdater_Splash.png" }
+	}
+}
