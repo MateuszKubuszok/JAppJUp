@@ -40,8 +40,6 @@ Development
  * ensure that repository will not blow server into space,
  * introduce functionality to install archival updates and *lock* updates (so
  that program won't be updated to version higher or equal to some defined),
- * introduc functionality to cancel update download (and whole update as
- a result, but only before actual installation),
  * add some documentation to Client's project,
  * introducing ability to install updates on Mac OS and others systems,
  * considering creating separate repository for *Java's System-Dependent

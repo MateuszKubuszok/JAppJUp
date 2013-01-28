@@ -36,6 +36,7 @@ public class Gui2ClientAdapter {
     private GuiClientWindow clientWindow;
 
     private final Thread updateThread;
+    private FileAggregatedDownloadService currentDownloadSession = null;
 
     private int updateCountdown;
 
@@ -80,11 +81,15 @@ public class Gui2ClientAdapter {
         setInstallationIndetermined();
 
         try {
-            utils.installUpdates();
+            currentDownloadSession = utils.installUpdates();
         } catch (ProgramSettingsNotFoundException | IOException e) {
             reportError("Error occured during installation", e.getMessage());
             setState(IDLE);
         }
+    }
+
+    public void cancelDownloads() {
+        currentDownloadSession.cancel();
     }
 
     // operations with models

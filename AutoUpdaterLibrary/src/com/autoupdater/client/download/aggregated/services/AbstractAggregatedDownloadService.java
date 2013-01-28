@@ -1,5 +1,8 @@
 package com.autoupdater.client.download.aggregated.services;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.Future;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -49,6 +52,8 @@ public abstract class AbstractAggregatedDownloadService<Service extends Abstract
         AbstractAggregatedService<Service, Notifier, DownloadServiceMessage, DownloadServiceMessage, AdditionalMessage> {
     private EDownloadStatus state;
     private final ThreadPoolExecutor threadPoolExecutor;
+    private final List<Future<?>> queuedFutures;
+    private boolean cancelled = false;
 
     /**
      * Creates new AbstractAggregatedDownloadService instance.
@@ -61,12 +66,7 @@ public abstract class AbstractAggregatedDownloadService<Service extends Abstract
      * @see com.autoupdater.client.download.ConnectionConfiguration#DEFAULT_MAX_PARALLEL_DOWNLOADS_NUMBER
      */
     public AbstractAggregatedDownloadService() {
-        super();
-        int maxParallelDownloadsNumber = ConnectionConfiguration.DEFAULT_MAX_PARALLEL_DOWNLOADS_NUMBER;
-        state = EDownloadStatus.HASNT_STARTED;
-        threadPoolExecutor = new ThreadPoolExecutor(maxParallelDownloadsNumber,
-                maxParallelDownloadsNumber + 1, 2L, TimeUnit.HOURS,
-                new LinkedBlockingQueue<Runnable>());
+        this(ConnectionConfiguration.DEFAULT_MAX_PARALLEL_DOWNLOADS_NUMBER);
     }
 
     /**
@@ -77,6 +77,7 @@ public abstract class AbstractAggregatedDownloadService<Service extends Abstract
      */
     public AbstractAggregatedDownloadService(int maxParallelDownloadsNumber) {
         super();
+        queuedFutures = new ArrayList<Future<?>>();
         state = EDownloadStatus.HASNT_STARTED;
         threadPoolExecutor = new ThreadPoolExecutor(maxParallelDownloadsNumber,
                 maxParallelDownloadsNumber, 2L, TimeUnit.HOURS, new LinkedBlockingQueue<Runnable>());
@@ -88,18 +89,8 @@ public abstract class AbstractAggregatedDownloadService<Service extends Abstract
      */
     public void start() {
         if (getServices() != null && !getServices().isEmpty())
-            for (final Service service : getServices()) {
-                threadPoolExecutor.execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        service.start();
-                        try {
-                            service.joinThread();
-                        } catch (InterruptedException e) {
-                        }
-                    }
-                });
-            }
+            for (final Service service : getServices())
+                queuedFutures.add(threadPoolExecutor.submit(new ServiceRunnable(service)));
 
         new Thread(new Runnable() {
             @Override
@@ -108,12 +99,21 @@ public abstract class AbstractAggregatedDownloadService<Service extends Abstract
                     threadPoolExecutor.shutdown();
                     setState(EDownloadStatus.IN_PROCESS);
                     threadPoolExecutor.awaitTermination(Long.MAX_VALUE, TimeUnit.SECONDS);
-                    setState(EDownloadStatus.PROCESSED);
+                    setState(cancelled ? EDownloadStatus.CANCELLED : EDownloadStatus.PROCESSED);
                 } catch (InterruptedException e) {
                     setState(EDownloadStatus.CANCELLED);
                 }
             }
         }).start();
+    }
+
+    /**
+     * Cancel all downloads.
+     */
+    public void cancel() {
+        for (Future<?> future : queuedFutures)
+            future.cancel(true);
+        cancelled = true;
     }
 
     /**
@@ -171,5 +171,22 @@ public abstract class AbstractAggregatedDownloadService<Service extends Abstract
         getNotifier().hasChanged();
         getNotifier()
                 .notifyObservers(new DownloadServiceMessage(getNotifier(), state.getMessage()));
+    }
+
+    private class ServiceRunnable implements Runnable {
+        private final Service service;
+
+        public ServiceRunnable(Service service) {
+            this.service = service;
+        }
+
+        @Override
+        public void run() {
+            service.start();
+            try {
+                service.joinThread();
+            } catch (InterruptedException e) {
+            }
+        }
     }
 }

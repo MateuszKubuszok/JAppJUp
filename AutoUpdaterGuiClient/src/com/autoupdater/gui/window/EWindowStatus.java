@@ -4,7 +4,7 @@ public enum EWindowStatus {
     UNINITIALIZED(true, false, false, true), //
     IDLE(true, true, false, true), //
     FETCHING_UPDATE_INFO(false, false, false, true), //
-    FETCHING_UPDATES(false, false, false, true), //
+    FETCHING_UPDATES(false, false, true, true), //
     INSTALLING_UPDATES(false, false, false, false);
 
     private final boolean checkUpdatesButtonEnabled;

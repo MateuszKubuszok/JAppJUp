@@ -27,6 +27,7 @@ import com.autoupdater.client.models.Package;
 import com.autoupdater.client.models.Program;
 import com.autoupdater.client.models.Update;
 import com.autoupdater.gui.adapters.Gui2ClientAdapter;
+import com.autoupdater.gui.adapters.listeners.CancelDownloadsTriggerListener;
 import com.autoupdater.gui.adapters.listeners.CheckUpdateTriggerListener;
 import com.autoupdater.gui.adapters.listeners.InstallUpdateTriggerListener;
 import com.autoupdater.gui.adapters.listeners.PackagesInfoNotificationListener;
@@ -48,6 +49,8 @@ public class AdapterUtils {
                 new CheckUpdateTriggerListener(adapter));
         clientWindow.bindInstallUpdatesButton(new InstallUpdateTriggerListener(adapter),
                 new InstallUpdateTriggerListener(adapter));
+        clientWindow.bindCancelDownloadButton(new CancelDownloadsTriggerListener(adapter),
+                new CancelDownloadsTriggerListener(adapter));
 
         for (final Program program : adapter.getProgramsThatShouldBeDisplayed()) {
             ProgramSettings programSettings = program.findProgramSettings(client
@@ -88,7 +91,8 @@ public class AdapterUtils {
                 aggregatedChangelogInfoService, aggregatedBugsInfoService)).start();
     }
 
-    public void installUpdates() throws ProgramSettingsNotFoundException, IOException {
+    public FileAggregatedDownloadService installUpdates() throws ProgramSettingsNotFoundException,
+            IOException {
         FileAggregatedDownloadService aggregatedDownloadService = client
                 .createFileAggregatedDownloadService(adapter.getAvailableUpdates());
         AggregatedInstallationService aggregatedInstallationService = client
@@ -96,6 +100,8 @@ public class AdapterUtils {
 
         new Thread(new InstallUpdatesRunnable(adapter, aggregatedDownloadService,
                 aggregatedInstallationService)).start();
+
+        return aggregatedDownloadService;
     }
 
     public void markAllUpdatesAsIntendedToInstall() {

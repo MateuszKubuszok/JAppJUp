@@ -2,7 +2,8 @@ package com.autoupdater.gui.window;
 
 import static com.autoupdater.gui.mocks.MockModels.getInstalledPrograms;
 import static com.autoupdater.gui.window.ETrayStrategy.resolve;
-import static javax.swing.JOptionPane.showMessageDialog;
+import static com.autoupdater.gui.window.EWindowStatus.UNINITIALIZED;
+import static javax.swing.JOptionPane.*;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -25,7 +26,6 @@ import javax.imageio.ImageIO;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
@@ -97,21 +97,21 @@ public class GuiClientWindow extends JFrame {
         if (trayIcon != null)
             trayIcon.displayMessage(title, message, TrayIcon.MessageType.INFO);
         else
-            showMessageDialog(this, message, title, JOptionPane.INFORMATION_MESSAGE);
+            showMessageDialog(this, message, title, INFORMATION_MESSAGE);
     }
 
     public void reportWarning(String title, String message) {
         if (trayIcon != null)
             trayIcon.displayMessage(title, message, TrayIcon.MessageType.WARNING);
         else
-            showMessageDialog(this, message, title, JOptionPane.WARNING_MESSAGE);
+            showMessageDialog(this, message, title, WARNING_MESSAGE);
     }
 
     public void reportError(String title, String message) {
         if (trayIcon != null)
             trayIcon.displayMessage(title, message, TrayIcon.MessageType.ERROR);
         else
-            showMessageDialog(this, message, "Error occured", JOptionPane.ERROR_MESSAGE);
+            showMessageDialog(this, message, "Error occured", ERROR_MESSAGE);
     }
 
     public void refresh() {
@@ -226,7 +226,7 @@ public class GuiClientWindow extends JFrame {
         initializeControlPanel();
 
         resolve().initializeTrayIfPossible(this);
-        setStatus(EWindowStatus.UNINITIALIZED);
+        setStatus(UNINITIALIZED);
         setProgressBarInactive();
 
         hideSplashScreen();
@@ -317,7 +317,7 @@ public class GuiClientWindow extends JFrame {
         installUpdatesButton = new JButton("Install updates");
         controlPanel.add(installUpdatesButton, "5, 2, fill, fill");
 
-        cancelDownloadButton = new JButton("Cancell download");
+        cancelDownloadButton = new JButton("Cancel downloads");
         controlPanel.add(cancelDownloadButton, "7, 2, fill, fill");
 
         statusLabel = new JLabel("Welcome to AutoUpdater\r\n");

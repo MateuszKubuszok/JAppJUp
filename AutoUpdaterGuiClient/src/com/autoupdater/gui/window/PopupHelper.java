@@ -16,7 +16,6 @@ import java.util.SortedSet;
 
 import javax.imageio.ImageIO;
 
-
 import com.autoupdater.client.models.Program;
 import com.autoupdater.gui.Resources;
 import com.autoupdater.gui.config.GuiConfiguration;
@@ -91,7 +90,7 @@ public class PopupHelper {
         popup.add(checkUpdates);
         installUpdates = new MenuItem("Install updates");
         popup.add(installUpdates);
-        cancelDownload = new MenuItem("Cancell download");
+        cancelDownload = new MenuItem("Cancel downloads");
         popup.add(cancelDownload);
     }
 
