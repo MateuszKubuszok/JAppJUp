@@ -1,5 +1,6 @@
 package net.jsdpu.process.executors;
 
+import static java.util.Arrays.asList;
 import static net.jsdpu.process.executors.Commands.convertSingleCommand;
 import static net.jsdpu.process.executors.MultiCaller.prepareCommand;
 
@@ -16,7 +17,7 @@ public class LinuxProcessExecutor extends AbstractProcessExecutor {
     protected List<String[]> rootCommand(List<String[]> commands) {
         List<String> command = new ArrayList<String>();
         command.add("pkexec");
-        command.addAll(prepareCommand(commands));
+        command.addAll(asList(prepareCommand(commands)));
         return convertSingleCommand(command);
     }
 }

@@ -2,7 +2,8 @@ package net.jsdpu.process.executors;
 
 import static com.google.common.base.Strings.repeat;
 import static java.lang.Math.max;
-import static java.util.regex.Pattern.*;
+import static java.util.regex.Pattern.compile;
+import static java.util.regex.Pattern.quote;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -123,7 +124,7 @@ public class Commands {
      * Converts commands in form passed into console to a form suitable for
      * execute methods.
      * 
-     * @see #convertSingleConsoleCommands(String...)
+     * @see #convertSingleConsoleCommand(String)
      * 
      * @param commands
      *            commands to convert
@@ -145,7 +146,7 @@ public class Commands {
      * Converts commands in form passed into console to a form suitable for
      * execute methods.
      * 
-     * @see #convertSingleConsoleCommands(String...)
+     * @see #convertMultipleConsoleCommands(String...)
      * 
      * @param commands
      *            commands to convert
@@ -270,7 +271,7 @@ public class Commands {
      * If command contains quotation marks, they will be escaped.
      * </p>
      * 
-     * @param command
+     * @param commands
      *            program's command (program name and arguments)
      * @return command wrapped in quotation mark
      */

@@ -2,6 +2,7 @@ package com.autoupdater.client.download;
 
 import static org.apache.commons.codec.digest.DigestUtils.md5Hex;
 
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -17,6 +18,7 @@ import com.autoupdater.client.xml.parsers.ParserException;
  * marked as correctly downloaded.
  */
 public class FileCache {
+    private static final int INPUT_BUFFER_SIZE = 1024 * 1024;
     private static Map<String, String> cacheMap;
 
     /**
@@ -105,7 +107,7 @@ public class FileCache {
      */
     private static String calculateHash(File file) {
         try {
-            return md5Hex(new FileInputStream(file));
+            return md5Hex(new BufferedInputStream(new FileInputStream(file), INPUT_BUFFER_SIZE));
         } catch (IOException e) {
             return null;
         }

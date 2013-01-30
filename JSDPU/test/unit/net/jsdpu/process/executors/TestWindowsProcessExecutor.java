@@ -2,7 +2,8 @@ package net.jsdpu.process.executors;
 
 import static java.util.Arrays.asList;
 import static net.jsdpu.resources.Resources.getUACHandlerPath;
-import static org.fest.assertions.api.Assertions.*;
+import static org.fest.assertions.api.Assertions.assertThat;
+import static org.fest.assertions.api.Assertions.fail;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -18,7 +19,7 @@ public class TestWindowsProcessExecutor {
             // given
             WindowsProcessExecutor executor = new WindowsProcessExecutor();
             List<String[]> command = new ArrayList<String[]>();
-            command.add((String[]) asList("java", "-jar", "Some Installer.jar").toArray());
+            command.add(asList("java", "-jar", "Some Installer.jar").toArray(new String[0]));
             Method rootCommand = executor.getClass().getDeclaredMethod("rootCommand", List.class);
             rootCommand.setAccessible(true);
 
@@ -34,8 +35,7 @@ public class TestWindowsProcessExecutor {
                     .isNotNull()
                     .isEqualTo(
                             executor.isVistaOrLater() ? new String[] { getUACHandlerPath(),
-                                    "\"java -jar \\\"Some Installer.jar\\\"\"" } : command
-                                    .toArray(new String[0]));
+                                    "\"java -jar \\\"Some Installer.jar\\\"\"" } : command.get(0));
         } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException
                 | NoSuchMethodException | SecurityException e) {
             fail("No exception should be thrown");

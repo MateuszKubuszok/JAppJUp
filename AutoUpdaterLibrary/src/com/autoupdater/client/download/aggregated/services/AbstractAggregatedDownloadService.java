@@ -150,6 +150,7 @@ public abstract class AbstractAggregatedDownloadService<Service extends Abstract
      * DownloadResultException.
      * </p>
      * 
+     * @return result of a download (defined by implementation)
      * @throws DownloadResultException
      *             thrown if Service is still running
      */

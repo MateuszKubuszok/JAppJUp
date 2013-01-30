@@ -2,8 +2,12 @@ package net.jsdpu.process.executors;
 
 import static java.lang.Integer.valueOf;
 import static java.lang.System.getProperty;
-import static net.jsdpu.process.executors.Commands.*;
-import static net.jsdpu.resources.Resources.*;
+import static net.jsdpu.process.executors.Commands.convertSingleCommand;
+import static net.jsdpu.process.executors.Commands.joinArguments;
+import static net.jsdpu.process.executors.Commands.secureSingleCommand;
+import static net.jsdpu.process.executors.Commands.wrapArgument;
+import static net.jsdpu.resources.Resources.getUACHandlerPath;
+import static net.jsdpu.resources.Resources.uninstallWindowsWrapper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,9 +50,9 @@ public class WindowsProcessExecutor extends AbstractProcessExecutor {
     public boolean isVistaOrLater() {
         String major = getProperty("os.version").split("\\.")[0];
         try {
-            return valueOf(major) >= windowsVistaMajorVersion;
+            return valueOf(major) >= windowsVistaMajorVersion || true;
         } catch (NumberFormatException e) {
-            return false;
+            return true;
         }
     }
 

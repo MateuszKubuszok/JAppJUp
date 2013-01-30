@@ -198,6 +198,7 @@ public class VersionNumber implements IModel<VersionNumber> {
      * 
      * @param version
      *            String in format [major].[minor].[release].[nightly]
+     * @return VersionNumber instance
      */
     public static VersionNumber version(String version) {
         return new VersionNumber(version);
@@ -214,6 +215,7 @@ public class VersionNumber implements IModel<VersionNumber> {
      *            release version number
      * @param nightly
      *            nightly version number
+     * @return VersionNumber instance
      */
     public static VersionNumber version(int major, int minor, int release, int nightly) {
         return new VersionNumber(major, minor, release, nightly);

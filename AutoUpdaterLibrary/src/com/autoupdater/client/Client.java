@@ -201,6 +201,8 @@ public class Client {
      * @return service prepared to use
      * @throws IOException
      *             thrown when IO error occurs while creating connection
+     * @throws ProgramSettingsNotFoundException
+     *             thrown when ProgramSettings of some program cannot be found
      */
     public UpdateInfoAggregatedDownloadService createUpdateInfoAggregatedDownloadService(
             SortedSet<Package> selectedPackages) throws ProgramSettingsNotFoundException,
@@ -233,6 +235,8 @@ public class Client {
      * @return service prepared to use
      * @throws IOException
      *             thrown when IO error occurs while creating connection
+     * @throws ProgramSettingsNotFoundException
+     *             thrown when ProgramSettings of some program cannot be found
      */
     public ChangelogInfoAggregatedDownloadService createChangelogInfoAggregatedDownloadService(
             SortedSet<Package> selectedPackages) throws ProgramSettingsNotFoundException,
@@ -266,6 +270,8 @@ public class Client {
      * @return service prepared to use
      * @throws IOException
      *             thrown when IO error occurs while creating connection
+     * @throws ProgramSettingsNotFoundException
+     *             thrown when ProgramSettings of some program cannot be found
      */
     public BugsInfoAggregatedDownloadService createBugsInfoAggregatedDownloadService(
             SortedSet<Program> selectedPrograms) throws ProgramSettingsNotFoundException,
@@ -298,6 +304,8 @@ public class Client {
      * @return service prepared to use
      * @throws IOException
      *             thrown when IO error occurs while creating connection
+     * @throws ProgramSettingsNotFoundException
+     *             thrown when ProgramSettings of some program cannot be found
      */
     public FileAggregatedDownloadService createFileAggregatedDownloadService(
             SortedSet<Update> requestedUpdates) throws ProgramSettingsNotFoundException,
@@ -357,7 +365,7 @@ public class Client {
     /**
      * Cleans up all temporally files.
      * 
-     * @see com.autoupdater.client.ClientcleanBackup()
+     * @see com.autoupdater.client.Client#cleanBackup()
      * @see com.autoupdater.client.Client#cleanDownloaded()
      */
     public void cleanTemp() {

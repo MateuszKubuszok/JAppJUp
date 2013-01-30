@@ -1,6 +1,7 @@
 package net.jsdpu.process.executors;
 
-import static net.jsdpu.process.executors.Commands.*;
+import static net.jsdpu.process.executors.Commands.convertMultipleConsoleCommands;
+import static net.jsdpu.process.executors.Commands.joinArguments;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -32,9 +33,9 @@ public class MultiCaller {
      * </p>
      * 
      * @param commands
-     * @return
+     * @return list of commands for ProcessBulder/ProcessExecutor
      */
-    static List<String> prepareCommand(List<String[]> commands) {
+    static String[] prepareCommand(List<String[]> commands) {
         List<String> command = new ArrayList<String>();
         command.add("java");
         command.add("-cp");
@@ -42,7 +43,7 @@ public class MultiCaller {
         command.add(MultiCaller.class.getName());
         for (String[] subCommand : commands)
             command.add(joinArguments(subCommand));
-        return command;
+        return command.toArray(new String[0]);
     }
 
     /**

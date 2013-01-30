@@ -3,7 +3,8 @@ package net.jsdpu.process.executors;
 import static java.util.Arrays.asList;
 import static net.jsdpu.process.executors.Commands.convertSingleCommand;
 import static net.jsdpu.process.executors.MultiCaller.prepareCommand;
-import static org.fest.assertions.api.Assertions.*;
+import static org.fest.assertions.api.Assertions.assertThat;
+import static org.fest.assertions.api.Assertions.fail;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -41,7 +42,7 @@ public class TestLinuxProcessExecutor {
     private String[] rootCommand(List<String[]> commands) {
         List<String> command = new ArrayList<String>();
         command.add("pkexec");
-        command.addAll(prepareCommand(commands));
+        command.addAll(asList(prepareCommand(commands)));
         return convertSingleCommand(command).get(0);
     }
 }
