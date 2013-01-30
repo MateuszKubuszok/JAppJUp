@@ -6,6 +6,7 @@ import static java.lang.Thread.sleep;
 
 import java.io.IOException;
 import java.util.SortedSet;
+import java.util.TreeSet;
 
 import com.autoupdater.client.Client;
 import com.autoupdater.client.download.DownloadResultException;
@@ -100,6 +101,8 @@ public class Gui2ClientAdapter {
     // operations with models
 
     public SortedSet<Update> getAvailableUpdates() {
+        if (availableUpdates == null)
+            availableUpdates = new TreeSet<Update>();
         return availableUpdates;
     }
 

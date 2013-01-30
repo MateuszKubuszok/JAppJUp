@@ -36,13 +36,13 @@ public class CheckUpdatesRunnable implements Runnable {
 
     @Override
     public void run() {
-        SortedSet<Update> availableUpdates = null;
+        SortedSet<Update> availableUpdates = adapter.getAvailableUpdates();
         try {
             aggregatedUpdateInfoService.getNotifier().addObserver(
                     new UpdateInfoNotificationListener(adapter, aggregatedUpdateInfoService));
             aggregatedUpdateInfoService.start();
             aggregatedUpdateInfoService.joinThread();
-            availableUpdates = aggregatedUpdateInfoService.getResult();
+            availableUpdates.addAll(aggregatedUpdateInfoService.getResult());
             adapter.setAvailableUpdates(availableUpdates);
 
             adapter.refreshGUI();
