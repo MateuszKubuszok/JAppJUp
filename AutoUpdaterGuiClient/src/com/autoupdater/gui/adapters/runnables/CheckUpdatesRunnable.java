@@ -1,20 +1,24 @@
 package com.autoupdater.gui.adapters.runnables;
 
+import static com.autoupdater.client.environment.AvailabilityFilter.filterUpdateSelection;
+import static com.autoupdater.gui.window.EWindowStatus.*;
+
 import java.util.SortedSet;
+import java.util.TreeSet;
 
 import com.autoupdater.client.download.DownloadResultException;
 import com.autoupdater.client.download.aggregated.services.BugsInfoAggregatedDownloadService;
 import com.autoupdater.client.download.aggregated.services.ChangelogInfoAggregatedDownloadService;
 import com.autoupdater.client.download.aggregated.services.UpdateInfoAggregatedDownloadService;
-import com.autoupdater.client.environment.AvailabilityFilter;
 import com.autoupdater.client.models.Update;
 import com.autoupdater.gui.adapters.Gui2ClientAdapter;
 import com.autoupdater.gui.adapters.listeners.BugsInfoNotificationListener;
 import com.autoupdater.gui.adapters.listeners.ChangelogInfoNotificationListener;
 import com.autoupdater.gui.adapters.listeners.UpdateInfoNotificationListener;
-import com.autoupdater.gui.window.EWindowStatus;
 
 public class CheckUpdatesRunnable implements Runnable {
+    private static final SortedSet<Update> DISPLAYED_UPDATES = new TreeSet<Update>();
+
     private final Gui2ClientAdapter adapter;
     private final UpdateInfoAggregatedDownloadService aggregatedUpdateInfoService;
     private final ChangelogInfoAggregatedDownloadService aggregatedChangelogInfoService;
@@ -59,27 +63,37 @@ public class CheckUpdatesRunnable implements Runnable {
         } catch (DownloadResultException e) {
             adapter.reportError("Error occured while checking updates", e.getMessage());
             if (adapter.isInitiated())
-                adapter.setState(EWindowStatus.IDLE);
+                adapter.setState(IDLE);
             else
-                adapter.setState(EWindowStatus.UNINITIALIZED);
+                adapter.setState(UNINITIALIZED);
         } finally {
             adapter.markAllUpdatesAsIntendedToInstall();
 
-            if (availableUpdates == null
-                    || AvailabilityFilter.filterUpdateSelection(availableUpdates).isEmpty())
-                adapter.setState(EWindowStatus.UNINITIALIZED);
+            if (availableUpdates == null || filterUpdateSelection(availableUpdates).isEmpty())
+                adapter.setState(UNINITIALIZED);
             else {
-                String message = "";
-                for (Update update : AvailabilityFilter.filterUpdateSelection(availableUpdates)) {
-                    message += update.getPackage().getProgram() + "/" + update.getPackage()
-                            + " -> " + update.getVersionNumber() + "\n";
-                    message += update.getChanges() + "\n";
+                SortedSet<Update> notDisplayedUpdates = filterUpdatesNotification(filterUpdateSelection(availableUpdates));
+                StringBuilder builder = new StringBuilder();
+                for (Update update : notDisplayedUpdates)
+                    builder.append(update.getPackage().getProgram()).append('/')
+                            .append(update.getPackage()).append(" -> ")
+                            .append(update.getVersionNumber()).append("\n")
+                            .append(update.getChanges()).append("\n");
+
+                adapter.setState(IDLE);
+                if (!notDisplayedUpdates.isEmpty()) {
+                    adapter.reportInfo("New updates are available", builder.toString());
+                    DISPLAYED_UPDATES.addAll(notDisplayedUpdates);
                 }
-                adapter.setState(EWindowStatus.IDLE);
-                adapter.reportInfo("Updates are available", message);
             }
 
             adapter.refreshGUI();
         }
+    }
+
+    public SortedSet<Update> filterUpdatesNotification(SortedSet<Update> availableUpdates) {
+        SortedSet<Update> notDisplayedUpdates = new TreeSet<Update>(availableUpdates);
+        notDisplayedUpdates.removeAll(DISPLAYED_UPDATES);
+        return notDisplayedUpdates;
     }
 }

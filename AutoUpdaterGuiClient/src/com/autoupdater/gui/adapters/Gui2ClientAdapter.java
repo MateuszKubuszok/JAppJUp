@@ -68,12 +68,17 @@ public class Gui2ClientAdapter {
         setInstallationInactive();
         updateCountdown = 0;
 
-        try {
-            utils.queryServerForInformation();
-        } catch (DownloadResultException | IOException | ProgramSettingsNotFoundException e) {
-            reportError("Error occured during update checking", e.getMessage());
-            setState(IDLE);
-        }
+        (new Thread() {
+            @Override
+            public void run() {
+                try {
+                    utils.queryServerForInformation();
+                } catch (DownloadResultException | IOException | ProgramSettingsNotFoundException e) {
+                    reportError("Error occured during update checking", e.getMessage());
+                    setState(isInitiated() ? IDLE : UNINITIALIZED);
+                }
+            }
+        }).start();
     }
 
     public synchronized void installUpdates() {
