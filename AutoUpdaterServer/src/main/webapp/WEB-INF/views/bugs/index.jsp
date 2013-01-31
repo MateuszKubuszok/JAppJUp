@@ -15,19 +15,16 @@
 			<a href="<c:url value="/logout" />"><spring:message code="navigation.logout" /></a>
 			| <a href="<c:url value="/changepw" />"><spring:message code="navigation.changepw" /></a>
 			<c:if test="${user.admin}">
-				<c:url var="usersUrl" value="/users/" />
-				| <a href="${usersUrl}"><spring:message code="navigation.users" /></a>
+				| <a href="<c:url value="/users/" />"><spring:message code="navigation.users" /></a>
 			</c:if>
 		</p>
 		<p>
-			<c:url var="backUrl" value="/programs" />
-			<a href="${backUrl}"><spring:message code="navigation.programs" /></a> &gt;	
+			<a href="<c:url value="/programs" />"><spring:message code="navigation.programs" /></a>	
 			<c:if test="${not empty program}">
-				<spring:message code="navigation.bugs" arguments="${program.name}" />
+				&gt; <spring:message code="navigation.bugs" arguments="${program.name}" />
 			</c:if>
 			<c:if test="${user.packageAdmin}">	
-				<c:url var="addUrl" value="/bugs/add/${program.id}" /> &gt;
-				<a href="${addUrl}"><spring:message code="navigation.bug.add" /></a>
+				&gt; <a href="<c:url value="/bugs/add/${program.id}" />"><spring:message code="navigation.bug.add" /></a>
 			</c:if>
 		</p>
 	</div>
@@ -41,19 +38,17 @@
 					<tr>
 						<th><spring:message code="model.bug.description" /></th>
 						<c:if test="${user.packageAdmin}">
-						<th colspan="2"><spring:message code="navigation.manage" /></th>
+							<th colspan="2"><spring:message code="navigation.manage" /></th>
 						</c:if>
 					</tr>
 				</thead>
 				<tbody>
 					<c:forEach items="${bugs}" var="bug">
 						<tr>
-							<td><c:out value="${bug.description}" /></td>
+							<td>${bug.description}</td>
 							<c:if test="${user.packageAdmin}">
-							<c:url var="editUrl" value="/bugs/edit/${bug.id}" />
-							<td><a href="${editUrl}"><spring:message code="navigation.edit" /></a></td>
-							<c:url var="deleteUrl" value="/bugs/delete/${bug.id}" />
-							<td><a href="${deleteUrl}"><spring:message code="navigation.delete" /></a></td>
+								<td><a href="<c:url value="/bugs/edit/${bug.id}" />"><spring:message code="navigation.edit" /></a></td>
+								<td><a href="<c:url value="/bugs/delete/${bug.id}" />"><spring:message code="navigation.delete" /></a></td>
 							</c:if>
 						</tr>
 					</c:forEach>

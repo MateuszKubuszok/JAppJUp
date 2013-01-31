@@ -15,19 +15,15 @@
 			<a href="<c:url value="/logout" />"><spring:message code="navigation.logout" /></a>
 			| <a href="<c:url value="/changepw" />"><spring:message code="navigation.changepw" /></a>
 			<c:if test="${user.admin}">
-				<c:url var="usersUrl" value="/users/" />
-				| <a href="${usersUrl}"><spring:message code="navigation.users" /></a>
+				| <a href="<c:url value="/users/" />"><spring:message code="navigation.users" /></a>
 			</c:if>
 		</p>
 		<p>
-			<c:url var="programsUrl" value="/programs/" />
-			<a href="${programsUrl}"><spring:message code="navigation.programs" /></a> &gt;
-			<c:url var="packagesUrl" value="/packages/${thePackage.program.id}" />
-			<a href="${packagesUrl}"><spring:message code="navigation.packages" arguments="${thePackage.program.name}" /></a> &gt;
-			<spring:message code="navigation.packages" arguments="${thePackage.program.name},${thePackage.name}" />
+			<a href="<c:url value="/programs/" />"><spring:message code="navigation.programs" /></a>
+			&gt; <a href="<c:url value="/packages/${thePackage.program.id}" />"><spring:message code="navigation.packages" arguments="${thePackage.program.name}" /></a>
+			&gt; <spring:message code="navigation.packages" arguments="${thePackage.program.name},${thePackage.name}" />
 			<c:if test="${user.packageAdmin}">
-				<c:url var="newUpdateUrl" value="/updates/add/${thePackage.id}" /> &gt;
-				<a href="${newUpdateUrl}"><spring:message code="navigation.update.add" /></a>
+				 &gt; <a href="<c:url value="/updates/add/${thePackage.id}" />"><spring:message code="navigation.update.add" /></a>
 			</c:if>
 		</p>
 	</div>
@@ -52,16 +48,16 @@
 				<tbody>
 					<c:forEach items="${updates}" var="update">
 						<tr>
-							<td><c:out value="${update.version}" /></td>
-							<td><c:out value="${update.developmentVersion}" /></td>
-							<td><c:out value="${update.type}" /></td>
-							<td><c:out value="${update.fileName}" /></td>
+							<td>${update.version}</td>
+							<td>${update.developmentVersion}</td>
+							<td><spring:message code="enum.EUpdateStrategy.${update.type}" /></td>
+							<td>${update.fileName}</td>
 							<td><c:choose>
 								<c:when test="${empty update.relativePath}">
 									<spring:message code="value.default" />
 								</c:when>
 								<c:otherwise>
-									<c:out value="${update.relativePath}" />
+									${update.relativePath}
 								</c:otherwise>
 							</c:choose></td>
 							<td><c:choose>
@@ -69,14 +65,12 @@
 									<spring:message code="value.none" />
 								</c:when>
 								<c:otherwise>
-									<c:out value="${update.updaterCommand}" />
+									${update.updaterCommand}
 								</c:otherwise>
 							</c:choose></td>
-							<td><c:out value="${update.changelog}" /></td>
-							<c:url value="/updates/edit/${update.id}" var="editURL" />
-							<td><a href="${editURL}"><spring:message code="navigation.edit" /></a></td>
-							<c:url value="/updates/delete/${update.id}" var="deleteURL" />
-							<td><a href="${deleteURL}"><spring:message code="navigation.delete" /></a></td>
+							<td>${update.changelog}</td>
+							<td><a href="<c:url value="/updates/edit/${update.id}" />"><spring:message code="navigation.edit" /></a></td>
+							<td><a href="<c:url value="/updates/delete/${update.id}" />"><spring:message code="navigation.delete" /></a></td>
 						</tr>
 					</c:forEach>
 				</tbody>

@@ -21,6 +21,7 @@ body { font-size: 10pt; }
 #breadcrumbs {
 	background-color: #efefef;
 	border-bottom: 5px solid #777;
+	box-shadow: 0px 0px 3px #777;
 	left: 0;
 	height: 50px;
 	position: fixed;
@@ -67,6 +68,11 @@ label, .error {
 input, select, textarea {
 	background-color: #fff;
 	border: 1px solid #777;
+}
+input.errorField, select.errorField, textarea.errorField {
+	background-color: #fee;
+	border-color: #700;
+	color: #700
 }
 input:not([type]), input[type="text"], input[type="password"], textarea { width: 300px; }
 

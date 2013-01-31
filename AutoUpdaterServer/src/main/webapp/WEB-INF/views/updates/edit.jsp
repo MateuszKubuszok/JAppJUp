@@ -21,39 +21,41 @@
 	 
 	<fieldset>
 	<legend><spring:message code="model.update.edit" arguments="${update.thePackage.program.name},${update.thePackage.name}" /></legend>
-	<c:url var="actionURL" value="/updates/edit" />
+	<c:url value="/updates/edit" var="actionURL" />
 	<form:form modelAttribute="update" method="POST" enctype="multipart/form-data" commandName="update" action="${actionURL}">
 		<p>
 			<form:label path="version" for="version"><spring:message code="model.update.version" />:</form:label>
 			<form:errors path="version" class="error" />
-			<form:input path="version" />
+			<form:input path="version" cssErrorClass="errorField" />
 		</p>
 		<p>
 			<form:label path="developmentVersion" for="developmentVersion"><spring:message code="model.update.developmentVersion" />:</form:label>
 			<form:errors path="developmentVersion" class="error" />
-			<form:checkbox path="developmentVersion" />
+			<form:checkbox path="developmentVersion" cssErrorClass="errorField" />
 		</p>
 		<p>
 			<form:label path="changelog" for="changelog"><spring:message code="model.update.changelog" />:</form:label>
 			<form:errors path="changelog" class="error" />
-			<form:textarea path="changelog" rows="10" />
+			<form:textarea path="changelog" rows="10" cssErrorClass="errorField" />
 		</p>
 		<p>
 			<form:label path="type" for="type"><spring:message code="model.update.type" />:</form:label>
 			<form:errors path="type" class="error" />
-			<form:select path="type">
-	        	<form:options items="${updateTypes}" />
+			<form:select path="type" cssErrorClass="errorField">
+	        <c:forEach items="${updateTypes}" var="type">
+				<form:option value="${type}"><spring:message code="enum.EUpdateStrategy.${type}" /></form:option>
+			</c:forEach>
 			</form:select>
 		</p>
 		<p>
 			<form:label path="relativePath" for="relativePath"><spring:message code="model.update.relativePath.long" />:</form:label>
 			<form:errors path="relativePath" class="error" />
-			<form:input path="relativePath" />
+			<form:input path="relativePath" cssErrorClass="errorField" />
 		</p>
 		<p>
 			<form:label path="updaterCommand" for="updaterCommand"><spring:message code="model.update.updaterCommand.long" />:</form:label>
 			<form:errors path="updaterCommand" class="error" />
-			<form:input path="updaterCommand" />
+			<form:input path="updaterCommand" cssErrorClass="errorField" />
 			
 		</p>
 		<p><spring:message code="model.update.updaterCommand.allowedVariables" />:</p>

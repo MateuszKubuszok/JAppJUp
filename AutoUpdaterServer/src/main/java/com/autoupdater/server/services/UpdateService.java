@@ -75,4 +75,13 @@ public interface UpdateService {
      * @return list of updates
      */
     public List<Update> findNewestByPackage(Package _package);
+    
+    /**
+     * Whether there already is update with given version number and developmentVersion status.
+     * 
+     * @param _package package to check
+     * @param update update with versions to check
+     * @return
+     */
+    public boolean checkIfVersionAvailableForPackage(Package _package, Update update);
 }

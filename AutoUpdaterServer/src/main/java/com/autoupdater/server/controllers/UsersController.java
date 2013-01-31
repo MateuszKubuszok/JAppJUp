@@ -92,6 +92,7 @@ public final class UsersController extends AppController {
 
         if (result.hasErrors()) {
             model.addAttribute("newUser", user);
+            model.addAttribute("types", EUserType.values());
 
             logger.debug("Renders request: POST /users/add (validation failed)");
             return "users/new";
@@ -147,6 +148,7 @@ public final class UsersController extends AppController {
 
         if (result.hasErrors()) {
             model.addAttribute("user", user);
+            model.addAttribute("types", EUserType.values());
 
             logger.debug("Renders request: POST /users/edit (validation failed)");
             return "users/edit";

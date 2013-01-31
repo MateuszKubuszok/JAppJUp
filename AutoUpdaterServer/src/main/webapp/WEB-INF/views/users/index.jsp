@@ -1,59 +1,56 @@
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html>
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	<title>Users</title>
+	<title><spring:message code="repository.name" /> - <spring:message code="model.user.plural" /></title>
 	<link rel="stylesheet" href="<c:url value="/resources/css/default.css" />" type="text/css" />
 </head>
 <body>
 	<div id="breadcrumbs">
 		<p>
-			<a href="<c:url value="/logout" />">Logout</a>
-			| <a href="<c:url value="/changepw" />">Change Password</a>
-			| <a href="<c:url value="/programs" />">Show Programs</a>
+			<a href="<c:url value="/logout" />"><spring:message code="navigation.logout" /></a>
+			| <a href="<c:url value="/changepw" />"><spring:message code="navigation.changepw" /></a>
+			| <a href="<c:url value="/programs" />"><spring:message code="navigation.programs" /></a>
 		</p>
 		<p>
-			<c:url var="addUrl" value="/users/add" />
-			<a href="${addUrl}">Add new User</a>
+			<a href="<c:url value="/users/add" />"><spring:message code="navigation.user.add" /></a>
 		</p>
 	</div>
 	
-	<h1>Users</h1>
+	<h1><spring:message code="model.user.plural" /></h1>
 	
 	<c:choose>
 		<c:when test="${not empty users}">
 			<table>
 				<thead>
 					<tr>
-						<th>Full Name</th>
-						<th>Username</th>
-						<th>Admin Privileges</th>
-						<th>Package Admin Privileges</th>
-						<th colspan="2">Manage</th>
+						<th><spring:message code="model.user.name" /></th>
+						<th><spring:message code="model.user.username" /></th>
+						<th><spring:message code="model.user.admin" /></th>
+						<th><spring:message code="model.user.repoAdmin" /></th>
+						<th colspan="2"><spring:message code="navigation.manage" /></th>
 					</tr>
 				</thead>
 				<tbody>
 					<c:forEach items="${users}" var="user">
 						<tr>
-							<td><c:out value="${user.name}" /></td>
-							<td><c:out value="${user.username}" /></td>
-							<td><c:out value="${user.admin}" /></td>
-							<td><c:out value="${user.packageAdmin}" /></td>
-							<c:url var="editUrl" value="/users/edit/${user.id}" />
-							<td><a href="${editUrl}">Edit</a></td>
-							<c:url var="deleteUrl" value="/users/delete/${user.id}" />
-							<td><a href="${deleteUrl}">Delete</a></td>
+							<td>${user.name}</td>
+							<td>${user.username}</td>
+							<td>${user.admin}</td>
+							<td>${user.packageAdmin}</td>
+							<td><a href="<c:url value="/users/edit/${user.id}" />"><spring:message code="navigation.edit" /></a></td>
+							<td><a href="<c:url value="/users/delete/${user.id}" />"><spring:message code="navigation.delete" /></a></td>
 						</tr>
 			  		</c:forEach>
 				</tbody>
 			</table>
 		</c:when>
 		<c:otherwise>
-			There are currently no users in the system.
+			<spring:message code="model.user.none" />
 		</c:otherwise>
 	</c:choose> 
 </body>

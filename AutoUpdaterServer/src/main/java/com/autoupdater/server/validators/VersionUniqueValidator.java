@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 import com.autoupdater.server.constraints.VersionUnique;
 import com.autoupdater.server.models.Package;
 import com.autoupdater.server.models.Update;
-import com.autoupdater.server.services.PackageService;
+import com.autoupdater.server.services.UpdateService;
 
 /**
  * Used for validating correctness of a version uniqueness.
@@ -17,10 +17,10 @@ import com.autoupdater.server.services.PackageService;
 @Component
 public class VersionUniqueValidator implements ConstraintValidator<VersionUnique, Update> {
     /**
-     * PackageService instance.
+     * UpdateService instance.
      */
     @Autowired
-    private PackageService packageService;
+    private UpdateService updateService;
 
     @Override
     public void initialize(VersionUnique constraintAnnotation) {
@@ -37,25 +37,6 @@ public class VersionUniqueValidator implements ConstraintValidator<VersionUnique
         if (_package == null)
             return true;
 
-        for (Update checkedUpdate : _package.getUpdates())
-            if (updatesVersionIsOccupied(update, checkedUpdate))
-                return false;
-
-        return true;
-    }
-
-    /**
-     * Whether updates occupy the same version number and version type.
-     * 
-     * @param update1
-     *            some update
-     * @param update2
-     *            some other update
-     * @return true if both are/aren't development version
-     */
-    private boolean updatesVersionIsOccupied(Update update1, Update update2) {
-        return update1 != null && update2 != null
-                && update1.isDevelopmentVersion() == update2.isDevelopmentVersion()
-                && update1.getVersion().equals(update2.getVersion());
+        return updateService.checkIfVersionAvailableForPackage(_package, update);
     }
 }

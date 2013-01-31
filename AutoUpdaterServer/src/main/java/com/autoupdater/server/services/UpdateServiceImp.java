@@ -109,4 +109,21 @@ public class UpdateServiceImp extends AbstractHibernateService implements Update
         logger.debug("Found Updates for Package: " + updates.size());
         return updates;
     }
+
+	@Override
+	public boolean checkIfVersionAvailableForPackage(Package _package,
+			Update update) {
+		logger.debug("Attempting to check version availability for Update: " + update + ", for Package: " + _package);
+		
+		boolean versionAvailable = getSession().createCriteria(Update.class).add(Restrictions.eq("thePackage", _package))
+				.add(Restrictions.eq("major", update.getMajor()))
+				.add(Restrictions.eq("minor", update.getMinor()))
+				.add(Restrictions.eq("release", update.getRelease()))
+				.add(Restrictions.eq("nightly", update.getNightly()))
+				.add(Restrictions.eq("developmentVersion", update.isDevelopmentVersion())).list().isEmpty();
+		
+		logger.debug("Found version availability for Update: " + update + ", for Package: "
+				+ _package + ": " + versionAvailable);
+		return versionAvailable;
+	}
 }

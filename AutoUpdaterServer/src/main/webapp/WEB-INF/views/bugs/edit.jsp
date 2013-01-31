@@ -20,13 +20,13 @@
 	<h1><spring:message code="model.package.edit" arguments="${bug.program.name}" /></h1>
 	 
 	<fieldset>
-		<legend>Edit Bug</legend>
+		<legend><spring:message code="model.package.edit" arguments="${bug.program.name}" /></legend>
 		<c:url value="/bugs/edit" var="actionURL" />
 		<form:form modelAttribute="bug" method="POST" commandName="bug" action="${actionURL}">
 			<p>
 				<form:label path="description" for="description"><spring:message code="model.bug.description" />:</form:label>
 				<form:errors path="description" class="error" />
-				<form:textarea path="description" />
+				<form:textarea path="description" cssErrorClass="errorField" />
 			</p>
 			<p>
 				<input name="send" type="submit" value="<spring:message code="navigation.edit" />" />

@@ -26,7 +26,7 @@
 			<p>
 				<form:label path="name" for="name"><spring:message code="model.package.name" />:</form:label>
 				<form:errors path="name" class="error" />
-				<form:input path="name"/>
+				<form:input path="name" cssErrorClass="errorField" />
 			</p>
 			<p>
 				<input name="send" type="submit" value="<spring:message code="navigation.edit" />" />

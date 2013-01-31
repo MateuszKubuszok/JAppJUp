@@ -3,6 +3,7 @@
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ page session="false" %>
+<?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -26,7 +27,7 @@
 			<p>
 				<form:label path="description" for="description"><spring:message code="model.bug.description"  />:</form:label>
 				<form:errors path="description" class="error" />
-				<form:textarea path="description" />
+				<form:textarea path="description" cssErrorClass="errorField" />
 			</p>
 			<p>
 				<input name="send" type="submit" value="<spring:message code="navigation.add" />" />

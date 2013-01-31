@@ -15,19 +15,16 @@
 			<a href="<c:url value="/logout" />"><spring:message code="navigation.logout" /></a>
 			| <a href="<c:url value="/changepw" />"><spring:message code="navigation.changepw" /></a>
 			<c:if test="${user.admin}">
-				<c:url var="usersUrl" value="/users/" />
-				| <a href="${usersUrl}"><spring:message code="navigation.users" /></a>
+				| <a href="<c:url value="/users/" />"><spring:message code="navigation.users" /></a>
 			</c:if>
 		</p>
 		<p>
-			<c:url var="backUrl" value="/programs" />
-			<a href="${backUrl}"><spring:message code="navigation.programs" /></a> &gt;	
+			<a href="<c:url value="/programs" />"><spring:message code="navigation.programs" /></a>	
 			<c:if test="${not empty program}">
-				<spring:message code="navigation.packages" arguments="${program.name}" />
+				&gt; <spring:message code="navigation.packages" arguments="${program.name}" />
 			</c:if>
 			<c:if test="${user.packageAdmin}">
-				<c:url var="addUrl" value="/packages/add/${program.id}" /> &gt;
-				<a href="${addUrl}"><spring:message code="navigation.package.add" /></a>
+				&gt; <a href="<c:url value="/packages/add/${program.id}" />"><spring:message code="navigation.package.add" /></a>
 			</c:if>
 		</p>
 	</div>
@@ -42,21 +39,18 @@
 						<th><spring:message code="model.package" /></th>
 						<th><spring:message code="model.update.plural" /></th>
 						<c:if test="${user.packageAdmin}">
-						<th colspan="2"><spring:message code="navigation.manage" /></th>
+							<th colspan="2"><spring:message code="navigation.manage" /></th>
 						</c:if>
 					</tr>
 				</thead>
 				<tbody>
 					<c:forEach items="${packages}" var="_package">
 						<tr>
-							<td><c:out value="${_package.name}" /></td>
-							<c:url var="updatesUrl" value="/updates/${_package.id}" />
-							<td><a href="${updatesUrl}"><spring:message code="model.update.show" /></a></td>
+							<td>${_package.name}</td>
+							<td><a href="<c:url value="/updates/${_package.id}" />"><spring:message code="model.update.show" /></a></td>
 							<c:if test="${user.packageAdmin}">
-							<c:url var="editUrl" value="/packages/edit/${_package.id}" />
-							<td><a href="${editUrl}"><spring:message code="navigation.edit" /></a></td>
-							<c:url var="deleteUrl" value="/packages/delete/${_package.id}" />
-							<td><a href="${deleteUrl}"><spring:message code="navigation.delete" /></a></td>
+								<td><a href="<c:url value="/packages/edit/${_package.id}" />"><spring:message code="navigation.edit" /></a></td>
+								<td><a href="<c:url value="/packages/delete/${_package.id}" />"><spring:message code="navigation.delete" /></a></td>
 							</c:if>
 						</tr>
 					</c:forEach>
