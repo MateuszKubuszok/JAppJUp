@@ -81,4 +81,28 @@
     
     <!-- Enables @Transactional in context -->
 	<tx:annotation-driven transaction-manager="transactionManager" />
+	
+	
+	<!-- Defines beans that supplies locales -->
+	
+	<!-- Loads messages from properties -->
+	<bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+    	<property name="basename" value="classpath:messages" />
+    	<property name="defaultEncoding" value="UTF-8"/>
+	</bean>
+
+ 	<!-- Reloads languages after locale change -->
+	<bean id="localeChangeInterceptor" class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
+		<property name="paramName" value="lang" />
+	</bean>
+ 
+	<!-- Resolves current locale -->
+	<bean id="localeResolver" class="org.springframework.web.servlet.i18n.CookieLocaleResolver">
+		<property name="defaultLocale" value="en"/>
+	</bean>
+
+	<!-- Mapping -->
+	<bean id="handlerMapping" class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping">
+		<property name="interceptors" ref="localeChangeInterceptor" />
+	</bean>
 </beans>

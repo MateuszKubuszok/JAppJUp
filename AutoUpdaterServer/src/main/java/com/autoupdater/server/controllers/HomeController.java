@@ -28,12 +28,11 @@ public final class HomeController extends AppController {
         logger.debug("Received request: GET /");
 
         if (CurrentUserUtil.getUsername() != null) {
-            logger.debug("Received request: GET /");
+            logger.debug("Redirect to: GET /programs");
             return "redirect:/programs";
         }
-
-        logger.debug("Renders request: GET /");
-        return "home/index";
+        logger.debug("Redirect to: GET /sign_in");
+        return "redirect:/programs";
     }
 
 }
