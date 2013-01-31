@@ -36,7 +36,7 @@ Development
  * distinguish between client's update and anothers program's update,
  * introduce the ability to handle JARs (obtaining java's process ID by usage of
  its *run path*),
- * improve design of a repository, and introduce AJAX validation,
+ * introduce AJAX validation into server,
  * ensure that repository will not blow server into space,
  * introduce functionality to install archival updates and *lock* updates (so
  that program won't be updated to version higher or equal to some defined),

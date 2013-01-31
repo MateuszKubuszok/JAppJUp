@@ -1,5 +1,6 @@
 package com.autoupdater.client.models;
 
+import static com.autoupdater.client.models.EUpdateStatus.NOT_SELECTED;
 import static com.autoupdater.client.models.Models.equal;
 import static com.autoupdater.client.utils.comparables.Comparables.compare;
 import static com.google.common.base.Objects.equal;
@@ -38,7 +39,7 @@ public class Update extends ObservableService<EUpdateStatus> implements IModel<U
     private String uniqueIdentifier;
 
     Update() {
-        this.status = EUpdateStatus.NOT_SELECTED;
+        status = NOT_SELECTED;
     }
 
     /**
