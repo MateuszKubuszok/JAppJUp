@@ -32,12 +32,11 @@
 			<table>
 				<thead>
 					<tr>
-						<th>Program Name</th>
-						<th></th>
-						<th></th>
+						<th>Program</th>
+						<th>Packages</th>
+						<th>Bugs</th>
 						<c:if test="${user.packageAdmin}">
-						<th></th>
-						<th></th>
+						<th colspan="2">Manage</th>
 						</c:if>
 					</tr>
 				</thead>

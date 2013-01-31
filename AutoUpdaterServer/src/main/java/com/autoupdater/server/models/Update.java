@@ -18,6 +18,7 @@ import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import com.autoupdater.server.constraints.FileAttatched;
 import com.autoupdater.server.constraints.UpdaterCommandDefined;
 import com.autoupdater.server.constraints.VersionNumberCorrect;
+import com.autoupdater.server.constraints.VersionUnique;
 
 /**
  * Model of Update, used to store information about Packages' Updates.
@@ -29,6 +30,7 @@ import com.autoupdater.server.constraints.VersionNumberCorrect;
 @FileAttatched
 @UpdaterCommandDefined
 @VersionNumberCorrect
+@VersionUnique
 public class Update {
     @Id
     @GeneratedValue

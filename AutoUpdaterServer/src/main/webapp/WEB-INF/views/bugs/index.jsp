@@ -40,8 +40,7 @@
 					<tr>
 						<th>Bug</th>
 						<c:if test="${user.packageAdmin}">
-						<th></th>
-						<th></th>
+						<th colspan="2">Manage</th>
 						</c:if>
 					</tr>
 				</thead>

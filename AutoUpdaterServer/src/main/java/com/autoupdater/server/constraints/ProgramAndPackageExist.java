@@ -9,17 +9,21 @@ import java.lang.annotation.Target;
 import javax.validation.Constraint;
 import javax.validation.Payload;
 
-import com.autoupdater.server.validators.VersionUniqueValidator;
+import com.autoupdater.server.validators.ProgramAndPackageExistValidator;
 
 /**
- * Update's annotation used for validating version uniqueness.
+ * Updates' annotation used for validating presence of file.
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@Constraint(validatedBy = VersionUniqueValidator.class)
-public @interface VersionNumberCorrect {
-    String message() default "{com.autoupdater.server.constraints.VersionUnique.message}";
+@Constraint(validatedBy = ProgramAndPackageExistValidator.class)
+public @interface ProgramAndPackageExist {
+    boolean admin() default false;
+
+    boolean packageAdmin() default false;
+
+    String message() default "{com.autoupdater.server.constraints.ProgramAndPackageExist.message}";
 
     Class<?>[] groups() default {};
 

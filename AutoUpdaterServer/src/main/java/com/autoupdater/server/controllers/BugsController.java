@@ -1,5 +1,8 @@
 package com.autoupdater.server.controllers;
 
+import static org.apache.log4j.Logger.getLogger;
+import static org.springframework.web.bind.annotation.RequestMethod.*;
+
 import javax.validation.Valid;
 
 import org.apache.log4j.Logger;
@@ -11,7 +14,6 @@ import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 import com.autoupdater.server.models.Bug;
@@ -28,7 +30,7 @@ public final class BugsController extends AppController {
     /**
      * Controller's logger.
      */
-    private static Logger logger = Logger.getLogger(BugsController.class);
+    private static final Logger logger = getLogger(BugsController.class);
 
     /**
      * Renders list of bugs.
@@ -42,7 +44,7 @@ public final class BugsController extends AppController {
      *            passed model
      * @return facelet name
      */
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/{id}", method = GET)
     public String index(@PathVariable("id") int programID, Model model) {
         logger.debug("Received request: GET /bugs/" + programID);
 
@@ -66,7 +68,7 @@ public final class BugsController extends AppController {
      *            passed model
      * @return facelet name
      */
-    @RequestMapping(value = "/add/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/add/{id}", method = GET)
     public String createForm(@PathVariable("id") int programID, Model model) {
         logger.debug("Received request: GET /bugs/add/" + programID);
 
@@ -95,7 +97,7 @@ public final class BugsController extends AppController {
      *            passed model
      * @return facelet name or redirect
      */
-    @RequestMapping(value = "/add", method = RequestMethod.POST)
+    @RequestMapping(value = "/add", method = POST)
     public String create(@Valid @ModelAttribute(value = "bug") Bug bug, BindingResult result,
             Model model) {
         logger.debug("Received request: POST /bugs/add");
@@ -124,7 +126,7 @@ public final class BugsController extends AppController {
      *            passed model
      * @return facelet name
      */
-    @RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/edit/{id}", method = GET)
     public String editForm(@PathVariable("id") int id, Model model) {
         logger.debug("Received request: GET /bugs/edit/" + id);
 
@@ -150,7 +152,7 @@ public final class BugsController extends AppController {
      *            passed model
      * @return facelet name
      */
-    @RequestMapping(value = "/edit", method = RequestMethod.POST)
+    @RequestMapping(value = "/edit", method = POST)
     public String edit(@Valid @ModelAttribute("bug") Bug bug, BindingResult result, Model model) {
         logger.debug("Received request: POST /bugs/edit");
 
@@ -179,7 +181,7 @@ public final class BugsController extends AppController {
      *            passed model
      * @return facelet name
      */
-    @RequestMapping(value = "/delete/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/delete/{id}", method = GET)
     public String delete(@PathVariable("id") int id, Model model) {
         logger.debug("Received request: GET /bugs/delete/" + id);
 

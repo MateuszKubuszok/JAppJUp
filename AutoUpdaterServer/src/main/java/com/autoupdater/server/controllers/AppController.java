@@ -1,9 +1,12 @@
 package com.autoupdater.server.controllers;
 
+import static org.apache.log4j.Logger.getLogger;
+
 import java.io.IOException;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.autoupdater.server.services.BugService;
@@ -56,6 +59,11 @@ public abstract class AppController {
     protected FileService fileService;
 
     /**
+     * AppController's logger.
+     */
+    private static final Logger logger = getLogger(AppController.class);
+
+    /**
      * Sends error instead of displaying page.
      * 
      * @param response
@@ -69,7 +77,7 @@ public abstract class AppController {
         try {
             response.sendError(errorCode, message);
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error(e);
         }
     }
 }

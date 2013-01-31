@@ -5,7 +5,7 @@
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	<title>Packages</title>
+	<title>Packages for ${program.name}</title>
 	<link rel="stylesheet" href="<c:url value="/resources/css/default.css" />" type="text/css" />
 </head>
 <body>
@@ -31,18 +31,17 @@
 		</p>
 	</div>
 	
-	<h1>Packages</h1>
+	<h1>Packages for ${program.name}</h1>
 	
 	<c:choose>
 		<c:when test="${not empty packages}">
 			<table>
 				<thead>
 					<tr>
-						<th>Package Name</th>
-						<th></th>
+						<th>Package</th>
+						<th>Updates</th>
 						<c:if test="${user.packageAdmin}">
-						<th></th>
-						<th></th>
+						<th colspan="2">Manage</th>
 						</c:if>
 					</tr>
 				</thead>

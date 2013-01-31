@@ -33,8 +33,7 @@
 						<th>Username</th>
 						<th>Admin Privileges</th>
 						<th>Package Admin Privileges</th>
-						<th></th>
-						<th></th>
+						<th colspan="2">Manage</th>
 					</tr>
 				</thead>
 				<tbody>

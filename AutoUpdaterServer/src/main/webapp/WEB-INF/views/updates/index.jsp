@@ -5,7 +5,7 @@
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	<title>Updates</title>
+	<title>Updates for ${thePackage.program.name}/${thePackage.name}</title>
 	<link rel="stylesheet" href="<c:url value="/resources/css/default.css" />" type="text/css" />
 </head>
 <body>
@@ -31,7 +31,7 @@
 		</p>
 	</div>
 	
-	<h1>Updates</h1>
+	<h1>Updates for ${thePackage.program.name}/${thePackage.name}</h1>
 	
 	<c:choose>
 		<c:when test="${not empty updates}">
@@ -41,10 +41,11 @@
 						<th>Version</th>
 						<th>Development Version</th>
 						<th>Type</th>
-						<th>Original name/<br />Relative path/<br />Command</th>
+						<th>Original name</th>
+						<th>Relative path</th>
+						<th>Command</th>
 						<th>Changelog</th>
-						<th></th>
-						<th></th>
+						<th colspan="2">Manage</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -53,7 +54,23 @@
 							<td><c:out value="${update.version}" /></td>
 							<td><c:out value="${update.developmentVersion}" /></td>
 							<td><c:out value="${update.type}" /></td>
-							<td><c:out value="${update.fileName}" /><br /><c:out value="${update.relativePath}" /><br /><c:out value="${update.updaterCommand}" /></td>
+							<td><c:out value="${update.fileName}" /></td>
+							<td><c:choose>
+								<c:when test="${empty update.relativePath}">
+									<c:out value="default" />
+								</c:when>
+								<c:otherwise>
+									<c:out value="${update.relativePath}" />
+								</c:otherwise>
+							</c:choose></td>
+							<td><c:choose>
+								<c:when test="${empty update.updaterCommand}">
+									<c:out value="none" />
+								</c:when>
+								<c:otherwise>
+									<c:out value="${update.updaterCommand}" />
+								</c:otherwise>
+							</c:choose></td>
 							<td><c:out value="${update.changelog}" /></td>
 							<c:url value="/updates/edit/${update.id}" var="editURL" />
 							<td><a href="${editURL}">Edit</a></td>

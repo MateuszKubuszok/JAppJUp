@@ -7,15 +7,21 @@
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	<title>Password Change</title>
+	<title>Password changed</title>
 	<link rel="stylesheet" href="<c:url value="/resources/css/default.css" />" type="text/css" />
 </head>
 <body>
+	<div id="breadcrumbs">
+		<p>
+			<a href="<c:url value="/logout" />">Logout</a>
+			| <a href="<c:url value="/changepw" />">Change Password</a>
+			| <a href="<c:url value="/users" />">Show System Users</a>
+			| <a href="<c:url value="/programs" />">Show Programs</a>
+		</p>
+	</div>
+
+	<h1>Password changed</h1>
  
-<p>You have successfully changed your password</p>
- 
-<c:url var="mainUrl" value="/programs" />
-<p>Return to <a href="${mainUrl}">Main Programs List</a></p>
- 
+	<p>You have successfully changed your password</p>
 </body>
 </html>

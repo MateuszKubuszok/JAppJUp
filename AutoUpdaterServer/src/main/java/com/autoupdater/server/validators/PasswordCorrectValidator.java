@@ -1,10 +1,11 @@
 package com.autoupdater.server.validators;
 
+import static org.springframework.security.crypto.bcrypt.BCrypt.checkpw;
+
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Component;
 
 import com.autoupdater.server.commands.PasswordEditionCommand;
@@ -38,8 +39,6 @@ public class PasswordCorrectValidator implements
 
         if (user == null)
             return false;
-        return BCrypt
-                .checkpw(passwordEditionCommand.getCurrentPassword(), user.getHashedPassword());
+        return checkpw(passwordEditionCommand.getCurrentPassword(), user.getHashedPassword());
     }
-
 }

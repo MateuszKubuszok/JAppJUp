@@ -10,34 +10,41 @@
 	<link rel="stylesheet" href="<c:url value="/resources/css/default.css" />" type="text/css" />
 </head>
 <body>
- 
-<h1>Change Your Password</h1>
- 
-<c:url var="saveUrl" value="/users/changepw" />
-<fieldset>
-	<legend>Change Password</legend>
-	<form:form modelAttribute="passwordEditionCommand" method="POST" commandName="passwordEditionCommand">
-		<form:hidden path="userId" />
+	<div id="breadcrumbs">
 		<p>
-			<form:label path="currentPassword" for="currentPassword">Current Password:</form:label>
-			<form:errors path="currentPassword" class="error" />
-			<form:password path="currentPassword" showPassword="false" />
+			<a href="<c:url value="/logout" />">Logout</a>
+			| <a href="<c:url value="/users" />">Show System Users</a>
+			| <a href="<c:url value="/programs" />">Show Programs</a>
 		</p>
-		<p>
-			<form:label path="password" for="password">New Password:</form:label>
-			<form:errors path="password" class="error" />
-			<form:password path="password" showPassword="false" />
-		</p>
-		<p>
-			<form:label path="confirmPassword" for="confirmPassword">Confirm New Password:</form:label>
-			<form:errors path="confirmPassword" class="error" />
-			<form:password path="confirmPassword" showPassword="false" />
-		</p>	
-		<p>
-			<input name="send" type="submit" value="Save" />
-		</p>
-	</form:form>
-</fieldset>
+	</div>
  
+	<h1>Change Your Password</h1>
+	 
+	<c:url var="saveUrl" value="/users/changepw" />
+	<fieldset>
+		<legend>Change Password</legend>
+		<form:form modelAttribute="passwordEditionCommand" method="POST" commandName="passwordEditionCommand">
+			<form:hidden path="userId" />
+			<p>
+				<form:label path="currentPassword" for="currentPassword">Current Password:</form:label>
+				<form:errors path="currentPassword" class="error" />
+				<form:password path="currentPassword" showPassword="false" />
+			</p>
+			<p>
+				<form:label path="password" for="password">New Password:</form:label>
+				<form:errors path="password" class="error" />
+				<form:password path="password" showPassword="false" />
+			</p>
+			<p>
+				<form:label path="confirmPassword" for="confirmPassword">Confirm New Password:</form:label>
+				<form:errors path="confirmPassword" class="error" />
+				<form:password path="confirmPassword" showPassword="false" />
+			</p>	
+			<p>
+				<input name="send" type="submit" value="Save" />
+			</p>
+		</form:form>
+	</fieldset>
+
 </body>
 </html>

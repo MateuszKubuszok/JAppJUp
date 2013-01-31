@@ -1,9 +1,11 @@
 package com.autoupdater.server.controllers;
 
+import static org.apache.log4j.Logger.getLogger;
+import static org.springframework.web.bind.annotation.RequestMethod.*;
+
 import javax.validation.Valid;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -11,7 +13,6 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 import com.autoupdater.server.commands.PasswordEditionCommand;
@@ -27,7 +28,7 @@ public final class SignInController extends AppController {
     /**
      * Controller's logger.
      */
-    private static final Logger logger = LoggerFactory.getLogger(SignInController.class);
+    private static final Logger logger = getLogger(SignInController.class);
 
     /**
      * Renders sign in form.
@@ -53,7 +54,7 @@ public final class SignInController extends AppController {
      *            passed user model
      * @return facelet name
      */
-    @RequestMapping(value = "/changepw", method = RequestMethod.GET)
+    @RequestMapping(value = "/changepw", method = GET)
     public String editPasswordForm(Model model) {
         logger.debug("Received request: GET /changepw");
 
@@ -82,7 +83,7 @@ public final class SignInController extends AppController {
      *            passed model
      * @return facelet name
      */
-    @RequestMapping(value = "/changepw", method = RequestMethod.POST)
+    @RequestMapping(value = "/changepw", method = POST)
     public String editPassword(
             @Valid @ModelAttribute("passwordEditionCommand") PasswordEditionCommand passwordEditionCommand,
             BindingResult result, @ModelAttribute("user") User user, Model model) {

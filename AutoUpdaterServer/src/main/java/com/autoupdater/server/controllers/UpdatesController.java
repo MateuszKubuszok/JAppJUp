@@ -1,5 +1,8 @@
 package com.autoupdater.server.controllers;
 
+import static org.apache.log4j.Logger.getLogger;
+import static org.springframework.web.bind.annotation.RequestMethod.*;
+
 import java.io.IOException;
 
 import javax.validation.Valid;
@@ -13,7 +16,6 @@ import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 import com.autoupdater.server.models.EUpdateStrategy;
@@ -33,7 +35,7 @@ public final class UpdatesController extends AppController {
     /**
      * Controller's logger.
      */
-    private static Logger logger = Logger.getLogger(UpdatesController.class);
+    private static final Logger logger = getLogger(UpdatesController.class);
 
     /**
      * Renders list of packages.
@@ -47,7 +49,7 @@ public final class UpdatesController extends AppController {
      *            passed updates model
      * @return facelet name
      */
-    @RequestMapping(value = "/{packageID}", method = RequestMethod.GET)
+    @RequestMapping(value = "/{packageID}", method = GET)
     public String index(@PathVariable("packageID") int packageID, Model model) {
         logger.debug("Received request: GET /updates/" + packageID);
 
@@ -73,7 +75,7 @@ public final class UpdatesController extends AppController {
      *            passed update model
      * @return facelet name
      */
-    @RequestMapping(value = "/add/{packageID}", method = RequestMethod.GET)
+    @RequestMapping(value = "/add/{packageID}", method = GET)
     public String createForm(@PathVariable("packageID") int packageID, Model model) {
         logger.debug("Received request: GET /updates/add/" + packageID);
 
@@ -104,7 +106,7 @@ public final class UpdatesController extends AppController {
      *            passed model
      * @return facelet name or redirect
      */
-    @RequestMapping(value = "/add", method = RequestMethod.POST)
+    @RequestMapping(value = "/add", method = POST)
     public String create(@Valid @ModelAttribute(value = "newUpdate") Update update,
             BindingResult result, Model model) {
         logger.debug("Received request: POST /updates/add");
@@ -143,7 +145,7 @@ public final class UpdatesController extends AppController {
      *            passed updates model
      * @return facelet name
      */
-    @RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/edit/{id}", method = GET)
     public String editForm(@PathVariable("id") int id, Model model) {
         logger.debug("Received request: GET /updates/edit/" + id);
 
@@ -170,7 +172,7 @@ public final class UpdatesController extends AppController {
      *            passed model
      * @return facelet name or redirect
      */
-    @RequestMapping(value = "/edit", method = RequestMethod.POST)
+    @RequestMapping(value = "/edit", method = POST)
     public String edit(@Valid @ModelAttribute(value = "update") Update update,
             BindingResult result, Model model) {
         logger.debug("Received request: POST /updates/edit");
@@ -198,7 +200,7 @@ public final class UpdatesController extends AppController {
      *            model
      * @return facelet name
      */
-    @RequestMapping(value = "/delete/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/delete/{id}", method = GET)
     public String delete(@PathVariable("id") int id, Model model) {
         logger.debug("Received request: GET /updates/delete/" + id);
 
