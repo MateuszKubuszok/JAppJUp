@@ -7,9 +7,12 @@
 <head>
 	<title>Add Program</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<link rel="stylesheet" href="<c:url value="/resources/css/default.css" />" type="text/css" />
 </head>
 <body>
-	<a href="<c:url value="/programs" />">Back</a>
+	<div id="breadcrumbs">
+		<a href="<c:url value="/programs" />">Back</a>
+	</div>
 
 	<h1>Add Program</h1>
 	
@@ -17,8 +20,8 @@
 	<legend>New Program</legend>
 	<form:form modelAttribute="program" method="POST" commandName="program">
 		<p>
-			<form:errors path="name" cssStyle="color : red;" />
 			<form:label path="name" for="name">Program Name:</form:label>
+			<form:errors path="name" class="error" />
 			<form:input path="name" />
 		</p>
 		<p>

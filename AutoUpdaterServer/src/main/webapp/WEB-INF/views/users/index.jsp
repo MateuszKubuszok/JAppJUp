@@ -5,22 +5,29 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<title>Users</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>Users</title>
+	<link rel="stylesheet" href="<c:url value="/resources/css/default.css" />" type="text/css" />
 </head>
 <body>
-	<a href="<c:url value="/logout" />">Logout</a> |
-	<a href="<c:url value="/changepw" />">Change Password</a> |
-	<a href="<c:url value="/programs" />">Show Programs</a>
-	<c:url var="addUrl" value="/users/add" /> |
-	<a href="${addUrl}">Add new User</a>
+	<div id="breadcrumbs">
+		<p>
+			<a href="<c:url value="/logout" />">Logout</a>
+			| <a href="<c:url value="/changepw" />">Change Password</a>
+			| <a href="<c:url value="/programs" />">Show Programs</a>
+		</p>
+		<p>
+			<c:url var="addUrl" value="/users/add" />
+			<a href="${addUrl}">Add new User</a>
+		</p>
+	</div>
 	
 	<h1>Users</h1>
 	
 	<c:choose>
 		<c:when test="${not empty users}">
-			<table style="border: 1px solid; width: 800px; text-align:center">
-				<thead style="background:#fcf">
+			<table>
+				<thead>
 					<tr>
 						<th>Full Name</th>
 						<th>Username</th>

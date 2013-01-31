@@ -7,9 +7,12 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	<title>Edit Program</title>
+	<link rel="stylesheet" href="<c:url value="/resources/css/default.css" />" type="text/css" />
 </head>
 <body>
-	<a href="<c:url value="/programs" />">Back</a>
+	<div id="breadcrumbs">
+		<a href="<c:url value="/programs" />">Back</a>
+	</div>
 
 	<h1>Edit Program Data</h1>
 	
@@ -18,8 +21,8 @@
 		<c:url value="/programs/edit" var="actionURL" />
 		<form:form modelAttribute="program" method="POST" commandName="program" action="${actionURL}">
 			<p>
-				<form:errors path="name" cssStyle="color : red;" />
 				<form:label path="name" for="name">Program Name:</form:label>
+				<form:errors path="name" class="error" />
 				<form:input path="name" value="${program.name}"/>
 			</p>
 			<p>

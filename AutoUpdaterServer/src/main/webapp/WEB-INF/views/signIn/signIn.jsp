@@ -7,6 +7,7 @@
 <head>
 	<title>Sign in</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<link rel="stylesheet" href="<c:url value="/resources/css/default.css" />" type="text/css" />
 </head>
 <body>
 <h1>Sign in! </h1>

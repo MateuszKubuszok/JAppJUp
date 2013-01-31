@@ -6,25 +6,31 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	<title>Programs</title>
+	<link rel="stylesheet" href="<c:url value="/resources/css/default.css" />" type="text/css" />
 </head>
 <body>
-	<a href="<c:url value="/logout" />">Logout</a> |
-	<a href="<c:url value="/changepw" />">Change Password</a>
-	<c:if test="${user.admin}">
-		<c:url var="usersUrl" value="/users/" /> |
-		<a href="${usersUrl}">Show System Users</a>
-	</c:if>
-	<br />
-	<c:if test="${user.packageAdmin}">
-		<c:url var="addUrl" value="/programs/add" />
-		<a href="${addUrl}">Add new Program</a>
-	</c:if>
+	<div id="breadcrumbs">
+		<p>
+			<a href="<c:url value="/logout" />">Logout</a> |
+			<a href="<c:url value="/changepw" />">Change Password</a>
+			<c:if test="${user.admin}">
+				<c:url var="usersUrl" value="/users/" /> |
+				<a href="${usersUrl}">Show System Users</a>
+			</c:if>
+		</p>
+		<c:if test="${user.packageAdmin}">
+		<p>
+			<c:url var="addUrl" value="/programs/add" />
+			<a href="${addUrl}">Add new Program</a>
+		</p>
+		</c:if>
+	</div>
 	
 	<h1>Programs</h1>
 	<c:choose>
 		<c:when test="${not empty programs}">
-			<table style="border: 1px solid; width: 400px; text-align:center">
-				<thead style="background:#fcf">
+			<table>
+				<thead>
 					<tr>
 						<th>Program Name</th>
 						<th></th>

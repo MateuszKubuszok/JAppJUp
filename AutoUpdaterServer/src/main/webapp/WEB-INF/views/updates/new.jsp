@@ -7,9 +7,14 @@
 <head>
 	<title>Add New Update</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<link rel="stylesheet" href="<c:url value="/resources/css/default.css" />" type="text/css" />
 </head>
 <body>
-	<a href="<c:url value="/updates/${newUpdate.thePackage.id}" />">Back</a>
+	<div id="breadcrumbs">
+		<p>
+			<a href="<c:url value="/updates/${newUpdate.thePackage.id}" />">Back</a>
+		</p>
+	</div>
 
 	<h1>Add New Update for ${newUpdate.thePackage.program.name}/${newUpdate.thePackage.name}</h1>
 	
@@ -18,53 +23,52 @@
 	<c:url value="/updates/add" var="actionURL" />
 	<form:form modelAttribute="newUpdate" method="POST" enctype="multipart/form-data" commandName="newUpdate" action="${actionURL}">
 		<p>
-			<form:errors path="version" cssStyle="color : red;" />
 			<form:label path="version" for="version">Version:</form:label>
+			<form:errors path="version" class="error" />
 			<form:input path="version"/>
 		</p>
 		<p>
-			<form:errors path="developmentVersion" cssStyle="color : red;" />
 			<form:label path="developmentVersion" for="developmentVersion">Development version:</form:label>
+			<form:errors path="developmentVersion" class="error" />
 			<form:checkbox path="developmentVersion" />
 		</p>
 		<p>
-			<form:errors path="changelog" cssStyle="color : red;" />
 			<form:label path="changelog" for="changelog">Changelog:</form:label>
+			<form:errors path="changelog" class="error" />
 			<form:textarea path="changelog" rows="10" />
 		</p>
 		<p>
-			<form:errors path="type" cssStyle="color : red;" />
 			<form:label path="type" for="type">Type:</form:label>
+			<form:errors path="type" class="error" />
 			<form:select path="type">
 	        <form:options items="${updateTypes}" />
 			</form:select>
 		</p>
 		<p>
-			<form:errors path="file" cssStyle="color : red;" />
 			<form:label for="file" path="file">File:</form:label>
+			<form:errors path="file" class="error" />
 	        <form:input path="file" type="file" />
 		</p>
 		<p>
-			<form:errors path="relativePath" cssStyle="color : red;" />
 			<form:label path="relativePath" for="relativePath">Path to extract/copy update relative to programs main directory (optional):</form:label>
+			<form:errors path="relativePath" class="error" />
 			<form:input path="relativePath" />
 		</p>
 		<p>
-			<form:errors path="updaterCommand" cssStyle="color : red;" />
 			<form:label path="updaterCommand" for="updaterCommand">Command that should be called: after Unzip/Copy (optional) or as Execution command (required):</form:label>
+			<form:errors path="updaterCommand" class="error" />
 			<form:input path="updaterCommand" />
-			<br />
-			Allowed variables:
-			<ul>
-				<li><b>{F}</b> - original filename</li>
-				<li><b>{U}</b> - absolute path to uploaded file on Client's platform</li>
-				<li><b>{I}</b> - program's installation directory</li>
-				<li><b>{R}</b> - relative path (defined above)</li>
-				<li><b>{T}</b> - target directory (installation_directory / relative_path)</li>
-			</ul>
 		</p>
+		<p>Allowed variables:</p>
+		<ul>
+			<li><b>{F}</b> - original filename</li>
+			<li><b>{U}</b> - absolute path to uploaded file on Client's platform</li>
+			<li><b>{I}</b> - program's installation directory</li>
+			<li><b>{R}</b> - relative path (defined above)</li>
+			<li><b>{T}</b> - target directory (installation_directory / relative_path)</li>
+		</ul>
 		<p>
-			<input name="send" type="submit" value="Send" />
+			<input name="send" type="submit" value="Save" />
 		</p>
 	</form:form>
 	</fieldset>

@@ -50,7 +50,7 @@ public final class BugsController extends AppController {
 
         model.addAttribute("user", userService.findByUsername(CurrentUserUtil.getUsername()));
         model.addAttribute("bugs", program != null ? program.getBugs() : bugService.findAll());
-        model.addAttribute("programID", programID);
+        model.addAttribute("program", program);
 
         logger.debug("Renders request: GET /bugs/" + programID);
         return "bugs/index";

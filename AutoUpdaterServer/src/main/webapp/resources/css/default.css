@@ -1,0 +1,99 @@
+/* fonts and colors */
+* {
+	color: #000;
+	font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+}
+a {
+	border-bottom: 1px dashed #000;
+	color: #777;
+	text-decoration: none;
+}
+a:hover, a:focus {
+	color: #000;
+	border-bottom-color: #777;
+}
+
+h1, h2, h3, h4, h5, h6 { border-bottom: 1px solid #777; }
+
+body { font-size: 10pt; }
+
+/* breadcrumbs */
+#breadcrumbs {
+	background-color: #efefef;
+	border-bottom: 5px solid #777;
+	left: 0;
+	height: 50px;
+	position: fixed;
+	text-align: right;
+	top: 0;
+	width: 100%;
+}
+#breadcrumbs p {
+	font-size: 8pt;
+	font-weight: bold;
+	margin: 0;
+	padding: 5px 15px 0 0;
+}
+body { margin-top: 55px; }
+
+/* forms */
+fieldset, legend {
+	background-color: #efefef;
+	border: 0;
+	border-radius: 5px;
+	box-shadow: 1px 1px 5px #777;
+}
+fieldset p:after {
+	clear: both;
+	content: ".";
+	display: block;
+	font-size: 0;
+	height: 0;
+	visibility: hidden;
+	width: 0;
+}
+label, legend { font-weight: bold; }
+legend {
+	background-color: #fff;
+	border: 1px solid #777;
+}
+label, .error {
+	clear: left;
+	float: left;
+	font-size: 8pt;
+	width: 250px;
+}
+.error { color: red; }
+input, select, textarea {
+	background-color: #fff;
+	border: 1px solid #777;
+}
+input:not([type]), input[type="text"], input[type="password"], textarea { width: 300px; }
+
+/* tables */
+table {
+	background-color: #efefef;
+	border-spacing: 5px;
+	border-radius: 5px;
+	border-collapse: collapse;
+	box-shadow: 1px 1px 5px #777;
+}
+thead { border-collapse: spacing; }
+th { 
+	border: 0;
+	border-bottom: 1px solid #777;
+	padding: 7px;
+	text-decoration: underline;
+}
+tbody { border-collapse: spacing; }
+td {
+	background-color: #fff;
+	border: 0;
+	margin: 0;
+	padding: 5px;
+}
+td:first-child {
+	background-color: #efefef;
+	border-right: 1px solid #777;
+	font-weight: bold;
+}

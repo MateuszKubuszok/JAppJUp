@@ -5,32 +5,38 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	<title>Bugs</title>
+	<title>Bugs for ${program.name}</title>
+	<link rel="stylesheet" href="<c:url value="/resources/css/default.css" />" type="text/css" />
 </head>
 <body>
-	<a href="<c:url value="/logout" />">Logout</a> |
-	<a href="<c:url value="/changepw" />">Change Password</a> |
-	<c:if test="${user.admin}">
-		<c:url var="usersUrl" value="/users/" /> |
-		<a href="${usersUrl}">Show System Users</a>
-	</c:if>
-	<br />
-	<c:url var="backUrl" value="/programs" />
-	<a href="${backUrl}">Back to Programs List</a> &gt;	
-	<c:if test="${not empty program}">
-		${program.name}'s packages
-	</c:if>	
-	<c:if test="${user.packageAdmin}">	
-		<c:url var="addUrl" value="/bugs/add/${programID}" /> &gt;
-		<a href="${addUrl}">Add new Bug</a>
-	</c:if>
+	<div id="breadcrumbs">
+		<p>
+			<a href="<c:url value="/logout" />">Logout</a>
+			| <a href="<c:url value="/changepw" />">Change Password</a>
+			<c:if test="${user.admin}">
+				<c:url var="usersUrl" value="/users/" />
+				| <a href="${usersUrl}">Show System Users</a>
+			</c:if>
+		</p>
+		<p>
+			<c:url var="backUrl" value="/programs" />
+			<a href="${backUrl}">Back to Programs List</a> &gt;	
+			<c:if test="${not empty program}">
+				${program.name}'s bugs
+			</c:if>	
+			<c:if test="${user.packageAdmin}">	
+				<c:url var="addUrl" value="/bugs/add/${program.id}" /> &gt;
+				<a href="${addUrl}">Add new Bug</a>
+			</c:if>
+		</p>
+	</div>
 	
-	<h1>Bugs</h1>
+	<h1>Bugs for ${program.name}</h1>
 	
 	<c:choose>
 		<c:when test="${not empty bugs}">
-			<table style="border: 1px solid; width: 500px; text-align:center">
-				<thead style="background:#fcf">
+			<table>
+				<thead>
 					<tr>
 						<th>Bug</th>
 						<c:if test="${user.packageAdmin}">

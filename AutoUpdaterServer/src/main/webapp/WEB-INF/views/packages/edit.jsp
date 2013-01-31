@@ -5,21 +5,26 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<title>Edit Package</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>Edit Package for ${_package.program.name}</title>
+	<link rel="stylesheet" href="<c:url value="/resources/css/default.css" />" type="text/css" />
 </head>
 <body>
-	<a href="<c:url value="/packages/${_package.program.id}" />">Back</a>
+	<div id="breadcrumbs">
+		<p>
+			<a href="<c:url value="/packages/${_package.program.id}" />">Back</a>
+		</p>
+	</div>
  
-	<h1>Edit Package Data</h1>
+	<h1>Edit Package for ${_package.program.name}</h1>
 	 
 	<fieldset>
 	<legend>Edit Package</legend>
 	<c:url value="/packages/edit" var="actionURL" />
 	<form:form modelAttribute="_package" method="POST" commandName="_package" action="${actionURL}">
 		<p>
-			<form:errors path="name" cssStyle="color : red;"/>
 			<form:label path="name" for="name">Package Name:</form:label>
+			<form:errors path="name" class="error" />
 			<form:input path="name"/>
 		</p>
 		<p>

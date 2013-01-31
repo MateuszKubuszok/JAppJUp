@@ -4,33 +4,39 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<title>Updates</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>Updates</title>
+	<link rel="stylesheet" href="<c:url value="/resources/css/default.css" />" type="text/css" />
 </head>
 <body>
-	<a href="<c:url value="/logout" />">Logout</a> |
-	<a href="<c:url value="/changepw" />">Change Password</a>
-	<c:if test="${user.admin}">
-		<c:url var="usersUrl" value="/users/" /> |
-		<a href="${usersUrl}">Show System Users</a>
-	</c:if>
-	<br />
-	<c:url var="programsUrl" value="/programs/" />
-	<a href="${programsUrl}">Programs</a> &gt;
-	<c:url var="packagesUrl" value="/packages/${thePackage.program.id}" />
-	<a href="${packagesUrl}">${thePackage.program.name}'s packages</a> &gt;
-	${thePackage.name}'s updates
-	<c:if test="${user.packageAdmin}">
-		<c:url var="newUpdateUrl" value="/updates/add/${thePackage.id}" /> &gt;
-		<a href="${newUpdateUrl}">Add update</a>
-	</c:if>
+	<div id="breadcrumbs">
+		<p>
+			<a href="<c:url value="/logout" />">Logout</a> |
+			<a href="<c:url value="/changepw" />">Change Password</a>
+			<c:if test="${user.admin}">
+				<c:url var="usersUrl" value="/users/" /> |
+				<a href="${usersUrl}">Show System Users</a>
+			</c:if>
+		</p>
+		<p>
+			<c:url var="programsUrl" value="/programs/" />
+			<a href="${programsUrl}">Programs</a> &gt;
+			<c:url var="packagesUrl" value="/packages/${thePackage.program.id}" />
+			<a href="${packagesUrl}">${thePackage.program.name}'s packages</a> &gt;
+			${thePackage.name}'s updates
+			<c:if test="${user.packageAdmin}">
+				<c:url var="newUpdateUrl" value="/updates/add/${thePackage.id}" /> &gt;
+				<a href="${newUpdateUrl}">Add update</a>
+			</c:if>
+		</p>
+	</div>
 	
 	<h1>Updates</h1>
 	
 	<c:choose>
 		<c:when test="${not empty updates}">
-			<table style="border: 1px solid; width: 400px; text-align:center">
-				<thead style="background:#fcf">
+			<table>
+				<thead>
 					<tr>
 						<th>Version</th>
 						<th>Development Version</th>

@@ -7,10 +7,11 @@
 <head>
 	<title>Home</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<link rel="stylesheet" href="<c:url value="/resources/css/default.css" />" type="text/css" />
 </head>
 <body>
-<h1>Welcome to AutoUpdater!</h1>
-<c:url value="/sign_in" var="_SignIn_"/>
- <a href="<c:out value='${_SignIn_}'/>">Sign in</a>
+	<h1>Welcome to AutoUpdater!</h1>
+	<c:url value="/sign_in" var="_SignIn_"/>
+	 <a href="<c:out value='${_SignIn_}'/>">Sign in</a>
 </body>
 </html>
