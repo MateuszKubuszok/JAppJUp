@@ -16,11 +16,11 @@ public class ExecuteCommandGenerator extends UnzipCommandGenerator {
 
     protected String translateCommand(Update update, ProgramSettings programSettings) {
         String command = update.getCommand();
-        command = command.replaceAll("{F}", update.getOriginalName());
-        command = command.replaceAll("{U}", update.getFile().getAbsolutePath());
-        command = command.replaceAll("{T}", calculateTarget(programSettings, update));
-        command = command.replaceAll("{I}", programSettings.getPathToProgramDirectory());
-        command = command.replaceAll("{R}", update.getRelativePath());
+        command = command.replace("{F}", update.getOriginalName());
+        command = command.replace("{U}", update.getFile().getAbsolutePath());
+        command = command.replace("{T}", calculateTarget(programSettings, update));
+        command = command.replace("{I}", programSettings.getPathToProgramDirectory());
+        command = command.replace("{R}", update.getRelativePath());
         return command;
     }
 }
