@@ -78,7 +78,6 @@ namespace UACHandler
             psInfo.FileName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "UACPerformer.exe");
             // secures format of commands (escapes quotations and slashes)
             psInfo.Arguments = parseArguments(commands);
-            Console.Error.WriteLine(psInfo.Arguments);
             // ensures no new window would be created during elevation
             psInfo.CreateNoWindow = true;
             psInfo.UseShellExecute = true;

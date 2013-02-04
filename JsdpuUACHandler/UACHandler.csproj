@@ -29,9 +29,12 @@
     <DebugType>none</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>..\JSDPU\resources\net\jsdpu\resources\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
+    <DefineConstants>
+    </DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
   </PropertyGroup>
   <PropertyGroup />
   <PropertyGroup />

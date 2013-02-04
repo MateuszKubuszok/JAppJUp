@@ -45,12 +45,14 @@
     <DebugType>none</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>..\JSDPU\resources\net\jsdpu\resources\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
+    <DefineConstants>
+    </DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <LangVersion>ISO-2</LangVersion>
     <DebugSymbols>false</DebugSymbols>
     <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject>UACPerformer.Executor</StartupObject>
