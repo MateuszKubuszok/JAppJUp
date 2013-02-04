@@ -2,8 +2,7 @@ package net.jsdpu.process.executors;
 
 import static com.google.common.base.Strings.repeat;
 import static java.lang.Math.max;
-import static java.util.regex.Pattern.compile;
-import static java.util.regex.Pattern.quote;
+import static java.util.regex.Pattern.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,39 +34,40 @@ import com.google.common.base.Joiner;
  * @see net.jsdpu.process.executors.AbstractProcessExecutor
  */
 public class Commands {
-    private static Joiner argJoiner = Joiner.on(" ");
+    private static final Joiner argJoiner = Joiner.on(" ");
 
     /**
      * Quotation mark for Pattern.
      */
-    private static String qm = quote("\"");
+    private static final String qm = quote("\"");
     /**
      * Slash for Pattern.
      */
-    private static String s = quote("\\");
+    private static final String s = quote("\\");
 
     /**
      * Starting and ending with quotation mark with no quotation mark
      * not-escaped in the middle.
      */
-    private static Pattern singleWrapped = compile("^" + qm + "(" + s + qm + "|[^" + qm + "])*"
-            + qm + "$");
+    private static final Pattern singleWrapped = compile("^" + qm + "(" + s + qm + "|[^" + qm
+            + "])*" + qm + "$");
     /**
      * Only beginning with not-escaped quotation mark.
      */
-    private static Pattern beginningOfGroup = compile("^" + qm);
+    private static final Pattern beginningOfGroup = compile("^" + qm);
     /**
      * Ending with not-escaped quotation mark.
      */
-    private static Pattern endOfGroup = compile("^(.*[^" + s + "])?" + qm + "$");
+    private static final Pattern endOfGroup = compile("^(.*[^" + s + "])?" + qm + "$");
+
     /**
      * All quotation marks with optional escape slash.
      */
-    private static Pattern escapePattern = compile("(" + s + ")*" + qm);
+    private static final Pattern escapePattern = compile("(" + s + ")*" + qm);
     /**
      * Temporally replaces quotation mark during escaping.
      */
-    private static String quoteReplacement = "?*:%";
+    private static final String quoteReplacement = "?*:%";
 
     /**
      * Static class.

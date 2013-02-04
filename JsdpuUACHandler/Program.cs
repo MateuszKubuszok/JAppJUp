@@ -37,9 +37,21 @@ namespace UACHandler
         private static bool errRead = false;
 
         /// <summary>
+        /// Quotation mark for Regex.
+        /// </summary>
+        private static string qm = Regex.Escape("\"");
+        /// <summary>
+        /// Slash mark for Regex.
+        /// </summary>
+        private static string s = Regex.Escape("\\");
+        /// <summary>
+        /// Starting and ending with quotation mark with no quotation mark not-escaped in the middle.
+        /// </summary>
+        private static Regex singleWrapped = new Regex("^" + qm + "(" + s + qm + "|[^" + qm + "])*" + qm + "$");
+        /// <summary>
         /// Pattern used for escaping quotations and slashes.
         /// </summary>
-        private static Regex escapePattern = new Regex("(" + Regex.Escape("\\") + ")*" + Regex.Escape("\""));
+        private static Regex escapePattern = new Regex("(" + s + ")*" + qm);
         /// <summary>
         /// Temporary replacement t for a quotatin mark during escaping.
         /// </summary>
@@ -57,7 +69,7 @@ namespace UACHandler
         /// </param>
         static void Main(string[] commands)
         {
-            // don'r run elevation for no command
+            // don't run elevation for no command
             if (commands.Length == 0)
                 return;
 
@@ -66,6 +78,7 @@ namespace UACHandler
             psInfo.FileName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "UACPerformer.exe");
             // secures format of commands (escapes quotations and slashes)
             psInfo.Arguments = parseArguments(commands);
+            Console.Error.WriteLine(psInfo.Arguments);
             // ensures no new window would be created during elevation
             psInfo.CreateNoWindow = true;
             psInfo.UseShellExecute = true;
@@ -145,17 +158,25 @@ namespace UACHandler
         /// </returns>
         private static string escapeCommand(string command)
         {
-            Match result = escapePattern.Match(command);
-
-            while (result.Success)
+            String result = command;
+            int longestFound = 0;
+            Match matcher = escapePattern.Match(command);
+            while (matcher.Success)
             {
-                int replacementSize = (result.Groups[1].Length + 1) * 2 - 1;
-                string replacement = new String('\\', replacementSize) + quoteReplacement;
-                command = command.Replace(result.Groups[0].Value, replacement);
-                result = escapePattern.Match(command);
+                if (matcher.Groups[1].Length > longestFound)
+                    longestFound = matcher.Groups[1].Length;
+                matcher = matcher.NextMatch();
             }
 
-            return command.Replace(quoteReplacement, "\"");
+            for (int i = longestFound; i >= 0; i--)
+            {
+                int replacementSize = (i + 1) * 2 - 1;
+                String original = new String('\\', i) + '"';
+                String replacement = new String('\\', replacementSize) + quoteReplacement;
+                result = result.Replace(original, replacement);
+            }
+
+            return result.Replace(quoteReplacement, "\"");
         }
 
         /// <summary>
@@ -169,7 +190,9 @@ namespace UACHandler
         /// </returns>
         private static string wrapCommand(String command)
         {
-            return '"' + escapeCommand(command) + '"';
+            if(command.Contains(" ") && !singleWrapped.Match(command).Success)
+                return '"' + escapeCommand(command) + '"';
+            return command;
         }
 
         /// <summary>
@@ -193,7 +216,8 @@ namespace UACHandler
         /// <summary>
         /// Function for new thread responsible for redirecting output into pipe.
         /// </summary>
-        private static void handleOut() {
+        private static void handleOut()
+        {
             NamedPipeServerStream outServer = new NamedPipeServerStream(getIdentifier() + ".out", PipeDirection.In);
             outServer.WaitForConnection();
             redirect(outServer, Console.Out);

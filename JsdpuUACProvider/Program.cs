@@ -145,7 +145,7 @@ namespace UACPerformer {
             }
             catch (Win32Exception ex)
             {
-                Console.Error.WriteLine(ex.Message);
+                errWriter.WriteLine(ex.Message);
                 Environment.ExitCode = -1;
             }
         }

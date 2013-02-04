@@ -18,7 +18,7 @@ public class ExecuteCommandGenerator extends UnzipCommandGenerator {
     }
 
     /**
-     * Translates generic command downloaded from server into actuall local
+     * Translates generic command downloaded from server into actual local
      * command.
      * 
      * @param update
