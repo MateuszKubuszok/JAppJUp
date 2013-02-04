@@ -14,6 +14,9 @@
 <body>
 	<div id="breadcrumbs">
 		<p>
+			<a href="<c:url value="/sign_in" />"><spring:message code="navigation.signIn" /></a>
+		</p>
+		<p>
 			<a href="<c:url value="/api/upload_file" />"><spring:message code="remoteUpload.newFileUpload" /></a>
 		</p>
 	</div>
