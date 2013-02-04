@@ -1,6 +1,7 @@
 package com.autoupdater.client.download;
 
 import static com.autoupdater.client.download.ConnectionConfiguration.DOWNLOAD_DIRECTORY;
+import static com.autoupdater.client.environment.AvailabilityFilter.filterUpdateSelection;
 import static java.io.File.separator;
 
 import java.io.IOException;
@@ -19,7 +20,6 @@ import com.autoupdater.client.download.services.ChangelogInfoDownloadService;
 import com.autoupdater.client.download.services.FileDownloadService;
 import com.autoupdater.client.download.services.PackagesInfoDownloadService;
 import com.autoupdater.client.download.services.UpdateInfoDownloadService;
-import com.autoupdater.client.environment.AvailabilityFilter;
 import com.autoupdater.client.environment.EnvironmentData;
 import com.autoupdater.client.environment.ProgramSettingsNotFoundException;
 import com.autoupdater.client.environment.settings.ProgramSettings;
@@ -301,15 +301,14 @@ public class DownloadServiceFactory {
         FileAggregatedDownloadService aggregatedService = new FileAggregatedDownloadService();
 
         SortedSet<Update> downloadedUpdates = (SortedSet<Update>) Models.addAll(
-                new TreeSet<Update>(), AvailabilityFilter.filterUpdateSelection(requestedUpdates),
+                new TreeSet<Update>(), filterUpdateSelection(requestedUpdates),
                 Models.EComparisionType.LOCAL_TO_SERVER);
 
         for (Update update : downloadedUpdates) {
             ProgramSettings programSettings = environmentData.findProgramSettingsForUpdate(update);
 
             String downloadDestinationPath = DOWNLOAD_DIRECTORY + separator
-                    + programSettings.getServerAddress().hashCode() + separator + update.getID()
-                    + separator + update.getOriginalName();
+                    + programSettings.getServerAddress().hashCode() + separator + update.getID();
 
             HttpURLConnection connection = connectionFactory.getPerProgramConnectionFactory(
                     programSettings).createFileConnection(update.getID());

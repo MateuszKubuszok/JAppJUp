@@ -1,12 +1,14 @@
 package com.autoupdater.client.installation.command.generation;
 
-import java.io.File;
-
+import static java.io.File.separator;
 import net.jsdpu.process.executors.InvalidCommandException;
 
 import com.autoupdater.client.environment.settings.ProgramSettings;
 import com.autoupdater.client.models.Update;
 
+/**
+ * Generates command for unzipped update.
+ */
 public class UnzipCommandGenerator implements ICommandGenerator {
     @Override
     public String[] generateCommand(Update update, String pathToInstaller,
@@ -16,6 +18,15 @@ public class UnzipCommandGenerator implements ICommandGenerator {
                 calculateTarget(programSettings, update) };
     }
 
+    /**
+     * Calculates target directory for an update.
+     * 
+     * @param programSettings
+     *            program's settings
+     * @param update
+     *            udate to install
+     * @return target directory
+     */
     protected String calculateTarget(ProgramSettings programSettings, Update update) {
         String target = programSettings.getPathToProgramDirectory();
 
@@ -29,7 +40,7 @@ public class UnzipCommandGenerator implements ICommandGenerator {
             if (target.endsWith("/") || relativePath.endsWith("\\"))
                 relativePath = relativePath.substring(0, relativePath.length() - 1);
             if (!relativePath.isEmpty())
-                target += File.separator + relativePath;
+                target += separator + relativePath;
         }
 
         return target;

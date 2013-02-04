@@ -114,7 +114,7 @@ public class InstallationRunnable extends ObservableService<InstallationServiceM
         reportChange("Preparing installation commands...", EInstallationStatus.INSTALLING);
         updateExecutionCommands = commandGenerationHelper.getUpdateExecutionCommands(updates);
         reader = environmentData.getSystem().getProcessExecutor()
-                .execute(updateExecutionCommands, true);
+                .executeRoot(updateExecutionCommands);
     }
 
     /**

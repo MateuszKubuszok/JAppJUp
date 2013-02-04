@@ -8,6 +8,7 @@ import net.jsdpu.process.executors.InvalidCommandException;
 
 import com.autoupdater.client.environment.EnvironmentData;
 import com.autoupdater.client.environment.ProgramSettingsNotFoundException;
+import com.autoupdater.client.environment.settings.ProgramSettings;
 import com.autoupdater.client.models.Update;
 
 /**
@@ -68,10 +69,30 @@ class CommandGenerationHelper {
      */
     public String[] getSingleUpdateExecutionCommand(Update update)
             throws ProgramSettingsNotFoundException, InvalidCommandException {
-        return update
-                .getUpdateStrategy()
-                .getCommandGenerator()
-                .generateCommand(update, environmentData.getClientSettings().getPathToInstaller(),
-                        environmentData.findProgramSettingsForUpdate(update));
+        return update.getUpdateStrategy().getCommandGenerator()
+                .generateCommand(update, getPathToInstaller(), findProgramSettings(update));
+    }
+
+    /**
+     * Returns path to installer.
+     * 
+     * @return path to installer
+     */
+    private String getPathToInstaller() {
+        return environmentData.getClientSettings().getPathToInstaller();
+    }
+
+    /**
+     * Returns ProgramSettings for update.
+     * 
+     * @param update
+     *            Update for which we search ProgramSettings
+     * @return ProgramSettings
+     * @throws ProgramSettingsNotFoundException
+     *             thrown if ProgramSettings cannot be found
+     */
+    private ProgramSettings findProgramSettings(Update update)
+            throws ProgramSettingsNotFoundException {
+        return environmentData.findProgramSettingsForUpdate(update);
     }
 }

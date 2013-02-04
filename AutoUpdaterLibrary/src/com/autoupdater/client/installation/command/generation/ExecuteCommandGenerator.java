@@ -5,6 +5,9 @@ import net.jsdpu.process.executors.InvalidCommandException;
 import com.autoupdater.client.environment.settings.ProgramSettings;
 import com.autoupdater.client.models.Update;
 
+/**
+ * Generates update for execute type command.
+ */
 public class ExecuteCommandGenerator extends UnzipCommandGenerator {
     @Override
     public String[] generateCommand(Update update, String pathToInstaller,
@@ -14,6 +17,16 @@ public class ExecuteCommandGenerator extends UnzipCommandGenerator {
                 translateCommand(update, programSettings) };
     }
 
+    /**
+     * Translates generic command downloaded from server into actuall local
+     * command.
+     * 
+     * @param update
+     *            update to execute
+     * @param programSettings
+     *            program's settings
+     * @return actual command
+     */
     protected String translateCommand(Update update, ProgramSettings programSettings) {
         String command = update.getCommand();
         command = command.replace("{F}", update.getOriginalName());
