@@ -1,10 +1,10 @@
 package com.autoupdater.client.download.runnables.post.download.strategies;
 
+import static com.google.common.io.Files.createParentDirs;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
-
-import com.google.common.io.Files;
 
 /**
  * Implementation of DownloadStorageStrategyInterface used for downloading files
@@ -26,8 +26,8 @@ public class FilePostDownloadStrategy implements IPostDownloadStrategy<File> {
      */
     public FilePostDownloadStrategy(File file) throws IOException {
         this.file = file;
-        Files.createParentDirs(file);
-        out = new RandomAccessFile(file, "rws");
+        createParentDirs(file);
+        out = new RandomAccessFile(file, "rw");
     }
 
     /**
@@ -40,7 +40,7 @@ public class FilePostDownloadStrategy implements IPostDownloadStrategy<File> {
      */
     public FilePostDownloadStrategy(String fileDestinationPath) throws IOException {
         file = new File(fileDestinationPath);
-        Files.createParentDirs(file);
+        createParentDirs(file);
         out = new RandomAccessFile(file, "rw");
     }
 
@@ -51,6 +51,10 @@ public class FilePostDownloadStrategy implements IPostDownloadStrategy<File> {
 
     @Override
     public File processDownload() {
+        try {
+            out.close();
+        } catch (IOException e) {
+        }
         return file;
     }
 }

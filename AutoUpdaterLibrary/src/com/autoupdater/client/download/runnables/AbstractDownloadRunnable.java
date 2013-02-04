@@ -1,5 +1,7 @@
 package com.autoupdater.client.download.runnables;
 
+import static java.lang.System.currentTimeMillis;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -195,7 +197,7 @@ public abstract class AbstractDownloadRunnable<Result> extends
         InputStream in = httpURLConnection.getInputStream();
 
         byte[] buffer = new byte[ConnectionConfiguration.MAX_BUFFER_SIZE];
-        long downloadStartTime = System.currentTimeMillis();
+        long downloadStartTime = currentTimeMillis();
 
         reportChange(EDownloadStatus.IN_PROCESS.getMessage(), EDownloadStatus.IN_PROCESS);
 
@@ -206,7 +208,7 @@ public abstract class AbstractDownloadRunnable<Result> extends
             downloadStrategy.write(buffer, bytesRead);
             bytesWritten += bytesRead;
 
-            long elapsedTime = System.currentTimeMillis() - downloadStartTime;
+            long elapsedTime = currentTimeMillis() - downloadStartTime;
             if (elapsedTime > 500)
                 reportProgress(elapsedTime, bytesWritten);
         }

@@ -1,6 +1,7 @@
 package com.autoupdater.gui.adapters.runnables;
 
 import static com.autoupdater.client.environment.AvailabilityFilter.filterUpdateSelection;
+import static com.autoupdater.client.models.VersionNumber.UNVERSIONED;
 import static com.autoupdater.gui.window.EWindowStatus.*;
 
 import java.util.SortedSet;
@@ -75,8 +76,12 @@ public class CheckUpdatesRunnable implements Runnable {
                 SortedSet<Update> notDisplayedUpdates = filterUpdatesNotification(filterUpdateSelection(availableUpdates));
                 StringBuilder builder = new StringBuilder();
                 for (Update update : notDisplayedUpdates)
-                    builder.append(update.getPackage().getProgram()).append('/')
-                            .append(update.getPackage()).append(" -> ")
+                    builder.append(update.getPackage().getProgram())
+                            .append('/')
+                            .append(update.getPackage().getName())
+                            .append(' ')
+                            .append(update.getPackage().getVersionNumber().equals(UNVERSIONED) ? "not installed"
+                                    : update.getPackage().getVersionNumber()).append(" -> ")
                             .append(update.getVersionNumber()).append("\n")
                             .append(update.getChanges()).append("\n");
 
