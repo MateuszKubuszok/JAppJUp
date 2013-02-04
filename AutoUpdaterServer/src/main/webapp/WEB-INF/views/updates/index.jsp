@@ -70,8 +70,8 @@
 								</c:otherwise>
 							</c:choose></td>
 							<td>${update.changelog}</td>
-							<td><a href="<c:url value="/api/download/${update.id}"/>"></a></td>
-							<td><a href="<c:url value="/updates/edit/${update.id}" />"><spring:message code="navigation.edit" /><spring:message code="model.update.download" /></a></td>
+							<td><a href="<c:url value="/api/download/${update.id}"/>"><spring:message code="model.update.download" /></a></td>
+							<td><a href="<c:url value="/updates/edit/${update.id}" />"><spring:message code="navigation.edit" /></a></td>
 							<td><a href="<c:url value="/updates/delete/${update.id}" />"><spring:message code="navigation.delete" /></a></td>
 						</tr>
 					</c:forEach>

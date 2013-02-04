@@ -68,7 +68,7 @@ label, .error {
 input, select, textarea {
 	background-color: #fff;
 	border: 1px solid #777;
-	border-radius: 2px;
+	border-radius: 3px;
 }
 input.errorField, select.errorField, textarea.errorField {
 	background-color: #fee;
