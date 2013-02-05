@@ -1,24 +1,19 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
-<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
 <%@ page session="false" %>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-	<title><spring:message code="repository.name" /> - <spring:message code="model.user.add" /></title>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	<link rel="stylesheet" href="<c:url value="/resources/css/default.css" />" type="text/css" />
-</head>
-<body>
-	<div id="breadcrumbs">
-		<p>
-			<a href="<c:url value="/users" />"><spring:message code="navigation.back" /></a>
-		</p>
-	</div>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
+<%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
+<%@ taglib uri="http://tiles.apache.org/tags-tiles" prefix="tiles" %>
 
-	<h1><spring:message code="model.user.add" /></h1>
-	
+<spring:message code="model.user.add" var="title" />
+
+<c:set var="breadcrumbs">
+	<p>
+		<a href="<c:url value="/users" />"><spring:message code="navigation.back" /></a>
+	</p>
+</c:set>
+
+<c:set var="content">
 	<fieldset>
 		<legend><spring:message code="model.user.add" /></legend>
 		<form:form modelAttribute="newUser" method="POST" commandName="newUser">
@@ -56,5 +51,10 @@
 			</p>
 		</form:form>
 	</fieldset>
-</body>
-</html>
+</c:set>
+
+<tiles:insertDefinition name="default">
+	<tiles:putAttribute name="title" value="${title}" />
+	<tiles:putAttribute name="breadcrumbs" value="${breadcrumbs}" />
+	<tiles:putAttribute name="content" value="${content}" />
+</tiles:insertDefinition>

@@ -44,6 +44,7 @@ fieldset, legend {
 	border-radius: 5px;
 	box-shadow: 1px 1px 5px #777;
 }
+legend { padding: 5px; }
 fieldset p:after {
 	clear: both;
 	content: ".";
@@ -79,19 +80,19 @@ input:not([type]), input[type="text"], input[type="password"], textarea { width:
 
 /* tables */
 table {
-	background-color: #efefef;
+	background-color: #777;
 	border-spacing: 5px;
 	border-radius: 5px;
 	border-collapse: collapse;
 	box-shadow: 1px 1px 5px #777;
 }
 thead { border-collapse: spacing; }
-th { 
+th {
 	border: 0;
-	border-bottom: 1px solid #777;
+	color: #fff;
 	padding: 7px;
-	text-decoration: underline;
 }
+th a { color: #fff; }
 tbody { border-collapse: spacing; }
 td {
 	background-color: #fff;
@@ -105,3 +106,5 @@ td:first-child {
 	border-right: 1px solid #777;
 	font-weight: bold;
 }
+tr:last-child td:first-child { border-radius:  0 0 0 5px; }
+tr:last-child td:last-child { border-radius:  0 0 5px 0; }

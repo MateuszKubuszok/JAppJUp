@@ -86,16 +86,38 @@
 		  	<artifactId>spring-security-web</artifactId>  
 		  	<version>${spring.security.version}</version> 
 		</dependency> 
-		<dependency> 
-		  	<groupId>org.springframework.security</groupId>  
-		  	<artifactId>spring-security-taglibs</artifactId>  
-		  	<version>${spring.security.version}</version> 
+		<dependency>
+		 	<groupId>org.springframework.security</groupId>  
+		 	<artifactId>spring-security-taglibs</artifactId>  
+			<version>${spring.security.version}</version> 
 		</dependency> 
 		<dependency> 
-		 	<groupId>org.springframework.security</groupId>  
+			<groupId>org.springframework.security</groupId>  
 			<artifactId>spring-security-acl</artifactId> 
 			<version>${spring.security.version}</version> 
 		</dependency>
+		
+		<!-- Tiles dependancies -->
+		<dependency>
+	    	<groupId>org.apache.tiles</groupId>
+	    	<artifactId>tiles-api</artifactId>
+	    	<version>2.1.4</version>
+	    </dependency>
+	    <dependency>
+    		<groupId>org.apache.tiles</groupId>
+    		<artifactId>tiles-core</artifactId>
+    		<version>2.1.4</version>
+    	</dependency>
+    	<dependency>
+    		<groupId>org.apache.tiles</groupId>
+    		<artifactId>tiles-jsp</artifactId>
+    		<version>2.1.4</version>
+    	</dependency>
+    	<dependency>
+    	<groupId>org.apache.tiles</groupId>
+    		<artifactId>tiles-servlet</artifactId>
+    		<version>2.1.4</version>
+    	</dependency>
 				
 		<!-- AspectJ -->
 		<dependency>
@@ -230,16 +252,21 @@
 			<version>1.6.1</version>
 		</dependency>
 	 
-	 	<!-- Commons -->
-		<dependency>
-			<groupId>commons-logging</groupId>
-			<artifactId>commons-logging</artifactId>
-			<version>1.1.1</version>
+	 	<!-- Commons -->		
+	    <dependency>
+			<groupId>commons-beanutils</groupId>
+			<artifactId>commons-beanutils</artifactId>
+			<version>1.8.3</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-collections</groupId>
 			<artifactId>commons-collections</artifactId>
 			<version>3.2.1</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-digester</groupId>
+			<artifactId>commons-digester</artifactId>
+			<version>2.1</version>
 		</dependency>
 		<dependency>
 		     <groupId>commons-fileupload</groupId>
@@ -255,6 +282,11 @@
 			<groupId>commons-lang</groupId>
 			<artifactId>commons-lang</artifactId>
 			<version>2.6</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-logging</groupId>
+			<artifactId>commons-logging</artifactId>
+			<version>1.1.1</version>
 		</dependency>
 	 
 	 	<!-- Language recognizer required by Spring -->
