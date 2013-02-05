@@ -223,6 +223,21 @@ public final class FrontEndAPIController extends AppController {
         return "api/remoteUploadByFile";
     }
 
+    /**
+     * Uploads update or renders errors.
+     * 
+     * @param shouldDisplayError
+     *            whether error should be returned instead of page with errors
+     * @param remoteUpload
+     *            Update upload
+     * @param result
+     *            result of Update validation
+     * @param model
+     *            model instance
+     * @param response
+     *            response to send
+     * @return facelet name
+     */
     @RequestMapping(value = "/upload_file", method = POST)
     public String remoteUploadByFile(
             @RequestParam(value = "displayError", required = false) boolean shouldDisplayError,

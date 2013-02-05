@@ -13,12 +13,38 @@ a:hover, a:focus {
 	border-bottom-color: #777;
 }
 
-h1, h2, h3, h4, h5, h6 { border-bottom: 1px solid #777; }
-
+h2 { 
+	border-bottom: 1px solid #777;
+	font-size: 20pt;
+}
 body { font-size: 10pt; }
 
+/* sticky footer */
+html, body { height: 100%; margin: 0; padding: 0; }
+#wrapper {
+	min-height: 100%;
+	height: auto !important;
+	height: 100%;
+	margin: 0 auto -55px;
+}
+#padding { padding: 55px 10px 60px 10px; }
+#padding h2:first-child { margin-top: 0; }
+#footer {
+	background-color: #efefef;
+	border-radius: 5px;
+	box-shadow: 0px 0px 3px #777;
+	font-size: 8pt;
+	height: 25px;
+	line-height: 2.3;
+	margin: 0 auto;
+	position: relative;
+	top: 15px;
+	text-align: center;
+	width: 500px;;
+}
+
 /* breadcrumbs */
-#breadcrumbs {
+#header {
 	background-color: #efefef;
 	border-bottom: 5px solid #777;
 	box-shadow: 0px 0px 3px #777;
@@ -29,13 +55,20 @@ body { font-size: 10pt; }
 	top: 0;
 	width: 100%;
 }
-#breadcrumbs p {
+#header h1 {
+	font-size: 14pt;
+	left: ;
+	margin: 0;
+	padding: 12px;
+	position: absolute;
+	top: 0;
+}
+#header p {
 	font-size: 8pt;
 	font-weight: bold;
 	margin: 0;
 	padding: 5px 15px 0 0;
 }
-body { margin-top: 55px; }
 
 /* forms */
 fieldset, legend {

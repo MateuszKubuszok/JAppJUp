@@ -14,12 +14,20 @@
 	<script type="text/javascript" src="<c:url value="/resources/js/jquery-tablesorter.js" />"></script>
 </head>
 <body>
-	<div id="breadcrumbs">
+	<div id="header">
+		<h1><spring:message code="repository.name" /></h1>
 		<tiles:insertAttribute name="breadcrumbs" />
 	</div>
 
-	<h1><tiles:insertAttribute name="title" /></h1>
+	<div id="wrapper">
+		<div id="padding">
+			<h2><tiles:insertAttribute name="title" /></h2>
+			<tiles:insertAttribute name="content" />
+		</div>
+	</div>
 	
-	<tiles:insertAttribute name="content" />
+	<div id="footer">
+		<spring:message code="repository.footer" />
+	</div>
 </body>
 </html>
