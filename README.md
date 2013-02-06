@@ -59,4 +59,4 @@ Development
 License
 -----------
 Project's own licence can be found [here](LICENSE.md). Licenses of referenced libraries
-can either be found on their respective homepages or in their source code files.
+can be found either on their respective homepages or inside their source code files.
