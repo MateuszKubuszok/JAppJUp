@@ -34,7 +34,7 @@ public class VersionUniqueValidator implements ConstraintValidator<VersionUnique
                 .addNode("developmentVersion").addConstraintViolation();
 
         Package _package = update.getThePackage();
-        if (_package == null)
+        if (_package == null || update.getId() != 0)
             return true;
 
         return updateService.checkIfVersionAvailableForPackage(_package, update);

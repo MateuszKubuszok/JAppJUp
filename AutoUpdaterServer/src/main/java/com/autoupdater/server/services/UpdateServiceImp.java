@@ -1,5 +1,7 @@
 package com.autoupdater.server.services;
 
+import static org.apache.log4j.Logger.getLogger;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +27,7 @@ public class UpdateServiceImp extends AbstractHibernateService implements Update
     /**
      * Service's logger.
      */
-    private static Logger logger = Logger.getLogger(UpdateServiceImp.class);
+    private final static Logger logger = getLogger(UpdateServiceImp.class);
 
     /**
      * Instance of FileService.
@@ -110,20 +112,22 @@ public class UpdateServiceImp extends AbstractHibernateService implements Update
         return updates;
     }
 
-	@Override
-	public boolean checkIfVersionAvailableForPackage(Package _package,
-			Update update) {
-		logger.debug("Attempting to check version availability for Update: " + update + ", for Package: " + _package);
-		
-		boolean versionAvailable = getSession().createCriteria(Update.class).add(Restrictions.eq("thePackage", _package))
-				.add(Restrictions.eq("major", update.getMajor()))
-				.add(Restrictions.eq("minor", update.getMinor()))
-				.add(Restrictions.eq("release", update.getRelease()))
-				.add(Restrictions.eq("nightly", update.getNightly()))
-				.add(Restrictions.eq("developmentVersion", update.isDevelopmentVersion())).list().isEmpty();
-		
-		logger.debug("Found version availability for Update: " + update + ", for Package: "
-				+ _package + ": " + versionAvailable);
-		return versionAvailable;
-	}
+    @Override
+    public boolean checkIfVersionAvailableForPackage(Package _package, Update update) {
+        logger.debug("Attempting to check version availability for Update: " + update
+                + ", for Package: " + _package);
+
+        boolean versionAvailable = getSession().createCriteria(Update.class)
+                .add(Restrictions.eq("thePackage", _package))
+                .add(Restrictions.eq("major", update.getMajor()))
+                .add(Restrictions.eq("minor", update.getMinor()))
+                .add(Restrictions.eq("release", update.getRelease()))
+                .add(Restrictions.eq("nightly", update.getNightly()))
+                .add(Restrictions.eq("developmentVersion", update.isDevelopmentVersion())).list()
+                .isEmpty();
+
+        logger.debug("Found version availability for Update: " + update + ", for Package: "
+                + _package + ": " + versionAvailable);
+        return versionAvailable;
+    }
 }

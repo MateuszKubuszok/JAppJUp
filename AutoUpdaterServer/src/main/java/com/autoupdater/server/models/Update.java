@@ -214,7 +214,7 @@ public class Update {
     }
 
     public int getRelease() {
-        return major;
+        return release;
     }
 
     public void setRelease(int release) {
