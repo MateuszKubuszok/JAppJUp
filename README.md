@@ -21,28 +21,42 @@ developer can be noticed. It should be noted though, that many of solutions
 origins from earlier versions of code. The reasearch concerning elevation of
 process done by Mariusz and Paweł did not go to waste.
 
+Specific manuals
+-----------
+ * [Repository's manual](README.REPOSITORY.md) - contains basic information about
+ building and deploying server,
+ * [Library's manual](LIBRARY.REPOSITORY.md) - contains basic information about
+ building and using libray, as well as about requiorements,
+ * [Client's manual](CLIENT.REPOSITORY.md) - containg basic information about
+ building, configuring and using client.
+
 Development
 -----------
 
 **Things already done**:
- * client appears to be able to perform some updates on Windows and Linux,
- * repository just works - but it was not yet checked for performence
+ - [x] client appears to be able to perform some updates on Windows and Linux,
+ - [x] repository just works - but it was not yet checked for performence
  or security issues,
- * user is able to perform some minor configuration by GUI,
- * *gradle build* runs tests.
+ - [x] user is able to perform some minor configuration by GUI,
+ - [x] *gradle build* runs tests.
 
 **Things to do**:
- * implement ability to update the client itself,
- * distinguish between client's update and anothers program's update,
- * introduce the ability to handle JARs (obtaining java's process ID by usage of
+ - [ ] implement ability to update the client itself,
+ - [ ] distinguish between client's update and anothers program's update,
+ - [ ] introduce the ability to handle JARs (obtaining java's process ID by usage of
  its *run path*),
- * introduce AJAX validation into server,
- * ensure that repository will not blow server into space,
- * introduce functionality to install archival updates and *lock* updates (so
+ - [ ] introduce AJAX validation into server,
+ - [ ] ensure that repository will not blow server into space,
+ - [ ] introduce functionality to install archival updates and *lock* updates (so
  that program won't be updated to version higher or equal to some defined),
- * add some documentation to Client's project,
- * introducing ability to install updates on Mac OS and others systems,
- * considering creating separate repository for *Java's System-Dependent
+ - [ ] add some documentation to Client's project,
+ - [ ] introducing ability to install updates on Mac OS and others systems,
+ - [ ] considering creating separate repository for *Java's System-Dependent
  Process Utils* (JSDPU) project (quite a big name as for something so trivial
  and unimpressive...),
- * not give up too soon.
+ - [ ] not give up too soon.
+
+License
+-----------
+Project's own licence can be found [here](LICENSE.md). Licenses of referenced libraries
+can either be found on their respective homepages or in their source code files.
