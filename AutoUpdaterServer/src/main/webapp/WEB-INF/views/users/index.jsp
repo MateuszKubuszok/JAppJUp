@@ -8,9 +8,7 @@
 
 <c:set var="breadcrumbs">
 	<p>
-		<a href="<c:url value="/logout" />"><spring:message code="navigation.logout" /></a>
-		| <a href="<c:url value="/changepw" />"><spring:message code="navigation.changepw" /></a>
-		| <a href="<c:url value="/programs" />"><spring:message code="navigation.programs" /></a>
+		<a href="<c:url value="/programs" />"><spring:message code="navigation.programs" /></a>
 	</p>
 	<p>
 		<a href="<c:url value="/users/add" />"><spring:message code="navigation.user.add" /></a>

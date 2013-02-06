@@ -16,7 +16,23 @@
 <body>
 	<div id="header">
 		<h1><spring:message code="repository.name" /></h1>
-		<tiles:insertAttribute name="breadcrumbs" />
+		<div id="profile">
+		<c:choose>
+			<c:when test="${not empty user}">
+				<p><spring:message code="navigation.welcome" arguments="${user.name}" /></p>
+				<p>
+					<a href="<c:url value="/changepw" />"><spring:message code="navigation.changepw" /></a>
+					| <a href="<c:url value="/logout" />"><spring:message code="navigation.logout" /></a>
+				</p>
+			</c:when>
+			<c:otherwise>
+				<p><a href="<c:url value="/sign_in" />"><spring:message code="navigation.signIn" /></a></p>
+			</c:otherwise>
+		</c:choose>
+		</div>
+		<div id="breadcrumbs">
+			<tiles:insertAttribute name="breadcrumbs" />
+		</div>
 	</div>
 
 	<div id="wrapper">

@@ -8,10 +8,8 @@
 
 <c:set var="breadcrumbs">
 	<p>
-		<a href="<c:url value="/logout" />"><spring:message code="navigation.logout" /></a>
-		| <a href="<c:url value="/changepw" />"><spring:message code="navigation.changepw" /></a>
 		<c:if test="${user.admin}">
-			| <a href="<c:url value="/users/" />"><spring:message code="navigation.users" /></a>
+			<a href="<c:url value="/users/" />"><spring:message code="navigation.users" /></a>
 		</c:if>
 	</p>
 	<c:if test="${user.packageAdmin}">

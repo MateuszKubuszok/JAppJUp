@@ -8,10 +8,8 @@
 
 <c:set var="breadcrumbs">
 	<p>
-		<a href="<c:url value="/logout" />"><spring:message code="navigation.logout" /></a>
-		| <a href="<c:url value="/changepw" />"><spring:message code="navigation.changepw" /></a>
 		<c:if test="${user.admin}">
-			| <a href="<c:url value="/users/" />"><spring:message code="navigation.users" /></a>
+			<a href="<c:url value="/users/" />"><spring:message code="navigation.users" /></a>
 		</c:if>
 	</p>
 	<p>
@@ -38,7 +36,9 @@
 						<th><spring:message code="model.update.updaterCommand" /></th>
 						<th><spring:message code="model.update.changelog" /></th>
 						<th><spring:message code="model.update.download" /></th>
-						<th colspan="2"><spring:message code="navigation.manage" /></th>
+						<c:if test="${user.packageAdmin}">
+							<th colspan="2"><spring:message code="navigation.manage" /></th>
+						</c:if>
 					</tr>
 				</thead>
 				<tbody>
@@ -66,8 +66,10 @@
 							</c:choose></td>
 							<td>${update.changelog}</td>
 							<td><a href="<c:url value="/api/download/${update.id}"/>"><spring:message code="model.update.download" /></a></td>
-							<td><a href="<c:url value="/updates/edit/${update.id}" />"><spring:message code="navigation.edit" /></a></td>
-							<td><a href="<c:url value="/updates/delete/${update.id}" />"><spring:message code="navigation.delete" /></a></td>
+							<c:if test="${user.packageAdmin}">
+								<td><a href="<c:url value="/updates/edit/${update.id}" />"><spring:message code="navigation.edit" /></a></td>
+								<td><a href="<c:url value="/updates/delete/${update.id}" />"><spring:message code="navigation.delete" /></a></td>
+							</c:if>
 						</tr>
 					</c:forEach>
 				</tbody>
