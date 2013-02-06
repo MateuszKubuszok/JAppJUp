@@ -50,24 +50,33 @@ html, body { height: 100%; margin: 0; padding: 0; }
 	box-shadow: 0px 0px 3px #777;
 	left: 0;
 	height: 50px;
+	min-width: 750px;
 	position: fixed;
 	text-align: right;
 	top: 0;
 	width: 100%;
 }
 #header h1 {
-	font-size: 14pt;
+	background-color: #777;
+	border: 0;
+	border-radius: 0 0 5px 0;
+	color: #fff;
+	font-size: 12pt;
 	left: ;
 	margin: 0;
-	padding: 12px;
+	padding: 2px 4px 4px 2px;
 	position: absolute;
 	top: 0;
 }
+#header h1 a {
+	border: 0;
+	color: #fff;
+}
 #header p {
-	font-size: 8pt;
+	font-size: 7pt;
 	font-weight: bold;
 	margin: 0;
-	padding: 5px 15px 0 0;
+	padding: 6px 15px 0 0;
 }
 #breadcrumbs, #profile {
 	float: right;
@@ -76,7 +85,7 @@ html, body { height: 100%; margin: 0; padding: 0; }
 #profile {
 	background-color: #fff;
 	border-left: 5px solid #777;
-	width: 300px;
+	width: 250px;
 }
 
 /* forms */

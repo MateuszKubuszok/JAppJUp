@@ -8,10 +8,7 @@
 <spring:message code="navigation.changepw" var="title" />
 
 <c:set var="breadcrumbs">
-	<p>
-		<a href="<c:url value="/users" />"><spring:message code="navigation.users" /></a>
-		| <a href="<c:url value="/programs" />"><spring:message code="navigation.programs" /></a>
-	</p>
+	<spring:message code="navigation.changepw" />
 </c:set>
 
 <c:set var="content">

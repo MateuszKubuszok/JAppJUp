@@ -7,15 +7,9 @@
 <spring:message code="model.program.plural" var="title" />
 
 <c:set var="breadcrumbs">
-	<p>
-		<c:if test="${user.admin}">
-			<a href="<c:url value="/users/" />"><spring:message code="navigation.users" /></a>
-		</c:if>
-	</p>
+	<spring:message code="navigation.programs" />
 	<c:if test="${user.packageAdmin}">
-	<p>
-		<a href="<c:url value="/programs/add" />"><spring:message code="navigation.program.add" /></a>
-	</p>
+		&gt; <a href="<c:url value="/programs/add" />"><spring:message code="navigation.program.add" /></a>
 	</c:if>
 </c:set>
 

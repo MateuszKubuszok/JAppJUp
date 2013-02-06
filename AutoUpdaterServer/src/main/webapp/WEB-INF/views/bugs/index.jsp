@@ -7,20 +7,13 @@
 <spring:message code="model.bug.for" arguments="${program.name}" var="title" />
 
 <c:set var="breadcrumbs">
-	<p>
-		<c:if test="${user.admin}">
-			<a href="<c:url value="/users/" />"><spring:message code="navigation.users" /></a>
-		</c:if>
-	</p>
-	<p>
-		<a href="<c:url value="/programs" />"><spring:message code="navigation.programs" /></a>	
-		<c:if test="${not empty program}">
-			&gt; <spring:message code="navigation.bugs" arguments="${program.name}" />
-		</c:if>
-		<c:if test="${user.packageAdmin}">	
-			&gt; <a href="<c:url value="/bugs/add/${program.id}" />"><spring:message code="navigation.bug.add" /></a>
-		</c:if>
-	</p>
+	<a href="<c:url value="/programs" />"><spring:message code="navigation.programs" /></a>	
+	<c:if test="${not empty program}">
+		&gt; <spring:message code="navigation.bugs" arguments="${program.name}" />
+	</c:if>
+	<c:if test="${user.packageAdmin}">	
+		&gt; <a href="<c:url value="/bugs/add/${program.id}" />"><spring:message code="navigation.bug.add" /></a>
+	</c:if>
 </c:set>
 
 <c:set var="content">

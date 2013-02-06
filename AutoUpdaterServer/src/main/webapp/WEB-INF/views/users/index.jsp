@@ -7,12 +7,7 @@
 <spring:message code="model.user.plural" var="title" />
 
 <c:set var="breadcrumbs">
-	<p>
-		<a href="<c:url value="/programs" />"><spring:message code="navigation.programs" /></a>
-	</p>
-	<p>
-		<a href="<c:url value="/users/add" />"><spring:message code="navigation.user.add" /></a>
-	</p>
+	<a href="<c:url value="/users/add" />"><spring:message code="navigation.user.add" /></a>
 </c:set>
 
 <c:set var="content">

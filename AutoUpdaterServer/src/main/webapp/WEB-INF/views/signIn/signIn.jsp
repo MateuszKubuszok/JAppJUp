@@ -8,9 +8,7 @@
 <spring:message code="navigation.signIn" var="title" />
 
 <c:set var="breadcrumbs">
-	<p>
-		<a href="<c:url value="/api/upload_file" />"><spring:message code="remoteUpload.quickUpload" /></a>
-	</p>
+	<a href="<c:url value="/api/upload_file" />"><spring:message code="remoteUpload.quickUpload" /></a>
 </c:set>
 
 <c:set var="content">

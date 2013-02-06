@@ -8,9 +8,7 @@
 <spring:message code="model.bug.add" arguments="${bug.program.name}" var="title" />
 
 <c:set var="breadcrumbs">
-	<p>
-		<a href="<c:url value="/bugs/${bug.program.id}" />">Back</a>
-	</p>
+	<a href="<c:url value="/bugs/${bug.program.id}" />">Back</a>
 </c:set>
 
 <c:set var="content">

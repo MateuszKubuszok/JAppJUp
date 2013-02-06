@@ -8,9 +8,7 @@
 <spring:message code="model.update.edit" arguments="${newUpdate.thePackage.program.name},${newUpdate.thePackage.name}" var="title" />
 
 <c:set var="breadcrumbs">
-	<p>
-		<a href="<c:url value="/updates/${update.thePackage.id}" />"><spring:message code="navigation.back" /></a>
-	</p>
+	<a href="<c:url value="/updates/${update.thePackage.id}" />"><spring:message code="navigation.back" /></a>
 </c:set>
 
 <c:set var="content">

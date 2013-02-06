@@ -8,9 +8,7 @@
 <spring:message code="model.program.edit" var="title" />
 
 <c:set var="breadcrumbs">
-	<p>
-		<a href="<c:url value="/programs" />"><spring:message code="navigation.back" /></a>
-	</p>
+	<a href="<c:url value="/programs" />"><spring:message code="navigation.back" /></a>
 </c:set>
 
 <c:set var="content">

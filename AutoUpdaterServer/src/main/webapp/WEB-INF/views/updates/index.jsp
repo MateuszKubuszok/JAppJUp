@@ -7,19 +7,12 @@
 <spring:message code="model.update.for" arguments="${thePackage.program.name},${thePackage.name}" var="title" />
 
 <c:set var="breadcrumbs">
-	<p>
-		<c:if test="${user.admin}">
-			<a href="<c:url value="/users/" />"><spring:message code="navigation.users" /></a>
-		</c:if>
-	</p>
-	<p>
-		<a href="<c:url value="/programs/" />"><spring:message code="navigation.programs" /></a>
-		&gt; <a href="<c:url value="/packages/${thePackage.program.id}" />"><spring:message code="navigation.packages" arguments="${thePackage.program.name}" /></a>
-		&gt; <spring:message code="navigation.packages" arguments="${thePackage.program.name},${thePackage.name}" />
-		<c:if test="${user.packageAdmin}">
-			 &gt; <a href="<c:url value="/updates/add/${thePackage.id}" />"><spring:message code="navigation.update.add" /></a>
-		</c:if>
-	</p>
+	<a href="<c:url value="/programs/" />"><spring:message code="navigation.programs" /></a>
+	&gt; <a href="<c:url value="/packages/${thePackage.program.id}" />"><spring:message code="navigation.packages" arguments="${thePackage.program.name}" /></a>
+	&gt; <spring:message code="navigation.updates" arguments="${thePackage.name}" />
+	<c:if test="${user.packageAdmin}">
+		 &gt; <a href="<c:url value="/updates/add/${thePackage.id}" />"><spring:message code="navigation.update.add" /></a>
+	</c:if>
 </c:set>
 
 <c:set var="content">

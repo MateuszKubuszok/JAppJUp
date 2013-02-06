@@ -8,9 +8,7 @@
 <spring:message code="remoteUpload.newFileUpload" var="title" />
 
 <c:set var="breadcrumbs">
-	<p>
-		<a href="<c:url value="/api/upload_file" />"><spring:message code="remoteUpload.newFileUpload" /></a>
-	</p>
+	<a href="<c:url value="/api/upload_file" />"><spring:message code="remoteUpload.newFileUpload" /></a>
 </c:set>
 	
 <c:set var="content">

@@ -15,7 +15,7 @@
 </head>
 <body>
 	<div id="header">
-		<h1><spring:message code="repository.name" /></h1>
+		<h1><a href="<c:url value="/" />"><spring:message code="repository.name" /></a></h1>
 		<div id="profile">
 		<c:choose>
 			<c:when test="${not empty user}">
@@ -26,12 +26,40 @@
 				</p>
 			</c:when>
 			<c:otherwise>
+				<spring:message code="navigation.guest" var="guest" />
+				<p><spring:message code="navigation.welcome" arguments="${guest}" /></p>
 				<p><a href="<c:url value="/sign_in" />"><spring:message code="navigation.signIn" /></a></p>
 			</c:otherwise>
 		</c:choose>
 		</div>
 		<div id="breadcrumbs">
-			<tiles:insertAttribute name="breadcrumbs" />
+			<p>
+			<c:choose>
+				<c:when test="${not empty user}">
+				<c:choose>
+					<c:when test="${user.userType eq 'SUPERADMIN'}">
+						<a href="<c:url value="/users/" />"><spring:message code="navigation.users" /></a>
+						| <a href="<c:url value="/programs/" />"><spring:message code="navigation.programs" /></a>
+					</c:when>
+					<c:when test="${user.userType eq 'REPO_ADMIN'}">
+						<a href="<c:url value="/users/" />"><spring:message code="navigation.users" /></a>
+					</c:when>
+					<c:when test="${user.userType eq 'PACKAGE_ADMIN'}">
+						<a href="<c:url value="/programs/" />"><spring:message code="navigation.programs" /></a>
+					</c:when>
+					<c:otherwise>
+						<spring:message code="navigation.noPrivileges" />
+					</c:otherwise>
+				</c:choose>
+				</c:when>
+				<c:otherwise>
+					<spring:message code="navigation.encourageToSignIn" />
+				</c:otherwise>
+			</c:choose>
+			</p>
+			<p>
+				<tiles:insertAttribute name="breadcrumbs" />
+			</p>
 		</div>
 	</div>
 
