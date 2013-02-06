@@ -25,9 +25,9 @@ Specific manuals
 -----------
  * [Repository's manual](README.REPOSITORY.md) - contains basic information about
  building and deploying server,
- * [Library's manual](LIBRARY.REPOSITORY.md) - contains basic information about
+ * [Library's manual](README.LIBRARY.md) - contains basic information about
  building and using libray, as well as about requiorements,
- * [Client's manual](CLIENT.REPOSITORY.md) - containg basic information about
+ * [Client's manual](README.CLIENT.md) - containg basic information about
  building, configuring and using client.
 
 Development
