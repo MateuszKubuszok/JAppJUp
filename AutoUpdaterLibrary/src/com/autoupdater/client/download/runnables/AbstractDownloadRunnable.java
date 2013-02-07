@@ -1,13 +1,17 @@
 package com.autoupdater.client.download.runnables;
 
+import static com.autoupdater.client.download.ConnectionConfiguration.*;
 import static java.lang.System.currentTimeMillis;
+import static java.lang.Thread.interrupted;
+import static net.jsdpu.logger.Logger.getLogger;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 
+import net.jsdpu.logger.Logger;
+
 import com.autoupdater.client.AutoUpdaterClientException;
-import com.autoupdater.client.download.ConnectionConfiguration;
 import com.autoupdater.client.download.DownloadResultException;
 import com.autoupdater.client.download.DownloadServiceMessage;
 import com.autoupdater.client.download.DownloadServiceProgressMessage;
@@ -40,9 +44,11 @@ import com.autoupdater.client.utils.services.ObservableService;
  */
 public abstract class AbstractDownloadRunnable<Result> extends
         ObservableService<DownloadServiceMessage> implements Runnable {
-    private HttpURLConnection httpURLConnection;
+    private static final Logger logger = getLogger(AbstractDownloadRunnable.class);
+
+    private final HttpURLConnection httpURLConnection;
+    private final String fileDestinationPath;
     private EDownloadStatus state;
-    private String fileDestinationPath;
     private IPostDownloadStrategy<Result> downloadStrategy;
     private long contentLength = -1;
     protected Result result;
@@ -54,7 +60,7 @@ public abstract class AbstractDownloadRunnable<Result> extends
      *            connection used for obtaining data
      */
     AbstractDownloadRunnable(HttpURLConnection connection) {
-        initialize(connection, null);
+        this(connection, null);
     }
 
     /**
@@ -66,7 +72,10 @@ public abstract class AbstractDownloadRunnable<Result> extends
      *            path to file where result should be stored
      */
     AbstractDownloadRunnable(HttpURLConnection connection, String fileDestinationPath) {
-        initialize(connection, fileDestinationPath);
+        this.httpURLConnection = connection;
+        this.fileDestinationPath = fileDestinationPath;
+        result = null;
+        state = EDownloadStatus.HASNT_STARTED;
     }
 
     /**
@@ -166,8 +175,8 @@ public abstract class AbstractDownloadRunnable<Result> extends
         reportChange("Initialized process of obtaining packages' data from server: "
                 + httpURLConnection.getURL().getHost() + httpURLConnection.getURL().getPath());
 
-        httpURLConnection.setConnectTimeout(ConnectionConfiguration.CONNECTION_TIME_OUT);
-        httpURLConnection.setReadTimeout(ConnectionConfiguration.CONNECTION_TIME_OUT);
+        httpURLConnection.setConnectTimeout(CONNECTION_TIME_OUT);
+        httpURLConnection.setReadTimeout(CONNECTION_TIME_OUT);
         httpURLConnection.connect();
 
         if (httpURLConnection.getResponseCode() / 100 != 2)
@@ -196,7 +205,7 @@ public abstract class AbstractDownloadRunnable<Result> extends
             downloadStrategy = getPostDownloadStrategy();
         InputStream in = httpURLConnection.getInputStream();
 
-        byte[] buffer = new byte[ConnectionConfiguration.MAX_BUFFER_SIZE];
+        byte[] buffer = new byte[MAX_BUFFER_SIZE];
         long downloadStartTime = currentTimeMillis();
 
         reportChange(EDownloadStatus.IN_PROCESS.getMessage(), EDownloadStatus.IN_PROCESS);
@@ -240,27 +249,13 @@ public abstract class AbstractDownloadRunnable<Result> extends
     }
 
     /**
-     * Initializes AbstractDownloadRunnable.
-     * 
-     * @param connection
-     *            connection used for obtaining data
-     * @param fileDestinationPath
-     *            path to destination file
-     */
-    private void initialize(HttpURLConnection connection, String fileDestinationPath) {
-        this.httpURLConnection = connection;
-        this.fileDestinationPath = fileDestinationPath;
-        result = null;
-        state = EDownloadStatus.HASNT_STARTED;
-    }
-
-    /**
      * Sent message that download was cancelled.
      */
     protected void reportCancelled() {
         state = EDownloadStatus.CANCELLED;
         hasChanged();
         notifyObservers(new DownloadServiceMessage(this, EDownloadStatus.CANCELLED.getMessage()));
+        logger.info("Cancelled download from " + httpURLConnection.getURL());
     }
 
     /**
@@ -304,6 +299,7 @@ public abstract class AbstractDownloadRunnable<Result> extends
         state = EDownloadStatus.FAILED;
         hasChanged();
         notifyObservers(new DownloadServiceMessage(this, message, true));
+        logger.error("Failed download from " + httpURLConnection.getURL() + ": " + message);
     }
 
     /**
@@ -331,7 +327,7 @@ public abstract class AbstractDownloadRunnable<Result> extends
      *             thrown if thread was interrupted (cancelled)
      */
     private synchronized void checkInterruption() throws InterruptedException {
-        if (Thread.interrupted())
+        if (interrupted())
             throw new InterruptedException();
     }
 }

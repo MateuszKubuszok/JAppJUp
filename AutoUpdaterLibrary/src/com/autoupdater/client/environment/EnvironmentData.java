@@ -1,10 +1,13 @@
 package com.autoupdater.client.environment;
 
+import static net.jsdpu.logger.Logger.getLogger;
+
 import java.io.IOException;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
 import net.jsdpu.EOperatingSystem;
+import net.jsdpu.logger.Logger;
 
 import com.autoupdater.client.environment.settings.ClientSettings;
 import com.autoupdater.client.environment.settings.ProgramSettings;
@@ -32,6 +35,8 @@ import com.google.common.collect.Iterables;
  * @see com.autoupdater.client.models.Program
  */
 public class EnvironmentData {
+    private static final Logger logger = getLogger(EnvironmentData.class);
+
     private EnvironmentDataManager environmentDataManager;
     private final EOperatingSystem system;
     private final ClientSettings clientSettings;
@@ -86,8 +91,10 @@ public class EnvironmentData {
      *             yet setting were tried to be saved
      */
     public void save() throws IOException, ClientEnvironmentException {
-        if (environmentDataManager == null)
+        if (environmentDataManager == null) {
+            logger.error("Failed to save settings (no EnvironmentDataManager set)");
             throw new ClientEnvironmentException("EnvironmentDataManager was not set");
+        }
         environmentDataManager.setEnvironmentData(this);
     }
 
@@ -221,6 +228,7 @@ public class EnvironmentData {
                                 program.getServerAddress()))
                     return programSettings;
             }
+        logger.warning("Attempt to get ProgramSettings for not existing Program: " + program);
         throw new ProgramSettingsNotFoundException("Could not find settings for program: "
                 + program);
     }
@@ -238,6 +246,7 @@ public class EnvironmentData {
             throws ProgramSettingsNotFoundException {
         if (_package != null)
             return findProgramSettingsForProgram(_package.getProgram());
+        logger.warning("Attempt to get ProgramSettings for not existing Package: " + _package);
         throw new ProgramSettingsNotFoundException("Could not find settings for package: "
                 + _package);
     }
@@ -255,6 +264,7 @@ public class EnvironmentData {
             throws ProgramSettingsNotFoundException {
         if (update != null)
             return findProgramSettingsForPackage(update.getPackage());
+        logger.warning("Attempt to get ProgramSettings for not existing Update: " + update);
         throw new ProgramSettingsNotFoundException("Could not find settings for update: " + update);
     }
 

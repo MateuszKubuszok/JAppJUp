@@ -1,8 +1,14 @@
 package net.jsdpu.process.killers;
 
+import static java.lang.Thread.sleep;
+import static net.jsdpu.logger.Logger.getLogger;
+import static net.jsdpu.process.killers.ProcessKillerConfiguration.*;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+
+import net.jsdpu.logger.Logger;
 
 /**
  * Implementation of ProcessKillerInterface used for killing process in Windows
@@ -11,28 +17,34 @@ import java.io.InputStreamReader;
  * @see net.jsdpu.process.killers.IProcessKiller
  */
 public class WindowsProcessKiller implements IProcessKiller {
+    private static final Logger logger = getLogger(WindowsProcessKiller.class);
+
     @Override
     public void killProcess(String programName) throws IOException, InterruptedException,
             ProcessKillerException {
+        logger.trace("Attempt to kill " + programName);
         int attempts = 0;
 
         if (!isProgramRunning(programName))
             return;
 
-        for (attempts = 0; attempts < ProcessKillerConfiguration.HOW_MANY_ATTEMPTS_BEFORE_FAIL; attempts++) {
+        for (attempts = 0; attempts < HOW_MANY_ATTEMPTS_BEFORE_FAIL; attempts++) {
             if (!askToDieGracefully(programName)) {
                 killAllResistants(programName);
                 return;
             }
 
-            if (!isProgramRunning(programName))
+            if (!isProgramRunning(programName)) {
+                logger.detailedTrace("Successfully killed all instances of " + programName);
                 return;
+            }
 
-            Thread.sleep(ProcessKillerConfiguration.HOW_MANY_SECONDS_BETWEEN_ATTEMPTS * 1000);
+            sleep(HOW_MANY_SECONDS_BETWEEN_ATTEMPTS * 1000);
         }
 
-        throw new ProcessKillerException("Couldn't kill process - "
-                + ProcessKillerConfiguration.HOW_MANY_ATTEMPTS_BEFORE_FAIL + " attempts failed");
+        logger.error("Failed to kill " + programName + " (exception thrown)");
+        throw new ProcessKillerException("Couldn't kill process - " + HOW_MANY_ATTEMPTS_BEFORE_FAIL
+                + " attempts failed");
     }
 
     /**
@@ -54,6 +66,7 @@ public class WindowsProcessKiller implements IProcessKiller {
      *             dependent process
      */
     private boolean askToDieGracefully(String programName) throws IOException, InterruptedException {
+        logger.detailedTrace("Attempt to gracefully kill " + programName);
         return new ProcessBuilder("taskkill", "/IM", programName).start().waitFor() == 0;
     }
 
@@ -71,6 +84,7 @@ public class WindowsProcessKiller implements IProcessKiller {
      */
     private void killAllResistants(String programName) throws IOException, InterruptedException,
             ProcessKillerException {
+        logger.detailedTrace("Attempt to forcefully kill " + programName);
         Process process = new ProcessBuilder("taskkill", "/F", "/IM", programName).start();
 
         BufferedReader reader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
@@ -79,6 +93,7 @@ public class WindowsProcessKiller implements IProcessKiller {
 
         if (errorCode != 0) {
             String message = reader.readLine();
+            logger.error("Failed to forcefully kill " + programName + " (exception thrown)");
             throw new ProcessKillerException(
                     message != null && message.length() > 7 ? message.substring(7, message.length())
                             : "Couldn't kill process \"" + programName + "\"");
@@ -98,6 +113,7 @@ public class WindowsProcessKiller implements IProcessKiller {
      *             dependent process
      */
     private boolean isProgramRunning(String programName) throws IOException, InterruptedException {
+        logger.detailedTrace("Obtaining information about running instances of " + programName);
         Process process = new ProcessBuilder("tasklist", "/FO", "csv").start();
 
         BufferedReader outputReader = new BufferedReader(new InputStreamReader(

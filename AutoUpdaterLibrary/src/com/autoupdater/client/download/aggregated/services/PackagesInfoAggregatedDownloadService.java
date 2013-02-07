@@ -1,7 +1,11 @@
 package com.autoupdater.client.download.aggregated.services;
 
+import static net.jsdpu.logger.Logger.getLogger;
+
 import java.util.SortedSet;
 import java.util.TreeSet;
+
+import net.jsdpu.logger.Logger;
 
 import com.autoupdater.client.download.DownloadResultException;
 import com.autoupdater.client.download.aggregated.notifiers.PackagesInfoAggregatedNotifier;
@@ -30,6 +34,8 @@ import com.autoupdater.client.models.Program;
 public class PackagesInfoAggregatedDownloadService
         extends
         AbstractAggregatedDownloadService<PackagesInfoDownloadService, PackagesInfoAggregatedNotifier, SortedSet<Program>, SortedSet<Program>, ProgramSettings> {
+    private static final Logger logger = getLogger(PackagesInfoAggregatedDownloadService.class);
+
     private SortedSet<Program> installedPrograms;
 
     @Override
@@ -55,6 +61,7 @@ public class PackagesInfoAggregatedDownloadService
 
     @Override
     public SortedSet<Program> getResult() throws DownloadResultException {
+        logger.debug("Starts calculating results");
         SortedSet<Program> allServersPrograms = new TreeSet<Program>();
         ProgramSettings programSettings;
         for (PackagesInfoDownloadService service : getServices()) {
@@ -66,7 +73,7 @@ public class PackagesInfoAggregatedDownloadService
         }
 
         updateInstalledPrograms(allServersPrograms);
-
+        logger.debug("Finshed calculating results");
         return allServersPrograms;
     }
 
@@ -83,6 +90,7 @@ public class PackagesInfoAggregatedDownloadService
      *            set of locally installed programs
      */
     private void updateInstalledPrograms(SortedSet<Program> allServersPrograms) {
+        logger.trace("Update installed Programs data");
         if (installedPrograms == null)
             return;
 
@@ -102,6 +110,7 @@ public class PackagesInfoAggregatedDownloadService
      *            program on server
      */
     private void updateInstalledPackages(Program installedProgram, Program serverProgram) {
+        logger.trace("Update installed Packges data");
         SortedSet<Package> installedPackages = installedProgram.getPackages();
         SortedSet<Package> serverPackages = serverProgram.getPackages();
 

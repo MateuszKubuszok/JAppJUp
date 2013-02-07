@@ -1,10 +1,13 @@
 package com.autoupdater.client.download.runnables;
 
 import static com.autoupdater.client.download.FileCache.*;
+import static net.jsdpu.logger.Logger.getLogger;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.HttpURLConnection;
+
+import net.jsdpu.logger.Logger;
 
 import com.autoupdater.client.download.EDownloadStatus;
 import com.autoupdater.client.download.runnables.post.download.strategies.FilePostDownloadStrategy;
@@ -26,6 +29,8 @@ import com.autoupdater.client.download.runnables.post.download.strategies.IPostD
  * @see com.autoupdater.client.download.services.FileDownloadService
  */
 public class FileDownloadRunnable extends AbstractDownloadRunnable<File> {
+    private static final Logger logger = getLogger(FileDownloadRunnable.class);
+
     /**
      * Creates PackagesInfoDownloadRunnable instance.
      * 
@@ -44,6 +49,7 @@ public class FileDownloadRunnable extends AbstractDownloadRunnable<File> {
             result = new File(getFileDestinationPath());
             try {
                 reportChange("File retrived from cache", EDownloadStatus.PROCESSED);
+                logger.debug("Retrived file '" + result.getPath() + "' from cache");
             } catch (InterruptedException e) {
                 reportCancelled();
             }

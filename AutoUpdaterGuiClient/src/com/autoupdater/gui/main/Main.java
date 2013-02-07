@@ -1,10 +1,13 @@
 package com.autoupdater.gui.main;
 
+import static java.awt.EventQueue.invokeLater;
+import static javax.swing.JOptionPane.*;
+
 import java.awt.EventQueue;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Arrays;
-
-import javax.swing.JOptionPane;
+import java.util.logging.LogManager;
 
 import com.autoupdater.client.environment.ClientEnvironmentException;
 import com.autoupdater.client.environment.EnvironmentDataManager;
@@ -12,9 +15,10 @@ import com.autoupdater.gui.adapters.Gui2ClientAdapter;
 import com.autoupdater.gui.settings.editor.EditorWindow;
 import com.autoupdater.gui.window.GuiClientWindow;
 
-
 public class Main {
     public static void main(String[] args) {
+        setUpLogger();
+
         EnvironmentDataManager edm = new EnvironmentDataManager();
 
         if (!ensureConfigExists(edm))
@@ -41,8 +45,17 @@ public class Main {
         return true;
     }
 
+    private static void setUpLogger() {
+        try {
+            FileInputStream configFile = new FileInputStream("./client.logger.properties");
+            LogManager.getLogManager().readConfiguration(configFile);
+        } catch (SecurityException | IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     private static void showConfig(final EnvironmentDataManager edm) {
-        EventQueue.invokeLater(new Runnable() {
+        invokeLater(new Runnable() {
             @Override
             public void run() {
                 try {
@@ -69,8 +82,7 @@ public class Main {
     }
 
     private static void showError(Exception e) {
-        JOptionPane.showMessageDialog(null, e.getMessage(), "Couldn't initiate Updater",
-                JOptionPane.ERROR_MESSAGE);
+        showMessageDialog(null, e.getMessage(), "Couldn't initiate Updater", ERROR_MESSAGE);
         e.printStackTrace();
     }
 }

@@ -1,5 +1,9 @@
 package net.jsdpu.process.killers;
 
+import static java.lang.Thread.sleep;
+import static java.util.regex.Pattern.*;
+import static net.jsdpu.logger.Logger.getLogger;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -8,6 +12,8 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import net.jsdpu.logger.Logger;
+
 /**
  * Implementation of ProcessKillerInterface used for killing process in Linux
  * family systems.
@@ -15,9 +21,12 @@ import java.util.regex.Pattern;
  * @see net.jsdpu.process.killers.IProcessKiller
  */
 public class LinuxProcessKiller implements IProcessKiller {
+    private static final Logger logger = getLogger(LinuxProcessKiller.class);
+
     @Override
     public void killProcess(String programName) throws IOException, InterruptedException,
             ProcessKillerException {
+        logger.trace("Attempt to kill " + programName);
         int attempts = 0;
 
         if (!isProgramRunning(programName))
@@ -29,12 +38,15 @@ public class LinuxProcessKiller implements IProcessKiller {
                     killAllResistants(pid);
                 }
 
-            if (!isProgramRunning(programName))
+            if (!isProgramRunning(programName)) {
+                logger.detailedTrace("Successfully killed all instances of " + programName);
                 return;
+            }
 
-            Thread.sleep(ProcessKillerConfiguration.HOW_MANY_SECONDS_BETWEEN_ATTEMPTS * 1000);
+            sleep(ProcessKillerConfiguration.HOW_MANY_SECONDS_BETWEEN_ATTEMPTS * 1000);
         }
 
+        logger.error("Failed to kill " + programName + " (exception thrown)");
         throw new ProcessKillerException("Couldn't kill process - "
                 + ProcessKillerConfiguration.HOW_MANY_ATTEMPTS_BEFORE_FAIL + " attempts failed");
     }
@@ -58,6 +70,7 @@ public class LinuxProcessKiller implements IProcessKiller {
      *             dependent process
      */
     private boolean askToDieGracefully(String pid) throws IOException, InterruptedException {
+        logger.detailedTrace("Attempt to gracefully kill " + pid);
         return new ProcessBuilder("kill", "-TERM", pid).start().waitFor() == 0;
     }
 
@@ -75,6 +88,7 @@ public class LinuxProcessKiller implements IProcessKiller {
      */
     private void killAllResistants(String pid) throws IOException, InterruptedException,
             ProcessKillerException {
+        logger.detailedTrace("Attempt to forcefully kill " + pid);
         Process process = new ProcessBuilder("kill", pid).start();
 
         BufferedReader reader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
@@ -83,6 +97,7 @@ public class LinuxProcessKiller implements IProcessKiller {
 
         if (errorCode != 0) {
             String message = reader.readLine();
+            logger.error("Failed to forcefully kill " + pid + " (exception thrown)");
             throw new ProcessKillerException(
                     message != null && message.length() > 7 ? message.substring(7, message.length())
                             : "Couldn't kill process \"" + pid + "\"");
@@ -102,6 +117,7 @@ public class LinuxProcessKiller implements IProcessKiller {
      *             dependent process
      */
     private boolean isProgramRunning(String programName) throws IOException, InterruptedException {
+        logger.detailedTrace("Obtaining information about running instances of " + programName);
         Process process = new ProcessBuilder("ps", "-ef").start();
 
         BufferedReader outputReader = new BufferedReader(new InputStreamReader(
@@ -129,13 +145,14 @@ public class LinuxProcessKiller implements IProcessKiller {
      *             dependent process
      */
     private List<String> getPID(String programName) throws IOException {
+        logger.detailedTrace("Obtaining PIDs for " + programName);
         Process process = new ProcessBuilder(new String[] { "ps", "-ef" }).start();
 
         BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
 
         List<String> pids = new ArrayList<String>();
 
-        Pattern pattern = Pattern.compile("^\\S+\\s+(\\d+).+" + Pattern.quote(programName));
+        Pattern pattern = compile("^\\S+\\s+(\\d+).+" + quote(programName));
 
         String result;
         while ((result = reader.readLine()) != null) {

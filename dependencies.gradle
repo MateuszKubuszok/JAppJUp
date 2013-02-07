@@ -124,5 +124,5 @@ project(':AutoUpdaterGuiClient') {
 		testCompile project(':AutoUpdaterLibrary')
 	}
 
-	jar { manifest { attributes "Class-Path": "./AutoUpdaterLibrary.jar ./JSDPU.jar                      ./libraries/guava-13.0.1.jar ./libraries/jgoodies-forms-1.3.0.jar    ./libraries/seaglasslookandfeel-0.2.jar" } }
+	jar { manifest { attributes "Class-Path": "./AutoUpdaterLibrary.jar ./JSDPU.jar                      ./libraries/guava-13.0.1.jar ./libraries/jgoodies-forms-1.3.0.jar    ./libraries/seaglasslookandfeel-0.2.jar ./logger.properties"} }
 }

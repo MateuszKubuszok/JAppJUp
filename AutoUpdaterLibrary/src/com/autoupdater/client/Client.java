@@ -2,10 +2,13 @@ package com.autoupdater.client;
 
 import static com.autoupdater.client.download.ConnectionConfiguration.DOWNLOAD_DIRECTORY;
 import static com.autoupdater.commons.installer.configuration.InstallerConfiguration.BACKUP_DIRECTORY;
+import static net.jsdpu.logger.Logger.getLogger;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.SortedSet;
+
+import net.jsdpu.logger.Logger;
 
 import com.autoupdater.client.download.DownloadServiceFactory;
 import com.autoupdater.client.download.aggregated.services.BugsInfoAggregatedDownloadService;
@@ -49,6 +52,8 @@ import com.autoupdater.client.models.Update;
  * @see com.autoupdater.client.utils.services.notifier.AbstractNotifier
  */
 public class Client {
+    private static final Logger logger = getLogger(Client.class);
+
     private final EnvironmentData environmentData;
     private final DownloadServiceFactory connectionServiceManager;
     private final InstallationServiceFactory installationServiceManager;
@@ -71,9 +76,7 @@ public class Client {
      *             thrown if file with settings/installation data cannot be read
      */
     public Client() throws ClientEnvironmentException, IOException {
-        environmentData = new EnvironmentDataManager().getEnvironmentData();
-        connectionServiceManager = new DownloadServiceFactory(environmentData);
-        installationServiceManager = new InstallationServiceFactory(environmentData);
+        this(new EnvironmentDataManager().getEnvironmentData());
     }
 
     /**
@@ -90,6 +93,7 @@ public class Client {
      *            EnvironmentData that should be used in this Client instance
      */
     public Client(EnvironmentData environmentData) {
+        logger.info("Initiates Client");
         this.environmentData = environmentData;
         connectionServiceManager = new DownloadServiceFactory(environmentData);
         installationServiceManager = new InstallationServiceFactory(environmentData);
@@ -352,14 +356,18 @@ public class Client {
      * Cleans up backup directory.
      */
     public void cleanBackup() {
+        logger.info("Cleans up backup directory");
         delete(new File(BACKUP_DIRECTORY));
+        logger.info("Backup directory cleaned");
     }
 
     /**
      * Cleans up download directory.
      */
     public void cleanDownloaded() {
+        logger.info("Cleans up downloads directory");
         delete(new File(DOWNLOAD_DIRECTORY));
+        logger.info("Downloads directory cleaned");
     }
 
     /**

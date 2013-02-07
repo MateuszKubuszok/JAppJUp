@@ -3,11 +3,14 @@ package net.jsdpu.process.executors;
 import static com.google.common.base.Strings.repeat;
 import static java.lang.Math.max;
 import static java.util.regex.Pattern.*;
+import static net.jsdpu.logger.Logger.getLogger;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import net.jsdpu.logger.Logger;
 
 import com.google.common.base.Joiner;
 
@@ -34,6 +37,11 @@ import com.google.common.base.Joiner;
  * @see net.jsdpu.process.executors.AbstractProcessExecutor
  */
 public class Commands {
+    private static final Logger logger = getLogger(Commands.class);
+
+    /**
+     * Joins arguments.
+     */
     private static final Joiner argJoiner = Joiner.on(" ");
 
     /**
@@ -93,6 +101,8 @@ public class Commands {
      */
     public static String[] convertSingleConsoleCommand(String command)
             throws InvalidCommandException {
+        logger.trace("Converting single console command for ProcessBuilder: " + command);
+
         List<String> preparedResult = new ArrayList<String>();
         String tmp = null;
 
@@ -114,9 +124,12 @@ public class Commands {
             }
         }
 
-        if (tmp != null)
+        if (tmp != null) {
+            logger.error("Failed to convert console command - command invalid (exception thrown)");
             throw new InvalidCommandException("There is error in \"" + command + "\" command");
+        }
 
+        logger.detailedTrace("\tConverted single console command: " + preparedResult);
         return preparedResult.toArray(new String[0]);
     }
 
@@ -134,11 +147,13 @@ public class Commands {
      */
     public static List<String[]> convertMultipleConsoleCommands(String... commands)
             throws InvalidCommandException {
+        logger.trace("Converting multiple console commands: " + commands);
         List<String[]> results = new ArrayList<String[]>();
 
         for (String command : commands)
             results.add(convertSingleConsoleCommand(command));
 
+        logger.detailedTrace("Converted multiple cponsole commands: " + results);
         return results;
     }
 
@@ -196,8 +211,10 @@ public class Commands {
      * @return list of commands
      */
     public static List<String[]> convertSingleCommand(String... command) {
+        logger.trace("Convert single command for ProcessBuilder: " + command);
         List<String[]> result = new ArrayList<String[]>();
         result.add(command);
+        logger.detailedTrace("Converted single command: " + result);
         return result;
     }
 
@@ -209,24 +226,27 @@ public class Commands {
      * @return escaped argument
      */
     public static String escapeArgument(String argument) {
-        if (!argument.contains("\""))
-            return argument;
-
+        logger.trace("Escaping argument: " + argument);
         String result = argument;
-        Matcher matcher = escapePattern.matcher(result);
-        int longestFound = 0;
-        while (matcher.find())
-            if (matcher.group(1) != null)
-                longestFound = max(longestFound, matcher.group(1).length());
 
-        for (int i = longestFound; i >= 0; i--) {
-            int replacementSize = (i + 1) * 2 - 1;
-            String original = repeat("\\", i) + "\"";
-            String replacement = repeat("\\", replacementSize) + quoteReplacement;
-            result = result.replace(original, replacement);
+        if (result.contains("\"")) {
+            Matcher matcher = escapePattern.matcher(result);
+            int longestFound = 0;
+            while (matcher.find())
+                if (matcher.group(1) != null)
+                    longestFound = max(longestFound, matcher.group(1).length());
+
+            for (int i = longestFound; i >= 0; i--) {
+                int replacementSize = (i + 1) * 2 - 1;
+                String original = repeat("\\", i) + "\"";
+                String replacement = repeat("\\", replacementSize) + quoteReplacement;
+                result = result.replace(original, replacement);
+            }
+            result = result.replace(quoteReplacement, "\"");
         }
 
-        return result.replace(quoteReplacement, "\"");
+        logger.detailedTrace("Escaped argument: " + argument);
+        return result;
     }
 
     /**
@@ -241,8 +261,10 @@ public class Commands {
      * @return argument wrapped in quotation mark
      */
     public static String wrapArgument(String argument) {
+        logger.trace("Wrapping argument: " + argument);
         if (argument.contains(" ") && !singleWrapped.matcher(argument).find())
-            return "\"" + escapeArgument(argument) + "\"";
+            argument = "\"" + escapeArgument(argument) + "\"";
+        logger.detailedTrace("Wrapped argument: " + argument);
         return argument;
     }
 
@@ -258,9 +280,11 @@ public class Commands {
      * @return command wrapped in quotation mark
      */
     public static String[] secureSingleCommand(String... command) {
+        logger.trace("Securing command for: " + command);
         String[] wrappedCommand = new String[command.length];
         for (int i = 0; i < command.length; i++)
             wrappedCommand[i] = wrapArgument(command[i]);
+        logger.detailedTrace("Secured command: " + wrappedCommand);
         return wrappedCommand;
     }
 
@@ -276,9 +300,11 @@ public class Commands {
      * @return command wrapped in quotation mark
      */
     public static List<String[]> secureMultipleCommands(List<String[]> commands) {
+        logger.trace("Securing commands for: " + commands);
         List<String[]> wrappedCommands = new ArrayList<String[]>();
         for (String[] command : commands)
             wrappedCommands.add(secureSingleCommand(command));
+        logger.detailedTrace("Secured commands for: " + wrappedCommands);
         return wrappedCommands;
     }
 

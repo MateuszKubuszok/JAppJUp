@@ -1,8 +1,12 @@
 package com.autoupdater.client.download.aggregated.services;
 
+import static net.jsdpu.logger.Logger.getLogger;
+
 import java.io.File;
 import java.util.SortedSet;
 import java.util.TreeSet;
+
+import net.jsdpu.logger.Logger;
 
 import com.autoupdater.client.download.DownloadResultException;
 import com.autoupdater.client.download.aggregated.notifiers.FileAggregatedNotifier;
@@ -24,6 +28,8 @@ import com.autoupdater.client.models.Update;
 public class FileAggregatedDownloadService
         extends
         AbstractAggregatedDownloadService<FileDownloadService, FileAggregatedNotifier, File, SortedSet<Update>, Update> {
+    private static final Logger logger = getLogger(FileAggregatedDownloadService.class);
+
     private SortedSet<Update> allUpdates;
 
     /**
@@ -39,6 +45,7 @@ public class FileAggregatedDownloadService
 
     @Override
     public SortedSet<Update> getResult() throws DownloadResultException {
+        logger.debug("Starts calculating results");
         SortedSet<Update> updates = new TreeSet<Update>();
         for (FileDownloadService service : getServices()) {
             Update update = null;
@@ -56,6 +63,7 @@ public class FileAggregatedDownloadService
                 updates.add(update);
             }
         }
+        logger.debug("Finshed calculating results");
         return updates;
     }
 

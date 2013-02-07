@@ -1,5 +1,7 @@
 package com.autoupdater.client.download;
 
+import static com.autoupdater.client.download.ConnectionConfiguration.CACHE_INFO_FILE;
+import static net.jsdpu.logger.Logger.getLogger;
 import static org.apache.commons.codec.digest.DigestUtils.md5Hex;
 
 import java.io.BufferedInputStream;
@@ -8,6 +10,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+
+import net.jsdpu.logger.Logger;
 
 import com.autoupdater.client.xml.creators.FileCacheXMLCreator;
 import com.autoupdater.client.xml.parsers.FileCacheParser;
@@ -18,6 +22,8 @@ import com.autoupdater.client.xml.parsers.ParserException;
  * marked as correctly downloaded.
  */
 public class FileCache {
+    private static final Logger logger = getLogger(FileCache.class);
+
     private static final int INPUT_BUFFER_SIZE = 1024 * 1024;
     private static Map<String, String> cacheMap;
 
@@ -35,6 +41,7 @@ public class FileCache {
      * @return true if file is already downloaded
      */
     public static boolean isFileDownloaded(String path) {
+        logger.trace("Checks whether file '" + path + "' is already downloaded");
         if (getMap().containsKey(path)) {
             File file = new File(path);
             return file.exists() && cacheMap.get(path).equals(calculateHash(file));
@@ -49,6 +56,7 @@ public class FileCache {
      *            path to file
      */
     public static void setFileDownloaded(String path) {
+        logger.trace("Marks file " + path + " as downloaded");
         File file = new File(path);
         if (file.exists()) {
             String hash = calculateHash(file);
@@ -66,7 +74,7 @@ public class FileCache {
      */
     private static Map<String, String> getMap() {
         if (cacheMap == null) {
-            File file = new File(ConnectionConfiguration.CACHE_INFO_FILE);
+            File file = new File(CACHE_INFO_FILE);
             if (file.exists()) {
                 try {
                     cacheMap = new FileCacheParser().parseXML(file);
@@ -86,7 +94,7 @@ public class FileCache {
      *            map to save
      */
     private static void setMap(Map<String, String> map) {
-        File destination = new File(ConnectionConfiguration.CACHE_INFO_FILE);
+        File destination = new File(CACHE_INFO_FILE);
         try {
             new FileCacheXMLCreator().createXML(destination, map);
         } catch (IOException e) {

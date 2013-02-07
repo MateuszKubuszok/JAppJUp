@@ -1,7 +1,9 @@
 package net.jsdpu.process.executors;
 
-import static net.jsdpu.process.executors.Commands.convertMultipleConsoleCommands;
-import static net.jsdpu.process.executors.Commands.joinArguments;
+import static java.lang.System.*;
+import static java.util.regex.Pattern.compile;
+import static net.jsdpu.logger.Logger.getLogger;
+import static net.jsdpu.process.executors.Commands.*;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -9,7 +11,8 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+
+import net.jsdpu.logger.Logger;
 
 /**
  * Class used to replace multiple commands calls with one.
@@ -20,6 +23,8 @@ import java.util.regex.Pattern;
  * </p>
  */
 public class MultiCaller {
+    private static final Logger logger = getLogger(MultiCaller.class);
+
     private static String path;
     private static String classPath;
 
@@ -36,6 +41,7 @@ public class MultiCaller {
      * @return list of commands for ProcessBulder/ProcessExecutor
      */
     static String[] prepareCommand(List<String[]> commands) {
+        logger.trace("Preparation of MultiCaller run: " + commands);
         List<String> command = new ArrayList<String>();
         command.add("java");
         command.add("-cp");
@@ -43,6 +49,7 @@ public class MultiCaller {
         command.add(MultiCaller.class.getName());
         for (String[] subCommand : commands)
             command.add(joinArguments(subCommand));
+        logger.detailedTrace("MultiCaller command: " + command);
         return command.toArray(new String[0]);
     }
 
@@ -65,15 +72,15 @@ public class MultiCaller {
 
                     BufferedReader in = new BufferedReader(new InputStreamReader(
                             process.getInputStream()));
-                    BufferedReader err = new BufferedReader(new InputStreamReader(
+                    BufferedReader error = new BufferedReader(new InputStreamReader(
                             process.getErrorStream()));
 
                     String line;
 
                     while ((line = in.readLine()) != null)
-                        System.out.println(line);
-                    while ((line = err.readLine()) != null)
-                        System.err.println(line);
+                        out.println(line);
+                    while ((line = error.readLine()) != null)
+                        err.println(line);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -115,12 +122,12 @@ public class MultiCaller {
     private static String getClassPath() {
         if (classPath == null) {
             if (runAsJar()) {
-                Matcher matcher = Pattern.compile("jar:([^!]+)!.+").matcher(getPath());
+                Matcher matcher = compile("jar:([^!]+)!.+").matcher(getPath());
                 if (!matcher.find())
                     throw new RuntimeException("Invalid class path");
                 classPath = matcher.group(1);
             } else
-                classPath = System.getProperty("java.class.path", null);
+                classPath = getProperty("java.class.path", null);
         }
         return classPath;
     }

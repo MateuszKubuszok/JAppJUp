@@ -1,7 +1,11 @@
 package com.autoupdater.client.download.services;
 
-import java.lang.Thread.State;
+import static java.lang.Thread.State.NEW;
+import static net.jsdpu.logger.Logger.getLogger;
+
 import java.net.HttpURLConnection;
+
+import net.jsdpu.logger.Logger;
 
 import com.autoupdater.client.download.DownloadResultException;
 import com.autoupdater.client.download.DownloadServiceMessage;
@@ -43,6 +47,8 @@ import com.google.common.base.Objects;
  */
 public abstract class AbstractDownloadService<Result> extends
         ObservableService<DownloadServiceMessage> implements IObserver<DownloadServiceMessage> {
+    private static final Logger logger = getLogger(AbstractDownloadService.class);
+
     private AbstractDownloadRunnable<Result> runnable;
     private Thread downloadThread;
     private HttpURLConnection connection;
@@ -63,7 +69,7 @@ public abstract class AbstractDownloadService<Result> extends
      *            connection used for obtain data
      */
     public AbstractDownloadService(HttpURLConnection connection) {
-        initialize(connection, null);
+        this(connection, null);
     }
 
     /**
@@ -81,7 +87,11 @@ public abstract class AbstractDownloadService<Result> extends
      *            path to file where result should be stored
      */
     public AbstractDownloadService(HttpURLConnection connection, String fileDestinationPath) {
-        initialize(connection, fileDestinationPath);
+        this.connection = connection;
+        this.fileDestinationPath = fileDestinationPath;
+        runnable = getRunnable();
+        runnable.addObserver(this);
+        downloadThread = new Thread(runnable);
     }
 
     /**
@@ -89,6 +99,7 @@ public abstract class AbstractDownloadService<Result> extends
      */
     public synchronized void start() {
         downloadThread.start();
+        logger.debug("Ordered start of download from: " + getConnection().getURL());
     }
 
     /**
@@ -97,7 +108,7 @@ public abstract class AbstractDownloadService<Result> extends
      * @return whether or not thread has started
      */
     public boolean hasStarted() {
-        return !downloadThread.getState().equals(State.NEW);
+        return !downloadThread.getState().equals(NEW);
     }
 
     /**
@@ -105,6 +116,7 @@ public abstract class AbstractDownloadService<Result> extends
      */
     public void cancel() {
         downloadThread.interrupt();
+        logger.debug("Ordered cancellation of download from: " + getConnection().getURL());
     }
 
     /**
@@ -184,22 +196,4 @@ public abstract class AbstractDownloadService<Result> extends
      * @return DownloadService instance
      */
     protected abstract AbstractDownloadRunnable<Result> getRunnable();
-
-    /**
-     * Initializes DownloadService.
-     * 
-     * <p>
-     * Used by constructors.
-     * </p>
-     * 
-     * @param connection
-     * @param fileDestinationPath
-     */
-    private void initialize(HttpURLConnection connection, String fileDestinationPath) {
-        this.connection = connection;
-        this.fileDestinationPath = fileDestinationPath;
-        runnable = getRunnable();
-        runnable.addObserver(this);
-        downloadThread = new Thread(runnable);
-    }
 }

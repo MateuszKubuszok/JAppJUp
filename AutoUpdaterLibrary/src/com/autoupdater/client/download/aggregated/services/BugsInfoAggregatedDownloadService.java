@@ -1,7 +1,11 @@
 package com.autoupdater.client.download.aggregated.services;
 
+import static net.jsdpu.logger.Logger.getLogger;
+
 import java.util.SortedSet;
 import java.util.TreeSet;
+
+import net.jsdpu.logger.Logger;
 
 import com.autoupdater.client.download.DownloadResultException;
 import com.autoupdater.client.download.aggregated.notifiers.BugsInfoAggregatedNotifier;
@@ -22,8 +26,11 @@ import com.autoupdater.client.models.Program;
 public class BugsInfoAggregatedDownloadService
         extends
         AbstractAggregatedDownloadService<BugsInfoDownloadService, BugsInfoAggregatedNotifier, SortedSet<BugEntry>, SortedSet<Program>, Program> {
+    private static final Logger logger = getLogger(BugsInfoAggregatedDownloadService.class);
+
     @Override
     public SortedSet<Program> getResult() throws DownloadResultException {
+        logger.debug("Starts calculating results");
         SortedSet<Program> result = new TreeSet<Program>();
         for (BugsInfoDownloadService service : getServices()) {
             Program program = null;
@@ -32,6 +39,7 @@ public class BugsInfoAggregatedDownloadService
                 result.add(program);
             }
         }
+        logger.debug("Finshed calculating results");
         return result;
     }
 

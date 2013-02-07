@@ -3,11 +3,14 @@ package com.autoupdater.client.download;
 import static com.autoupdater.client.download.ConnectionConfiguration.DOWNLOAD_DIRECTORY;
 import static com.autoupdater.client.environment.AvailabilityFilter.filterUpdateSelection;
 import static java.io.File.separator;
+import static net.jsdpu.logger.Logger.getLogger;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.util.SortedSet;
 import java.util.TreeSet;
+
+import net.jsdpu.logger.Logger;
 
 import com.autoupdater.client.download.aggregated.services.BugsInfoAggregatedDownloadService;
 import com.autoupdater.client.download.aggregated.services.ChangelogInfoAggregatedDownloadService;
@@ -56,6 +59,8 @@ import com.autoupdater.client.models.Update;
  * @see com.autoupdater.client.download.aggregated.services.FileAggregatedDownloadService
  */
 public class DownloadServiceFactory {
+    private static final Logger logger = getLogger(DownloadServiceFactory.class);
+
     private final EnvironmentData environmentData;
     private final ConnectionFactory connectionFactory;
 
@@ -67,8 +72,7 @@ public class DownloadServiceFactory {
      *            environment data
      */
     public DownloadServiceFactory(EnvironmentData environmentData) {
-        this.environmentData = environmentData;
-        this.connectionFactory = new ConnectionFactory(environmentData.getClientSettings());
+        this(environmentData, new ConnectionFactory(environmentData.getClientSettings()));
     }
 
     /**
@@ -82,6 +86,7 @@ public class DownloadServiceFactory {
      */
     public DownloadServiceFactory(EnvironmentData environmentData,
             ConnectionFactory connectionFactory) {
+        logger.debug("Initiated DownloadServiceFactory");
         this.environmentData = environmentData;
         this.connectionFactory = connectionFactory;
     }
@@ -111,6 +116,7 @@ public class DownloadServiceFactory {
      */
     public PackagesInfoAggregatedDownloadService createPackagesInfoAggregatedDownloadService()
             throws IOException {
+        logger.debug("Creates PackagesInfoAggregatedDownloadService");
         PackagesInfoAggregatedDownloadService aggregatedService = new PackagesInfoAggregatedDownloadService();
 
         for (ProgramSettings programSettings : environmentData.getProgramsSettingsForEachServer()) {
@@ -157,6 +163,7 @@ public class DownloadServiceFactory {
     public UpdateInfoAggregatedDownloadService createUpdateInfoAggregatedDownloadService(
             SortedSet<Package> selectedPackages) throws IOException,
             ProgramSettingsNotFoundException {
+        logger.debug("Creates UpdateInfoAggregatedDownloadService");
         UpdateInfoAggregatedDownloadService aggregatedService = new UpdateInfoAggregatedDownloadService();
 
         for (Package _package : selectedPackages) {
@@ -204,6 +211,7 @@ public class DownloadServiceFactory {
     public ChangelogInfoAggregatedDownloadService createChangelogInfoAggregatedDownloadService(
             SortedSet<Package> selectedPackages) throws ProgramSettingsNotFoundException,
             IOException {
+        logger.debug("Creates ChangelogInfoAggregatedDownloadService");
         ChangelogInfoAggregatedDownloadService aggregatedService = new ChangelogInfoAggregatedDownloadService();
 
         for (Package _package : selectedPackages) {
@@ -251,6 +259,7 @@ public class DownloadServiceFactory {
     public BugsInfoAggregatedDownloadService createBugsInfoAggregatedDownloadService(
             SortedSet<Program> selectedPrograms) throws ProgramSettingsNotFoundException,
             IOException {
+        logger.debug("Creates BugsInfoAggregatedDownloadService");
         BugsInfoAggregatedDownloadService aggregatedService = new BugsInfoAggregatedDownloadService();
 
         for (Program program : selectedPrograms) {
@@ -298,6 +307,7 @@ public class DownloadServiceFactory {
     public FileAggregatedDownloadService createFileAggregatedDownloadService(
             SortedSet<Update> requestedUpdates) throws ProgramSettingsNotFoundException,
             IOException {
+        logger.debug("Creates FileAggregatedDownloadService");
         FileAggregatedDownloadService aggregatedService = new FileAggregatedDownloadService();
 
         SortedSet<Update> downloadedUpdates = (SortedSet<Update>) Models.addAll(

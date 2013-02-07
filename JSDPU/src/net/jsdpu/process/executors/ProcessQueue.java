@@ -1,13 +1,19 @@
 package net.jsdpu.process.executors;
 
+import static net.jsdpu.logger.Logger.getLogger;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import net.jsdpu.logger.Logger;
 
 /**
  * Queue starting and returning Process' sequentially.
  */
 public class ProcessQueue {
+    private static final Logger logger = getLogger(ProcessQueue.class);
+
     private final List<ProcessBuilder> processBuilders;
 
     /**
@@ -39,6 +45,7 @@ public class ProcessQueue {
     public Process getNextProcess() throws IOException {
         if (processBuilders.isEmpty())
             return null;
+        logger.trace("Initialization of process: " + processBuilders.get(0).command());
         Process process = processBuilders.get(0).start();
         processBuilders.remove(0);
         return process;

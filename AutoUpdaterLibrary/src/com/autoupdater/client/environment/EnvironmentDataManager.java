@@ -1,8 +1,12 @@
 package com.autoupdater.client.environment;
 
+import static net.jsdpu.logger.Logger.getLogger;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.TreeSet;
+
+import net.jsdpu.logger.Logger;
 
 import com.autoupdater.client.environment.settings.ClientSettingsBuilder;
 import com.autoupdater.client.environment.settings.ProgramSettings;
@@ -28,6 +32,8 @@ import com.autoupdater.client.xml.parsers.ParserException;
  * @see com.autoupdater.client.environment.EnvironmentData
  */
 public class EnvironmentDataManager {
+    private static final Logger logger = getLogger(EnvironmentDataManager.class);
+
     private final EnvironmentContext environmentContext;
 
     /**
@@ -73,6 +79,7 @@ public class EnvironmentDataManager {
      */
     public EnvironmentData getEnvironmentData() throws ClientEnvironmentException, IOException {
         try {
+            logger.info("Reads settings from files");
             File settingsXMLFile = new File(environmentContext.getSettingsXMLPath());
             if (!settingsXMLFile.exists() || !settingsXMLFile.canRead())
                 throw new IOException("File does not exists or cannot be read");
@@ -86,6 +93,7 @@ public class EnvironmentDataManager {
 
             return environmentData.setEnvironmentDataManager(this);
         } catch (ParserException e) {
+            logger.warning("Settings read failed", e);
             throw new ClientEnvironmentException(e.getMessage());
         }
     }
@@ -99,6 +107,8 @@ public class EnvironmentDataManager {
      *             thrown if settings cannot be written to a file
      */
     public void setEnvironmentData(EnvironmentData environmentData) throws IOException {
+        logger.info("Saves settings to files");
+
         new ConfigurationXMLCreator().createXML(new File(environmentContext.getSettingsXMLPath()),
                 environmentData.getClientSettings(), environmentData.getProgramsSettings());
 
@@ -116,6 +126,8 @@ public class EnvironmentDataManager {
      * @return new EnvironmentData
      */
     public EnvironmentData createDefaultSettings() {
+        logger.info("Creates default settings");
+
         return new EnvironmentData(ClientSettingsBuilder.builder()
                 .setClientName(environmentContext.getDefaultClientName())
                 .setClientExecutableName(environmentContext.getDefaultClientExecutable())
@@ -134,6 +146,8 @@ public class EnvironmentDataManager {
      * @return new EnvironmentData
      */
     public EnvironmentData createDefaultSettingsWithProxy() {
+        logger.info("Creates default settings with proxy");
+
         return new EnvironmentData(ClientSettingsBuilder.builder()
                 .setClientName(environmentContext.getDefaultClientName())
                 .setClientExecutableName(environmentContext.getDefaultClientExecutable())

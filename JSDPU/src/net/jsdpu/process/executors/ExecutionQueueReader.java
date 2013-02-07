@@ -1,5 +1,7 @@
 package net.jsdpu.process.executors;
 
+import static net.jsdpu.logger.Logger.getLogger;
+
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -7,6 +9,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.SequenceInputStream;
 import java.util.Vector;
+
+import net.jsdpu.logger.Logger;
 
 /**
  * Enqueues execution of Process, from each of them obtains Output and Error
@@ -20,6 +24,8 @@ import java.util.Vector;
  * @see net.jsdpu.process.executors.AbstractProcessExecutor
  */
 public class ExecutionQueueReader {
+    private static final Logger logger = getLogger(ExecutionQueueReader.class);
+
     private final ProcessQueue processQueue;
     private BufferedReader reader;
 
@@ -73,6 +79,7 @@ public class ExecutionQueueReader {
      *             (e.g. program doesn't exists)
      */
     public void rewind() throws InvalidCommandException {
+        logger.trace("Reading to the end of stream");
         while (getNextOutput() != null)
             ;
     }
@@ -86,6 +93,7 @@ public class ExecutionQueueReader {
      *             (e.g. program doesn't exists)
      */
     private String readNextLine() throws InvalidCommandException {
+        logger.trace("Attempting to read next line");
         if (reader == null) {
             if (!processQueue.isEmpty())
                 loadNextReader();
@@ -99,6 +107,8 @@ public class ExecutionQueueReader {
                 ;
         } catch (IOException e) {
         }
+
+        logger.detailedTrace("Reading next line: " + line);
         return line;
     }
 
@@ -119,6 +129,7 @@ public class ExecutionQueueReader {
             }
 
             try {
+                logger.trace("Obtaining next reader");
                 Process process = processQueue.getNextProcess();
                 Vector<InputStream> vector = new Vector<InputStream>();
                 vector.add(process.getInputStream());
@@ -128,6 +139,7 @@ public class ExecutionQueueReader {
                 reader = new BufferedReader(new InputStreamReader(new SequenceInputStream(
                         vector.elements())));
             } catch (IOException e) {
+                logger.error("Failed to initiate next process (exception thrown)", e);
                 throw new InvalidCommandException(e.getMessage());
             }
         }

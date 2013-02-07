@@ -1,5 +1,9 @@
 package com.autoupdater.client.download.aggregated.services;
 
+import static com.autoupdater.client.download.ConnectionConfiguration.DEFAULT_MAX_PARALLEL_DOWNLOADS_NUMBER;
+import static java.lang.Thread.sleep;
+import static net.jsdpu.logger.Logger.getLogger;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Future;
@@ -7,7 +11,8 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import com.autoupdater.client.download.ConnectionConfiguration;
+import net.jsdpu.logger.Logger;
+
 import com.autoupdater.client.download.DownloadResultException;
 import com.autoupdater.client.download.DownloadServiceMessage;
 import com.autoupdater.client.download.EDownloadStatus;
@@ -50,6 +55,8 @@ import com.autoupdater.client.utils.aggregated.services.AbstractAggregatedServic
 public abstract class AbstractAggregatedDownloadService<Service extends AbstractDownloadService<Result>, Notifier extends AbstractAggregatedDownloadNotifier<AdditionalMessage>, Result, AggregatedResult, AdditionalMessage>
         extends
         AbstractAggregatedService<Service, Notifier, DownloadServiceMessage, DownloadServiceMessage, AdditionalMessage> {
+    private static final Logger logger = getLogger(AbstractAggregatedDownloadService.class);
+
     private EDownloadStatus state;
     private final ThreadPoolExecutor threadPoolExecutor;
     private final List<Future<?>> queuedFutures;
@@ -66,7 +73,7 @@ public abstract class AbstractAggregatedDownloadService<Service extends Abstract
      * @see com.autoupdater.client.download.ConnectionConfiguration#DEFAULT_MAX_PARALLEL_DOWNLOADS_NUMBER
      */
     public AbstractAggregatedDownloadService() {
-        this(ConnectionConfiguration.DEFAULT_MAX_PARALLEL_DOWNLOADS_NUMBER);
+        this(DEFAULT_MAX_PARALLEL_DOWNLOADS_NUMBER);
     }
 
     /**
@@ -88,6 +95,8 @@ public abstract class AbstractAggregatedDownloadService<Service extends Abstract
      * finished.
      */
     public void start() {
+        logger.info("Starts download queue");
+
         if (getServices() != null && !getServices().isEmpty())
             for (final Service service : getServices())
                 queuedFutures.add(threadPoolExecutor.submit(new ServiceRunnable(service)));
@@ -99,9 +108,16 @@ public abstract class AbstractAggregatedDownloadService<Service extends Abstract
                     threadPoolExecutor.shutdown();
                     setState(EDownloadStatus.IN_PROCESS);
                     threadPoolExecutor.awaitTermination(Long.MAX_VALUE, TimeUnit.SECONDS);
-                    setState(cancelled ? EDownloadStatus.CANCELLED : EDownloadStatus.PROCESSED);
+                    if (cancelled) {
+                        setState(EDownloadStatus.CANCELLED);
+                        logger.warning("Queue download cancelled");
+                    } else {
+                        setState(EDownloadStatus.PROCESSED);
+                        logger.info("Queue download finished");
+                    }
                 } catch (InterruptedException e) {
                     setState(EDownloadStatus.CANCELLED);
+                    logger.warning("Queue download cancelled");
                 }
             }
         }).start();
@@ -122,7 +138,7 @@ public abstract class AbstractAggregatedDownloadService<Service extends Abstract
     public void joinThread() {
         try {
             while (!getState().isDownloadFinished())
-                Thread.sleep(10);
+                sleep(10);
         } catch (InterruptedException e) {
         }
     }
@@ -174,6 +190,9 @@ public abstract class AbstractAggregatedDownloadService<Service extends Abstract
                 .notifyObservers(new DownloadServiceMessage(getNotifier(), state.getMessage()));
     }
 
+    /**
+     * Runnable executing single download.
+     */
     private class ServiceRunnable implements Runnable {
         private final Service service;
 

@@ -1,10 +1,13 @@
 package net.jsdpu.process.executors;
 
+import static net.jsdpu.logger.Logger.getLogger;
 import static net.jsdpu.process.executors.Commands.secureMultipleCommands;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import net.jsdpu.logger.Logger;
 
 /**
  * Superclass of ProcessExecutors - handles execution of commands and obtaining
@@ -27,6 +30,8 @@ import java.util.List;
  * @see net.jsdpu.EOperatingSystem#getProcessExecutor()
  */
 public abstract class AbstractProcessExecutor implements IProcessExecutor {
+    private static final Logger logger = getLogger(AbstractProcessExecutor.class);
+
     @Override
     public ExecutionQueueReader execute(List<String[]> commands) throws IOException {
         return executeCommands(secureMultipleCommands(commands));
@@ -54,10 +59,13 @@ public abstract class AbstractProcessExecutor implements IProcessExecutor {
      *             thrown when error occurs in system dependent process
      */
     private ExecutionQueueReader executeCommands(List<String[]> commands) throws IOException {
+        logger.trace("Creating ExecutionQueue for: " + commands);
+
         List<ProcessBuilder> processBuilders = new ArrayList<ProcessBuilder>();
         for (String[] command : commands)
             processBuilders.add(new ProcessBuilder(command));
 
+        logger.detailedTrace("Created ExecutionQueue");
         return new ExecutionQueueReader(new ProcessQueue(processBuilders));
     }
 

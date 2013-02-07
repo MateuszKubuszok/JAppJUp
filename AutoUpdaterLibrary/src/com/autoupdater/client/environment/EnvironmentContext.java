@@ -1,5 +1,7 @@
 package com.autoupdater.client.environment;
 
+import static com.autoupdater.client.environment.EnvironmentDefaultConfiguration.*;
+
 /**
  * Context used by EnvironmentDataManager to create, read and save
  * EnvironmentData.
@@ -32,19 +34,19 @@ public class EnvironmentContext {
      * EnviromentDataManager.
      */
     public EnvironmentContext() {
-        setSettingsXMLPath(EnvironmentDefaultConfiguration.DEFAULT_SETTINGS_XML_PATH);
-        setInstallationDataXMLPath(EnvironmentDefaultConfiguration.DEFAULT_INSTALLATION_DATA_XML_PATH);
+        setSettingsXMLPath(DEFAULT_SETTINGS_XML_PATH);
+        setInstallationDataXMLPath(DEFAULT_INSTALLATION_DATA_XML_PATH);
 
-        setDefaultClientName(EnvironmentDefaultConfiguration.DEFAULT_CLIENT_NAME);
-        setDefaultClientExecutable(EnvironmentDefaultConfiguration.DEFAULT_CLIENT_EXECUTABLE_NAME);
-        setTempporaryDirectory(EnvironmentDefaultConfiguration.DEFAULT_TEMPORARY_DIRECTORY);
-        setLocalAppData(EnvironmentDefaultConfiguration.DEFAULT_LOCAL_APPLICATION_DATA);
+        setDefaultClientName(DEFAULT_CLIENT_NAME);
+        setDefaultClientExecutable(DEFAULT_CLIENT_EXECUTABLE_NAME);
+        setTempporaryDirectory(DEFAULT_TEMPORARY_DIRECTORY);
+        setLocalAppData(DEFAULT_LOCAL_APPLICATION_DATA);
 
-        setDefaultPathToClientDirectory(EnvironmentDefaultConfiguration.DEFAULT_CLIENT_DIRECTORY_PATH);
-        setDefaultPathToClient(EnvironmentDefaultConfiguration.DEFAULT_CLIENT_EXECUTABLE_PATH);
-        setDefaultPathToInstaller(EnvironmentDefaultConfiguration.DEFAULT_INSTALLER_PATH);
-        setDefaultProxyAddress(EnvironmentDefaultConfiguration.DEFAULT_PROXY_ADDRESS);
-        setDefaultProxyPort(EnvironmentDefaultConfiguration.DEFAULT_PROXY_PORT);
+        setDefaultPathToClientDirectory(DEFAULT_CLIENT_DIRECTORY_PATH);
+        setDefaultPathToClient(DEFAULT_CLIENT_EXECUTABLE_PATH);
+        setDefaultPathToInstaller(DEFAULT_INSTALLER_PATH);
+        setDefaultProxyAddress(DEFAULT_PROXY_ADDRESS);
+        setDefaultProxyPort(DEFAULT_PROXY_PORT);
     }
 
     /**
