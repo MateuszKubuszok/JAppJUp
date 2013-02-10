@@ -51,4 +51,32 @@ public enum Level {
     public java.util.logging.Level getOrignialLevel() {
         return level;
     }
+    
+    /**
+     * Returns level instance for given name or null if none exists.
+     * 
+     * @param name
+     *            name for which value is searched
+     * @return Level value
+     */
+    public static Level parse(String name) {
+    	for (Level level : values())
+    		if (level.name().equals(name))
+    			return level;
+    	return null;
+    }
+    
+    /**
+     * Returns level instance for given original level or null if none exists.
+     * 
+     * @param level
+     *            original java.util.loging.Level
+     * @return Level value
+     */
+    public static Level parse(java.util.logging.Level originalLevel) {
+    	for (Level level : values())
+    		if (level.level.equals(originalLevel))
+    			return level;
+    	return null;
+    }
 }

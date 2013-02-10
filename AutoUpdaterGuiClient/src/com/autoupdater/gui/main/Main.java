@@ -7,7 +7,8 @@ import java.awt.EventQueue;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.logging.LogManager;
+
+import net.jsdpu.logger.LogManager;
 
 import com.autoupdater.client.environment.ClientEnvironmentException;
 import com.autoupdater.client.environment.EnvironmentDataManager;
