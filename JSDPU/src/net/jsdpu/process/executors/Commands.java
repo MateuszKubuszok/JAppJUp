@@ -6,6 +6,7 @@ import static java.util.regex.Pattern.*;
 import static net.jsdpu.logger.Logger.getLogger;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -147,13 +148,13 @@ public class Commands {
      */
     public static List<String[]> convertMultipleConsoleCommands(String... commands)
             throws InvalidCommandException {
-        logger.trace("Converting multiple console commands: " + commands);
+        logger.trace("Converting multiple console commands: " + arrayToString(commands));
         List<String[]> results = new ArrayList<String[]>();
 
         for (String command : commands)
             results.add(convertSingleConsoleCommand(command));
 
-        logger.detailedTrace("Converted multiple cponsole commands: " + results);
+        logger.detailedTrace("Converted multiple console commands: " + listToString(results));
         return results;
     }
 
@@ -211,10 +212,10 @@ public class Commands {
      * @return list of commands
      */
     public static List<String[]> convertSingleCommand(String... command) {
-        logger.trace("Convert single command for ProcessBuilder: " + command);
+        logger.trace("Convert single command for ProcessBuilder: " + arrayToString(command));
         List<String[]> result = new ArrayList<String[]>();
         result.add(command);
-        logger.detailedTrace("Converted single command: " + result);
+        logger.detailedTrace("Converted single command: { " + arrayToString(command) + " }");
         return result;
     }
 
@@ -280,11 +281,11 @@ public class Commands {
      * @return command wrapped in quotation mark
      */
     public static String[] secureSingleCommand(String... command) {
-        logger.trace("Securing command for: " + command);
+        logger.trace("Securing command for: " + arrayToString(command));
         String[] wrappedCommand = new String[command.length];
         for (int i = 0; i < command.length; i++)
             wrappedCommand[i] = wrapArgument(command[i]);
-        logger.detailedTrace("Secured command: " + wrappedCommand);
+        logger.detailedTrace("Secured command: " + arrayToString(wrappedCommand));
         return wrappedCommand;
     }
 
@@ -300,11 +301,11 @@ public class Commands {
      * @return command wrapped in quotation mark
      */
     public static List<String[]> secureMultipleCommands(List<String[]> commands) {
-        logger.trace("Securing commands for: " + commands);
+        logger.trace("Securing commands for: " + listToString(commands));
         List<String[]> wrappedCommands = new ArrayList<String[]>();
         for (String[] command : commands)
             wrappedCommands.add(secureSingleCommand(command));
-        logger.detailedTrace("Secured commands for: " + wrappedCommands);
+        logger.detailedTrace("Secured commands for: " + listToString(wrappedCommands));
         return wrappedCommands;
     }
 
@@ -317,5 +318,32 @@ public class Commands {
      */
     public static String joinArguments(String... arguments) {
         return argJoiner.join(arguments);
+    }
+
+    /**
+     * Returns String representing array of Strings.
+     * 
+     * @param array
+     *            array of Strings
+     * @return String
+     */
+    private static String arrayToString(String[] array) {
+        return Arrays.toString(array);
+    }
+
+    /**
+     * Returns String representing list of arrays of Strings.
+     * 
+     * @param list
+     *            list of arrays of Strings
+     * @return String
+     */
+    private static String listToString(List<String[]> list) {
+        StringBuilder builder = new StringBuilder().append("{ ");
+        if (list.size() > 0)
+            builder.append(arrayToString(list.get(0)));
+        for (int i = 1; i < list.size(); i++)
+            builder.append(", ").append(list.get(i));
+        return builder.append(" }").toString();
     }
 }
