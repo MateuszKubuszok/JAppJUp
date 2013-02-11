@@ -37,14 +37,11 @@
 			<c:choose>
 				<c:when test="${not empty currentUser}">
 				<c:choose>
-					<c:when test="${currentUser.userType eq 'SUPERADMIN'}">
+					<c:when test="${currentUser.admin}">
 						<a href="<c:url value="/users/" />"><spring:message code="navigation.users" /></a>
 						| <a href="<c:url value="/programs/" />"><spring:message code="navigation.programs" /></a>
 					</c:when>
-					<c:when test="${currentUser.userType eq 'REPO_ADMIN'}">
-						<a href="<c:url value="/users/" />"><spring:message code="navigation.users" /></a>
-					</c:when>
-					<c:when test="${currentUser.userType eq 'PACKAGE_ADMIN'}">
+					<c:when test="${currentUser.packageAdmin}">
 						<a href="<c:url value="/programs/" />"><spring:message code="navigation.programs" /></a>
 					</c:when>
 					<c:otherwise>

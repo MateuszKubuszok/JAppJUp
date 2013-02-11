@@ -78,6 +78,7 @@ public final class UpdatesController extends AppController {
         logger.debug("Received request: GET /updates/add/" + packageID);
 
         Update update = new Update();
+        update.setUploader(getCurrentUser());
         update.setThePackage(packageService.findById(packageID));
 
         model.addAttribute("newUpdate", update);
