@@ -173,7 +173,8 @@ public class Package implements IModel<Package> {
             return true;
 
         Package _package = (Package) obj;
-        return equal(name, _package.getName()) && equal(versionNumber, _package.getVersionNumber());
+        return equal(name, _package.name) && equal(versionNumber, _package.versionNumber)
+                && equal(program, _package.program);
     }
 
     @Override
@@ -189,7 +190,9 @@ public class Package implements IModel<Package> {
             return 0;
         else if (!equal(name, o.name))
             return compare(name, o.name);
-        return compare(versionNumber, o.versionNumber);
+        else if (!equal(versionNumber, o.versionNumber))
+            return compare(versionNumber, o.versionNumber);
+        return compare(program, o.program);
     }
 
     @Override
