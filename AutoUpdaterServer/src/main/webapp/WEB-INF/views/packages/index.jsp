@@ -11,7 +11,7 @@
 	<c:if test="${not empty program}">
 		&gt; <spring:message code="navigation.packages" arguments="${program.name}" />
 	</c:if>
-	<c:if test="${user.packageAdmin}">
+	<c:if test="${currentUser.packageAdmin}">
 		&gt; <a href="<c:url value="/packages/add/${program.id}" />"><spring:message code="navigation.package.add" /></a>
 	</c:if>
 </c:set>
@@ -24,7 +24,7 @@
 					<tr>
 						<th><spring:message code="model.package" /></th>
 						<th><spring:message code="model.update.plural" /></th>
-						<c:if test="${user.packageAdmin}">
+						<c:if test="${currentUser.packageAdmin}">
 							<th colspan="2"><spring:message code="navigation.manage" /></th>
 						</c:if>
 					</tr>
@@ -34,7 +34,7 @@
 						<tr>
 							<td>${_package.name}</td>
 							<td><a href="<c:url value="/updates/${_package.id}" />"><spring:message code="model.update.show" /></a></td>
-							<c:if test="${user.packageAdmin}">
+							<c:if test="${currentUser.packageAdmin}">
 								<td><a href="<c:url value="/packages/edit/${_package.id}" />"><spring:message code="navigation.edit" /></a></td>
 								<td><a href="<c:url value="/packages/delete/${_package.id}" />"><spring:message code="navigation.delete" /></a></td>
 							</c:if>

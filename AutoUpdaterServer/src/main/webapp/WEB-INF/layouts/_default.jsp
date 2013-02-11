@@ -18,8 +18,8 @@
 		<h1><a href="<c:url value="/" />"><spring:message code="repository.name" /></a></h1>
 		<div id="profile">
 		<c:choose>
-			<c:when test="${not empty user}">
-				<p><spring:message code="navigation.welcome" arguments="${user.name}" /></p>
+			<c:when test="${not empty currentUser}">
+				<p><spring:message code="navigation.welcome" arguments="${currentUser.name}" /></p>
 				<p>
 					<a href="<c:url value="/changepw" />"><spring:message code="navigation.changepw" /></a>
 					| <a href="<c:url value="/logout" />"><spring:message code="navigation.logout" /></a>
@@ -35,16 +35,16 @@
 		<div id="breadcrumbs">
 			<p>
 			<c:choose>
-				<c:when test="${not empty user}">
+				<c:when test="${not empty currentUser}">
 				<c:choose>
-					<c:when test="${user.userType eq 'SUPERADMIN'}">
+					<c:when test="${currentUser.userType eq 'SUPERADMIN'}">
 						<a href="<c:url value="/users/" />"><spring:message code="navigation.users" /></a>
 						| <a href="<c:url value="/programs/" />"><spring:message code="navigation.programs" /></a>
 					</c:when>
-					<c:when test="${user.userType eq 'REPO_ADMIN'}">
+					<c:when test="${currentUser.userType eq 'REPO_ADMIN'}">
 						<a href="<c:url value="/users/" />"><spring:message code="navigation.users" /></a>
 					</c:when>
-					<c:when test="${user.userType eq 'PACKAGE_ADMIN'}">
+					<c:when test="${currentUser.userType eq 'PACKAGE_ADMIN'}">
 						<a href="<c:url value="/programs/" />"><spring:message code="navigation.programs" /></a>
 					</c:when>
 					<c:otherwise>

@@ -10,7 +10,7 @@
 	<a href="<c:url value="/programs/" />"><spring:message code="navigation.programs" /></a>
 	&gt; <a href="<c:url value="/packages/${thePackage.program.id}" />"><spring:message code="navigation.packages" arguments="${thePackage.program.name}" /></a>
 	&gt; <spring:message code="navigation.updates" arguments="${thePackage.name}" />
-	<c:if test="${user.packageAdmin}">
+	<c:if test="${currentUser.packageAdmin}">
 		 &gt; <a href="<c:url value="/updates/add/${thePackage.id}" />"><spring:message code="navigation.update.add" /></a>
 	</c:if>
 </c:set>
@@ -29,7 +29,7 @@
 						<th><spring:message code="model.update.updaterCommand" /></th>
 						<th><spring:message code="model.update.changelog" /></th>
 						<th><spring:message code="model.update.download" /></th>
-						<c:if test="${user.packageAdmin}">
+						<c:if test="${currentUser.packageAdmin}">
 							<th colspan="2"><spring:message code="navigation.manage" /></th>
 						</c:if>
 					</tr>
@@ -59,7 +59,7 @@
 							</c:choose></td>
 							<td>${update.changelog}</td>
 							<td><a href="<c:url value="/api/download/${update.id}"/>"><spring:message code="model.update.download" /></a></td>
-							<c:if test="${user.packageAdmin}">
+							<c:if test="${currentUser.packageAdmin}">
 								<td><a href="<c:url value="/updates/edit/${update.id}" />"><spring:message code="navigation.edit" /></a></td>
 								<td><a href="<c:url value="/updates/delete/${update.id}" />"><spring:message code="navigation.delete" /></a></td>
 							</c:if>

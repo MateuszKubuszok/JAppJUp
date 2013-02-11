@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 import com.autoupdater.server.models.Program;
-import com.autoupdater.server.utils.authentication.CurrentUserUtil;
 
 /**
  * Responsible for managing programs.
@@ -44,7 +43,6 @@ public final class ProgramsController extends AppController {
     public String index(Model model) {
         logger.debug("Received request: GET /programs");
 
-        model.addAttribute("user", userService.findByUsername(CurrentUserUtil.getUsername()));
         model.addAttribute("programs", programService.findAll());
 
         logger.debug("Renders requiest: GET /programs");

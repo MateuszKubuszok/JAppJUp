@@ -18,7 +18,7 @@
 			<p>
 				<label for="j_username"><spring:message code="model.user.username" />:</label>
 				<c:if test="${not empty param.error}"> 
-					<span class="error">Wrong credentials</span>
+					<span class="error"><spring:message code="navigation.wrongCredentials" /></span>
 				</c:if>
 				<input name="j_username" />
 			</p>

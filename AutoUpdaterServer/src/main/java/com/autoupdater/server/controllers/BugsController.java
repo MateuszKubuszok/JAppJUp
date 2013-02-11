@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 
 import com.autoupdater.server.models.Bug;
 import com.autoupdater.server.models.Program;
-import com.autoupdater.server.utils.authentication.CurrentUserUtil;
 
 /**
  * Responsible for handling bugs panel.
@@ -50,7 +49,6 @@ public final class BugsController extends AppController {
 
         Program program = programService.findById(programID);
 
-        model.addAttribute("user", userService.findByUsername(CurrentUserUtil.getUsername()));
         model.addAttribute("bugs", program != null ? program.getBugs() : bugService.findAll());
         model.addAttribute("program", program);
 

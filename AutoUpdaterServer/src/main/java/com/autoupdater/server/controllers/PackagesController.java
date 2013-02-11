@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 
 import com.autoupdater.server.models.Package;
 import com.autoupdater.server.models.Program;
-import com.autoupdater.server.utils.authentication.CurrentUserUtil;
 
 /**
  * Responsible for handling package panel.
@@ -49,8 +48,6 @@ public final class PackagesController extends AppController {
         logger.debug("Received request: GET /packages/" + programID);
 
         Program program = programService.findById(programID);
-
-        model.addAttribute("user", userService.findByUsername(CurrentUserUtil.getUsername()));
         model.addAttribute("packages",
                 program != null ? program.getPackages() : packageService.findAll());
         model.addAttribute("program", program);

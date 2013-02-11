@@ -11,7 +11,7 @@
 	<c:if test="${not empty program}">
 		&gt; <spring:message code="navigation.bugs" arguments="${program.name}" />
 	</c:if>
-	<c:if test="${user.packageAdmin}">	
+	<c:if test="${currentUser.packageAdmin}">	
 		&gt; <a href="<c:url value="/bugs/add/${program.id}" />"><spring:message code="navigation.bug.add" /></a>
 	</c:if>
 </c:set>
@@ -32,7 +32,7 @@
 					<c:forEach items="${bugs}" var="bug">
 						<tr>
 							<td>${bug.description}</td>
-							<c:if test="${user.packageAdmin}">
+							<c:if test="${currentUser.packageAdmin}">
 								<td><a href="<c:url value="/bugs/edit/${bug.id}" />"><spring:message code="navigation.edit" /></a></td>
 								<td><a href="<c:url value="/bugs/delete/${bug.id}" />"><spring:message code="navigation.delete" /></a></td>
 							</c:if>

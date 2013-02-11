@@ -8,13 +8,16 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.ModelAttribute;
 
+import com.autoupdater.server.models.User;
 import com.autoupdater.server.services.BugService;
 import com.autoupdater.server.services.FileService;
 import com.autoupdater.server.services.PackageService;
 import com.autoupdater.server.services.ProgramService;
 import com.autoupdater.server.services.UpdateService;
 import com.autoupdater.server.services.UserService;
+import com.autoupdater.server.utils.authentication.CurrentUserUtil;
 
 /**
  * Parent of all controllers used in project.
@@ -62,6 +65,18 @@ public abstract class AppController {
      * AppController's logger.
      */
     private static final Logger logger = getLogger(AppController.class);
+
+    /**
+     * Sets up current user at beginning of each request.
+     * 
+     * @return current user
+     */
+    @ModelAttribute("currentUser")
+    public User getCurrentUser() {
+        User currentUser = userService.findByUsername(CurrentUserUtil.getUsername());
+        logger.debug("Sets up current user: " + currentUser);
+        return currentUser;
+    }
 
     /**
      * Sends error instead of displaying page.

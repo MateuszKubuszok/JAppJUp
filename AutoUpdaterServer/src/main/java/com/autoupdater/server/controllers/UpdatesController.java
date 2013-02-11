@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import com.autoupdater.server.models.EUpdateStrategy;
 import com.autoupdater.server.models.Package;
 import com.autoupdater.server.models.Update;
-import com.autoupdater.server.utils.authentication.CurrentUserUtil;
 
 /**
  * Responsible for rendering updates panel.
@@ -55,7 +54,6 @@ public final class UpdatesController extends AppController {
 
         Package _package = packageService.findById(packageID);
 
-        model.addAttribute("user", userService.findByUsername(CurrentUserUtil.getUsername()));
         model.addAttribute("thePackage", _package);
         model.addAttribute("updates", _package.getUpdates());
 
@@ -81,7 +79,6 @@ public final class UpdatesController extends AppController {
 
         Update update = new Update();
         update.setThePackage(packageService.findById(packageID));
-        update.setUploader(userService.findByUsername(CurrentUserUtil.getUsername()));
 
         model.addAttribute("newUpdate", update);
         model.addAttribute("updateTypes", EUpdateStrategy.values());

@@ -8,7 +8,7 @@
 
 <c:set var="breadcrumbs">
 	<spring:message code="navigation.programs" />
-	<c:if test="${user.packageAdmin}">
+	<c:if test="${currentUser.packageAdmin}">
 		&gt; <a href="<c:url value="/programs/add" />"><spring:message code="navigation.program.add" /></a>
 	</c:if>
 </c:set>
@@ -22,7 +22,7 @@
 						<th><spring:message code="model.program" /></th>
 						<th><spring:message code="model.package.plural" /></th>
 						<th><spring:message code="model.bug.plural" /></th>
-						<c:if test="${user.packageAdmin}">
+						<c:if test="${currentUser.packageAdmin}">
 							<th colspan="2"><spring:message code="navigation.manage" /></th>
 						</c:if>
 					</tr>
@@ -33,7 +33,7 @@
 							<td>${program.name}</td>
 						   	<td><a href="<c:url value="/packages/${program.id}" />"><spring:message code="model.package.show" /></a></td>
 						   	<td><a href="<c:url value="/bugs/${program.id}" />"><spring:message code="model.bug.show" /></a></td>
-						   	<c:if test="${user.packageAdmin}">
+						   	<c:if test="${currentUser.packageAdmin}">
 						   		<td><a href="<c:url value="/programs/edit/${program.id}" />"><spring:message code="navigation.edit" /></a></td>
 						   		<td><a href="<c:url value="/programs/delete/${program.id}" />"><spring:message code="navigation.delete" /></a></td>
 						   	</c:if>
