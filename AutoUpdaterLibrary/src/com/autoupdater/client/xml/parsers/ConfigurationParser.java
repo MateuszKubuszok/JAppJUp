@@ -1,7 +1,11 @@
 package com.autoupdater.client.xml.parsers;
 
+import static net.jsdpu.logger.Logger.getLogger;
+
 import java.util.SortedSet;
 import java.util.TreeSet;
+
+import net.jsdpu.logger.Logger;
 
 import org.dom4j.Document;
 import org.dom4j.Element;
@@ -18,8 +22,11 @@ import com.autoupdater.client.xml.schema.ConfigurationSchema;
  * Implementation parsing XML data from file into EnvironmentData.
  */
 public class ConfigurationParser extends AbstractXMLParser<EnvironmentData> {
+    private static final Logger logger = getLogger(ConfigurationParser.class);
+
     @Override
     EnvironmentData parseDocument(Document document) throws ParserException {
+        logger.trace("Parsing configuration file's document");
         try {
             Element client = (Element) document.selectSingleNode("./"
                     + ConfigurationSchema.Configuration.client_);
@@ -78,6 +85,8 @@ public class ConfigurationParser extends AbstractXMLParser<EnvironmentData> {
 
             return new EnvironmentData(clientSettings, programsSettings);
         } catch (Exception e) {
+            logger.error("Cannot parse configuration file's document: " + e.getMessage()
+                    + " (exception thrown)", e);
             throw new ParserException("Error occured while parsing configuration file");
         }
     }

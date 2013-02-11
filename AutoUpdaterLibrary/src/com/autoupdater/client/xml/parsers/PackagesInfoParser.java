@@ -1,8 +1,12 @@
 package com.autoupdater.client.xml.parsers;
 
+import static net.jsdpu.logger.Logger.getLogger;
+
 import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
+
+import net.jsdpu.logger.Logger;
 
 import org.dom4j.Document;
 import org.dom4j.Element;
@@ -18,8 +22,11 @@ import com.autoupdater.client.xml.schema.PackagesInfoSchema;
  * Implementation parsing incoming XML data into SortedSet of Programs.
  */
 public class PackagesInfoParser extends AbstractXMLParser<SortedSet<Program>> {
+    private static final Logger logger = getLogger(PackagesInfoParser.class);
+
     @Override
     SortedSet<Program> parseDocument(Document document) throws ParserException {
+        logger.trace("Parsing packages info data");
         try {
             SortedSet<Program> programs = new TreeSet<Program>();
 
@@ -46,6 +53,8 @@ public class PackagesInfoParser extends AbstractXMLParser<SortedSet<Program>> {
             }
             return programs;
         } catch (Exception e) {
+            logger.error("Cannot parse packages info data's document: " + e.getMessage()
+                    + " (exception thrown)", e);
             throw new ParserException("Error occured while parsing response");
         }
     }

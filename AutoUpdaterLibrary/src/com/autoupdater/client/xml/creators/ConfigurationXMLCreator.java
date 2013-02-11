@@ -1,8 +1,12 @@
 package com.autoupdater.client.xml.creators;
 
+import static net.jsdpu.logger.Logger.getLogger;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Set;
+
+import net.jsdpu.logger.Logger;
 
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
@@ -25,6 +29,8 @@ import com.google.common.io.Files;
  * @see com.autoupdater.client.xml.schema.ConfigurationSchema
  */
 public class ConfigurationXMLCreator {
+    private static final Logger logger = getLogger(ConfigurationXMLCreator.class);
+
     /**
      * Creates XML document with installation data and stores it info file.
      * 
@@ -39,6 +45,7 @@ public class ConfigurationXMLCreator {
      */
     public void createXML(File destination, ClientSettings clientSettings,
             Set<ProgramSettings> programsSettings) throws IOException {
+        logger.debug("Save confuguration data at: " + destination.getCanonicalPath());
         Document settings = DocumentHelper.createDocument();
         settings.addComment(XMLCreationConfiguration.DO_NOT_EDIT_FILE_MANUALLY_WARNING);
 
@@ -58,6 +65,7 @@ public class ConfigurationXMLCreator {
 
         Files.createParentDirs(destination);
         Files.write(settings.asXML(), destination, XMLCreationConfiguration.XML_ENCODING);
+        logger.trace("Saved configuration cache data at: " + destination.getCanonicalPath());
     }
 
     /**

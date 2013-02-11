@@ -1,9 +1,13 @@
 package com.autoupdater.installer;
 
+import static java.lang.System.*;
+import static net.jsdpu.logger.Logger.getLogger;
+import static net.jsdpu.process.executors.Commands.convertSingleConsoleCommand;
+
 import java.io.File;
 import java.io.IOException;
 
-import net.jsdpu.process.executors.Commands;
+import net.jsdpu.logger.Logger;
 import net.jsdpu.process.executors.InvalidCommandException;
 
 import com.autoupdater.commons.error.codes.EErrorCode;
@@ -18,6 +22,8 @@ import com.autoupdater.installer.installation.strategies.UnzipInstallationStrate
  * Class performing actual installation.
  */
 public class InstallationPerformer {
+    private static final Logger logger = getLogger(InstallationPerformer.class);
+
     /**
      * Runs installation by arguments passed from Main. Requires exactly 4
      * arguments:
@@ -97,8 +103,7 @@ public class InstallationPerformer {
     private int runPostInstallationCommand(String command) throws InvalidCommandException,
             IOException {
         try {
-            return new ProcessBuilder(Commands.convertSingleConsoleCommand(command)).start()
-                    .waitFor();
+            return new ProcessBuilder(convertSingleConsoleCommand(command)).start().waitFor();
         } catch (InterruptedException e) {
             return -1;
         }
@@ -130,7 +135,8 @@ public class InstallationPerformer {
      *            message to print
      */
     private void info(String id, EInstallerMessage message) {
-        System.out.println("[info] " + id + ": " + message);
+        logger.info("[info] " + id + ": " + message);
+        out.println("[info] " + id + ": " + message);
     }
 
     /**
@@ -142,6 +148,7 @@ public class InstallationPerformer {
      *            message to print
      */
     private void error(String id, EInstallerMessage message) {
-        System.err.println("[error] " + id + ": " + message);
+        logger.error("[error] " + id + ": " + message);
+        err.println("[error] " + id + ": " + message);
     }
 }

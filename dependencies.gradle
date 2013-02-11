@@ -71,7 +71,7 @@ project(':AutoUpdaterInstaller') {
 		compile project(':AutoUpdaterCommons')
 	}
 	
-	jar { manifest { attributes "Class-Path": "./AutoUpdaterCommons.jar ./JSDPU.jar                      ./libraries/guava-13.0.1.jar" } }
+	jar { manifest { attributes "Class-Path": "./AutoUpdaterCommons.jar ./JSDPU.jar                      ./libraries/guava-13.0.1.jar ./installer.logger.properties" } }
 }
 
 project(':AutoUpdaterLibrary') {

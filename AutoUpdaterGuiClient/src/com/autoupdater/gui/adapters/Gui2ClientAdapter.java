@@ -39,7 +39,8 @@ public class Gui2ClientAdapter {
     private final Thread updateThread;
     private FileAggregatedDownloadService currentDownloadSession = null;
 
-    private int updateCountdown;
+    private int minutesSinceLastUpdateCheck;
+    private final static int MINUTES_BETWEEN_EACH_UPDATE_CHECK = 10;
 
     // initialization
 
@@ -49,13 +50,14 @@ public class Gui2ClientAdapter {
         utils = new AdapterUtils(this, client);
 
         updateThread = new Thread(new InformationUpdater());
-        updateThread.start();
     }
 
     public void setClientWindow(final GuiClientWindow clientWindow) {
         this.clientWindow = clientWindow;
         clientWindow.setSettings(environmentData);
         utils.setUpClientWindow(clientWindow);
+        // until window is set up updates shouldn't be checked
+        updateThread.start();
     }
 
     // operations
@@ -67,7 +69,7 @@ public class Gui2ClientAdapter {
 
         setState(FETCHING_UPDATE_INFO);
         setInstallationInactive();
-        updateCountdown = 0;
+        minutesSinceLastUpdateCheck = 0;
 
         (new Thread() {
             @Override
@@ -198,16 +200,10 @@ public class Gui2ClientAdapter {
     private class InformationUpdater implements Runnable {
         @Override
         public void run() {
-            // initially wait 1 minute
-            try {
-                waitOneMinute();
-            } catch (InterruptedException e) {
-            }
-
-            updateCountdown = 10;
+            checkUpdates();
 
             while (!updateThread.isInterrupted()) {
-                if (updateCountdown >= 10)
+                if (minutesSinceLastUpdateCheck >= MINUTES_BETWEEN_EACH_UPDATE_CHECK)
                     checkUpdates();
 
                 try {

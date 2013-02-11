@@ -1,8 +1,12 @@
 package com.autoupdater.client.xml.creators;
 
+import static net.jsdpu.logger.Logger.getLogger;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.SortedSet;
+
+import net.jsdpu.logger.Logger;
 
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
@@ -26,6 +30,8 @@ import com.google.common.io.Files;
  * @see com.autoupdater.client.xml.schema.InstallationDataSchema
  */
 public class InstallationDataXMLCreator {
+    private static final Logger logger = getLogger(InstallationDataXMLCreator.class);
+
     /**
      * Creates XML document with installation data and stores it info file.
      * 
@@ -37,11 +43,13 @@ public class InstallationDataXMLCreator {
      *             thrown when error occurs during storing data to file
      */
     public void createXML(File destination, SortedSet<Program> installationData) throws IOException {
+        logger.debug("Save installation data at: " + destination.getCanonicalPath());
         Document installationDataXML = DocumentHelper.createDocument();
         installationDataXML.addComment(XMLCreationConfiguration.DO_NOT_EDIT_FILE_MANUALLY_WARNING);
         Element installed = installationDataXML.addElement(InstallationDataSchema.installed);
         addPrograms(installed, installationData);
         Files.write(installationDataXML.asXML(), destination, XMLCreationConfiguration.XML_ENCODING);
+        logger.trace("Saved installation data at: " + destination.getCanonicalPath());
     }
 
     /**

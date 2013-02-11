@@ -1,7 +1,11 @@
 package com.autoupdater.client.xml.parsers;
 
+import static net.jsdpu.logger.Logger.getLogger;
+
 import java.util.SortedSet;
 import java.util.TreeSet;
+
+import net.jsdpu.logger.Logger;
 
 import org.dom4j.Document;
 import org.dom4j.Element;
@@ -18,8 +22,11 @@ import com.autoupdater.client.xml.schema.InstallationDataSchema;
  * Programs.
  */
 public class InstallationDataParser extends AbstractXMLParser<SortedSet<Program>> {
+    private static final Logger logger = getLogger(InstallationDataParser.class);
+
     @Override
     SortedSet<Program> parseDocument(Document document) throws ParserException {
+        logger.trace("Parsing installation data file's document");
         try {
             SortedSet<Program> programs = new TreeSet<Program>();
 
@@ -56,6 +63,8 @@ public class InstallationDataParser extends AbstractXMLParser<SortedSet<Program>
 
             return programs;
         } catch (Exception e) {
+            logger.error("Cannot parse installation data file's document: " + e.getMessage()
+                    + " (exception thrown)", e);
             throw new ParserException("Error occured while parsing installation data file");
         }
     }

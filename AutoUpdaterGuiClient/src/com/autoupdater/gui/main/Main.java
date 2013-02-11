@@ -51,7 +51,6 @@ public class Main {
             FileInputStream configFile = new FileInputStream("./client.logger.properties");
             LogManager.getLogManager().readConfiguration(configFile);
         } catch (SecurityException | IOException e) {
-            e.printStackTrace();
         }
     }
 

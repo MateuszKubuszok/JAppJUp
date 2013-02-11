@@ -1,6 +1,7 @@
 package com.autoupdater.installer.installation.strategies;
 
 import static com.autoupdater.commons.error.codes.EErrorCode.SUCCESS;
+import static net.jsdpu.logger.Logger.getLogger;
 import static net.jsdpu.process.executors.Commands.convertMultipleConsoleCommands;
 
 import java.io.BufferedReader;
@@ -9,15 +10,20 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+import net.jsdpu.logger.Logger;
 import net.jsdpu.process.executors.InvalidCommandException;
 
 /**
  * Executes command passed into installer.
  */
 public class ExecuteInstallationStrategy implements IInstallationStrategy {
+    private static final Logger logger = getLogger(ExecuteInstallationStrategy.class);
+
     @Override
     public void process(File ignoredFile, String executedCommand) throws IOException,
             InvalidCommandException {
+        logger.debug("Executes command: " + executedCommand);
+
         String[] command = convertMultipleConsoleCommands(executedCommand).get(0);
         ProcessBuilder builder = new ProcessBuilder(command);
         Process process = builder.start();
@@ -26,11 +32,16 @@ public class ExecuteInstallationStrategy implements IInstallationStrategy {
         rewind(process.getErrorStream());
 
         try {
-            if (process.waitFor() != SUCCESS.getCode())
+            int errorCode = process.waitFor();
+            if (errorCode != SUCCESS.getCode()) {
+                logger.error("Execution finished with code: " + errorCode + " (exception thrown)");
                 throw new IOException("Update executaion failed!");
+            }
         } catch (InterruptedException e) {
+            logger.error("Exception occured: " + e.getMessage(), e);
             throw new IOException("Update executaion failed!");
         }
+        logger.debug("Execution finished successfully");
     }
 
     private void rewind(InputStream is) {
@@ -46,6 +57,7 @@ public class ExecuteInstallationStrategy implements IInstallationStrategy {
             reader.close();
             is.close();
         } catch (IOException e) {
+            logger.warning("Excepton occured while reading: " + e.getMessage(), e);
         }
     }
 }

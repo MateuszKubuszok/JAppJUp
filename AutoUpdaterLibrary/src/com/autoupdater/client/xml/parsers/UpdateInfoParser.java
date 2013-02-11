@@ -1,8 +1,12 @@
 package com.autoupdater.client.xml.parsers;
 
+import static net.jsdpu.logger.Logger.getLogger;
+
 import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
+
+import net.jsdpu.logger.Logger;
 
 import org.dom4j.Document;
 import org.dom4j.Element;
@@ -16,8 +20,11 @@ import com.autoupdater.client.xml.schema.UpdateInfoSchema;
  * Implementation parsing incoming XML data into Update model.
  */
 public class UpdateInfoParser extends AbstractXMLParser<SortedSet<Update>> {
+    private static final Logger logger = getLogger(UpdateInfoParser.class);
+
     @Override
     public SortedSet<Update> parseDocument(Document document) throws ParserException {
+        logger.trace("Parsing update info data");
         try {
             SortedSet<Update> updates = new TreeSet<Update>();
 
@@ -54,6 +61,8 @@ public class UpdateInfoParser extends AbstractXMLParser<SortedSet<Update>> {
 
             return updates;
         } catch (Exception e) {
+            logger.error("Cannot parse update info data's document: " + e.getMessage()
+                    + " (exception thrown)", e);
             throw new ParserException("Error occured while parsing response");
         }
     }

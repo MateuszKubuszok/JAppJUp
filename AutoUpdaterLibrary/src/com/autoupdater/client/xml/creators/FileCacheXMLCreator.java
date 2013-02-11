@@ -1,8 +1,12 @@
 package com.autoupdater.client.xml.creators;
 
+import static net.jsdpu.logger.Logger.getLogger;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Map;
+
+import net.jsdpu.logger.Logger;
 
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
@@ -12,6 +16,8 @@ import com.autoupdater.client.xml.schema.FileCacheSchema;
 import com.google.common.io.Files;
 
 public class FileCacheXMLCreator {
+    private static final Logger logger = getLogger(FileCacheXMLCreator.class);
+
     /**
      * Creates XML document with file cache data and stores it info file.
      * 
@@ -23,11 +29,13 @@ public class FileCacheXMLCreator {
      *             thrown when error occurs during storing data to file
      */
     public void createXML(File destination, Map<String, String> fileCache) throws IOException {
+        logger.debug("Save file cache data at: " + destination.getCanonicalPath());
         Document fileCacheXML = DocumentHelper.createDocument();
         fileCacheXML.addComment(XMLCreationConfiguration.DO_NOT_EDIT_FILE_MANUALLY_WARNING);
         Element files = fileCacheXML.addElement(FileCacheSchema.files);
         addFiles(files, fileCache);
         Files.write(fileCacheXML.asXML(), destination, XMLCreationConfiguration.XML_ENCODING);
+        logger.trace("Saved file cache data at: " + destination.getCanonicalPath());
     }
 
     /**
