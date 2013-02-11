@@ -1,5 +1,6 @@
 package com.autoupdater.gui.adapters;
 
+import static com.autoupdater.gui.config.GuiConfiguration.WINDOW_TITLE;
 import static com.autoupdater.gui.window.EWindowStatus.*;
 import static java.awt.EventQueue.invokeLater;
 import static java.lang.Thread.sleep;
@@ -56,8 +57,12 @@ public class Gui2ClientAdapter {
         this.clientWindow = clientWindow;
         clientWindow.setSettings(environmentData);
         utils.setUpClientWindow(clientWindow);
+
         // until window is set up updates shouldn't be checked
         updateThread.start();
+        reportInfo(
+                WINDOW_TITLE + " initalized",
+                "Updater is initialized and ready to work. Click right mouse button on tray icon to check/install updates or run installed applications.");
     }
 
     // operations
