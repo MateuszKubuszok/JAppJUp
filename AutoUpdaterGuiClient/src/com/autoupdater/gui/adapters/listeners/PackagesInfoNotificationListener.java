@@ -19,6 +19,6 @@ public class PackagesInfoNotificationListener implements IObserver<DownloadServi
     @Override
     public void update(ObservableService<DownloadServiceMessage> observable,
             DownloadServiceMessage message) {
-        adapter.setStatusMessage("Checking repositories: " + aggregatedService.getState());
+        adapter.reportQuiet("Checking repositories: " + aggregatedService.getState());
     }
 }

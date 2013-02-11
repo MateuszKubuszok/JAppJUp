@@ -20,6 +20,6 @@ public class BugsInfoNotificationListener implements IObserver<DownloadServiceMe
     public void update(ObservableService<DownloadServiceMessage> observable,
             DownloadServiceMessage message) {
         if (observable == aggregatedService.getNotifier())
-            adapter.setStatusMessage("Fetching known bugs: " + aggregatedService.getState());
+            adapter.reportQuiet("Fetching known bugs: " + aggregatedService.getState());
     }
 }

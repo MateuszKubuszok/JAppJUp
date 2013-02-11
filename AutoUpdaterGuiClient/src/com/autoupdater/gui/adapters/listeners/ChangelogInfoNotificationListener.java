@@ -20,6 +20,6 @@ public class ChangelogInfoNotificationListener implements IObserver<DownloadServ
     public void update(ObservableService<DownloadServiceMessage> observable,
             DownloadServiceMessage message) {
         if (observable == aggregatedService.getNotifier())
-            adapter.setStatusMessage("Fetching changelogs: " + aggregatedService.getState());
+            adapter.reportQuiet("Fetching changelogs: " + aggregatedService.getState());
     }
 }

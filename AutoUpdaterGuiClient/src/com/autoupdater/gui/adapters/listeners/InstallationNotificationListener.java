@@ -22,7 +22,7 @@ public class InstallationNotificationListener implements IObserver<InstallationS
     public void update(ObservableService<InstallationServiceMessage> observable,
             InstallationServiceMessage message) {
         if (observable == aggregatedService.getNotifier()) {
-            adapter.setStatusMessage("Installation: " + aggregatedService.getState());
+            adapter.reportQuiet("Installation: " + aggregatedService.getState());
         }
 
         if (aggregatedService.getState() == EInstallationStatus.INSTALLING) {

@@ -93,7 +93,12 @@ public class GuiClientWindow extends JFrame {
         settingsTab.setEnvironmentData(environmentData);
     }
 
+    public void setStatusMessage(String message) {
+        statusLabel.setText(message);
+    }
+
     public void reportInfo(String title, String message) {
+        setStatusMessage(message);
         if (trayIcon != null)
             trayIcon.displayMessage(title, message, TrayIcon.MessageType.INFO);
         else
@@ -101,6 +106,7 @@ public class GuiClientWindow extends JFrame {
     }
 
     public void reportWarning(String title, String message) {
+        setStatusMessage(message);
         if (trayIcon != null)
             trayIcon.displayMessage(title, message, TrayIcon.MessageType.WARNING);
         else
@@ -108,6 +114,7 @@ public class GuiClientWindow extends JFrame {
     }
 
     public void reportError(String title, String message) {
+        setStatusMessage(message);
         if (trayIcon != null)
             trayIcon.displayMessage(title, message, TrayIcon.MessageType.ERROR);
         else
@@ -168,10 +175,6 @@ public class GuiClientWindow extends JFrame {
         if (cancelDownload != null)
             cancelDownload.setEnabled(state.isCancelDownloadButtonEnabled());
         resolve().configureWindowBehaviour(this, state);
-    }
-
-    public void setStatusMessage(String message) {
-        statusLabel.setText(message);
     }
 
     public void setSystemTray(SystemTray tray) {

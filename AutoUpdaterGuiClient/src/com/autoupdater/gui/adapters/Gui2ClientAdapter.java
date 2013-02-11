@@ -132,9 +132,11 @@ public class Gui2ClientAdapter {
     public synchronized SortedSet<Program> getAvailableOnServer() throws IOException,
             DownloadResultException {
         if (availableOnServer == null) {
-            setStatusMessage("No available programs list found - attempting to download it from repostories");
+            clientWindow
+                    .setStatusMessage("No available programs list found - attempting to download it from repostories");
             availableOnServer = utils.queryServerForPackages();
-            setStatusMessage("Fetched available programs from repositories").refreshGUI();
+            clientWindow.setStatusMessage("Fetched available programs from repositories");
+            refreshGUI();
         }
 
         return availableOnServer;
@@ -168,13 +170,12 @@ public class Gui2ClientAdapter {
         return this;
     }
 
-    public Gui2ClientAdapter setStatusMessage(String message) {
-        clientWindow.setStatusMessage(message);
-        return this;
-    }
-
     public void refreshGUI() {
         invokeLater(new RefreshGUI());
+    }
+
+    public void reportQuiet(String message) {
+        clientWindow.setStatusMessage(message);
     }
 
     public void reportInfo(String title, String message) {

@@ -29,18 +29,18 @@ public class InstallUpdatesRunnable implements Runnable {
                     || aggregatedDownloadService.getServices().isEmpty()) {
                 adapter.setState(UNINITIALIZED);
                 adapter.setInstallationInactive();
-                adapter.setStatusMessage("There are no updates available to install");
+                adapter.reportQuiet("There are no updates available to install");
                 return;
             }
 
-            adapter.setStatusMessage("Preparing download queues");
+            adapter.reportInfo("Preparing to download", "Preparing download queues");
             adapter.bindDownloadServicesToUpdateInformationPanels(aggregatedDownloadService);
 
-            adapter.setStatusMessage("Downloading updates from repositories");
+            adapter.reportInfo("Downloading updates", "Downloading updates from repositories");
             aggregatedDownloadService.start();
             aggregatedDownloadService.joinThread();
 
-            adapter.setStatusMessage("Preparing downloaded updates to install");
+            adapter.reportInfo("Preparing to install", "Preparing downloaded updates to install");
             aggregatedDownloadService.getResult();
 
             aggregatedInstallationService.getNotifier().addObserver(
@@ -52,7 +52,6 @@ public class InstallUpdatesRunnable implements Runnable {
             aggregatedInstallationService.joinThread();
             aggregatedInstallationService.getResult();
         } catch (DownloadResultException e) {
-            adapter.setStatusMessage("Error occured: " + e.getMessage());
             adapter.reportError("Error occured during installation", e.getMessage());
             adapter.setState(IDLE);
         } finally {
