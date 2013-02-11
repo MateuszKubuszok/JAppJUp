@@ -97,28 +97,37 @@ public class GuiClientWindow extends JFrame {
         statusLabel.setText(message);
     }
 
-    public void reportInfo(String title, String message) {
-        setStatusMessage(message);
-        if (trayIcon != null)
-            trayIcon.displayMessage(title, message, TrayIcon.MessageType.INFO);
-        else
-            showMessageDialog(this, message, title, INFORMATION_MESSAGE);
+    public void reportInfo(String title, String message, EInfoTarget target) {
+        if (target.shouldUpdateStatusBar())
+            setStatusMessage(message);
+        if (target.shouldUpdateToolTip()) {
+            if (trayIcon != null)
+                trayIcon.displayMessage(title, message, TrayIcon.MessageType.INFO);
+            else
+                showMessageDialog(this, message, title, INFORMATION_MESSAGE);
+        }
     }
 
-    public void reportWarning(String title, String message) {
-        setStatusMessage(message);
-        if (trayIcon != null)
-            trayIcon.displayMessage(title, message, TrayIcon.MessageType.WARNING);
-        else
-            showMessageDialog(this, message, title, WARNING_MESSAGE);
+    public void reportWarning(String title, String message, EInfoTarget target) {
+        if (target.shouldUpdateStatusBar())
+            setStatusMessage(message);
+        if (target.shouldUpdateToolTip()) {
+            if (trayIcon != null)
+                trayIcon.displayMessage(title, message, TrayIcon.MessageType.WARNING);
+            else
+                showMessageDialog(this, message, title, WARNING_MESSAGE);
+        }
     }
 
-    public void reportError(String title, String message) {
-        setStatusMessage(message);
-        if (trayIcon != null)
-            trayIcon.displayMessage(title, message, TrayIcon.MessageType.ERROR);
-        else
-            showMessageDialog(this, message, "Error occured", ERROR_MESSAGE);
+    public void reportError(String title, String message, EInfoTarget target) {
+        if (target.shouldUpdateStatusBar())
+            setStatusMessage(message);
+        if (target.shouldUpdateToolTip()) {
+            if (trayIcon != null)
+                trayIcon.displayMessage(title, message, TrayIcon.MessageType.ERROR);
+            else
+                showMessageDialog(this, message, "Error occured", ERROR_MESSAGE);
+        }
     }
 
     public void refresh() {
@@ -317,7 +326,7 @@ public class GuiClientWindow extends JFrame {
         checkUpdatesButton = new JButton("Check updates");
         controlPanel.add(checkUpdatesButton, "3, 2, left, fill");
 
-        installUpdatesButton = new JButton("Install updates");
+        installUpdatesButton = new JButton("Install all updates");
         controlPanel.add(installUpdatesButton, "5, 2, fill, fill");
 
         cancelDownloadButton = new JButton("Cancel downloads");

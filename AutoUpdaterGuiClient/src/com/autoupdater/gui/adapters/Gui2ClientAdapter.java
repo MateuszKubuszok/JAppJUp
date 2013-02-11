@@ -21,6 +21,7 @@ import com.autoupdater.client.models.Program;
 import com.autoupdater.client.models.Update;
 import com.autoupdater.gui.adapters.utils.AdapterUtils;
 import com.autoupdater.gui.tabs.updates.UpdateInformationPanel;
+import com.autoupdater.gui.window.EInfoTarget;
 import com.autoupdater.gui.window.EWindowStatus;
 import com.autoupdater.gui.window.GuiClientWindow;
 
@@ -37,7 +38,7 @@ public class Gui2ClientAdapter {
     // GUI instances
     private GuiClientWindow clientWindow;
 
-    private final Thread updateThread;
+    private final Thread informationUpdatingThread;
     private FileAggregatedDownloadService currentDownloadSession = null;
 
     private int minutesSinceLastUpdateCheck;
@@ -50,7 +51,7 @@ public class Gui2ClientAdapter {
         client = new Client(environmentData = environmentDataManager.getEnvironmentData());
         utils = new AdapterUtils(this, client);
 
-        updateThread = new Thread(new InformationUpdater());
+        informationUpdatingThread = new Thread(new InformationUpdater());
     }
 
     public void setClientWindow(final GuiClientWindow clientWindow) {
@@ -59,10 +60,11 @@ public class Gui2ClientAdapter {
         utils.setUpClientWindow(clientWindow);
 
         // until window is set up updates shouldn't be checked
-        updateThread.start();
+        informationUpdatingThread.start();
         reportInfo(
                 WINDOW_TITLE + " initalized",
-                "Updater is initialized and ready to work. Click right mouse button on tray icon to check/install updates or run installed applications.");
+                "Updater is initialized and ready to work. Click right mouse button on tray icon to check/install updates or run installed applications.",
+                EInfoTarget.TOOLTIP);
     }
 
     // operations
@@ -82,21 +84,34 @@ public class Gui2ClientAdapter {
                 try {
                     utils.queryServerForInformation();
                 } catch (DownloadResultException | IOException | ProgramSettingsNotFoundException e) {
-                    reportError("Error occured during update checking", e.getMessage());
+                    reportError("Error occured during update checking", e.getMessage(),
+                            EInfoTarget.TOOLTIP);
                     setState(isInitiated() ? IDLE : UNINITIALIZED);
                 }
             }
         }).start();
     }
 
-    public synchronized void installUpdates() {
+    public synchronized void installAllUpdates() {
         setState(FETCHING_UPDATES);
         setInstallationIndetermined();
 
         try {
-            currentDownloadSession = utils.installUpdates();
+            currentDownloadSession = utils.installAllUpdates();
         } catch (ProgramSettingsNotFoundException | IOException e) {
-            reportError("Error occured during installation", e.getMessage());
+            reportError("Error occured during installation", e.getMessage(), EInfoTarget.TOOLTIP);
+            setState(IDLE);
+        }
+    }
+
+    public synchronized void installUpdatesForProgram(Program program) {
+        setState(FETCHING_UPDATES);
+        setInstallationIndetermined();
+
+        try {
+            utils.installUpdatesForProgram(program);
+        } catch (ProgramSettingsNotFoundException | IOException ex) {
+            reportError("Error occured during installation", ex.getMessage(), EInfoTarget.TOOLTIP);
             setState(IDLE);
         }
     }
@@ -178,16 +193,16 @@ public class Gui2ClientAdapter {
         clientWindow.setStatusMessage(message);
     }
 
-    public void reportInfo(String title, String message) {
-        clientWindow.reportInfo(title, message);
+    public void reportInfo(String title, String message, EInfoTarget target) {
+        clientWindow.reportInfo(title, message, target);
     }
 
-    public void reportWarning(String title, String message) {
-        clientWindow.reportWarning(title, message);
+    public void reportWarning(String title, String message, EInfoTarget target) {
+        clientWindow.reportWarning(title, message, target);
     }
 
-    public void reportError(String title, String message) {
-        clientWindow.reportError(title, message);
+    public void reportError(String title, String message, EInfoTarget target) {
+        clientWindow.reportError(title, message, target);
     }
 
     public void bindDownloadServicesToUpdateInformationPanels(
@@ -208,7 +223,7 @@ public class Gui2ClientAdapter {
         public void run() {
             checkUpdates();
 
-            while (!updateThread.isInterrupted()) {
+            while (!informationUpdatingThread.isInterrupted()) {
                 if (minutesSinceLastUpdateCheck >= MINUTES_BETWEEN_EACH_UPDATE_CHECK)
                     checkUpdates();
 

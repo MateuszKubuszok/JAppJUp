@@ -1,5 +1,6 @@
 package com.autoupdater.gui.adapters.utils;
 
+import static com.google.common.collect.Collections2.filter;
 import static java.util.concurrent.Executors.newSingleThreadExecutor;
 import static net.jsdpu.process.executors.Commands.*;
 
@@ -7,6 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.SortedSet;
+import java.util.TreeSet;
 import java.util.concurrent.ExecutorService;
 
 import net.jsdpu.EOperatingSystem;
@@ -25,6 +27,7 @@ import com.autoupdater.client.installation.aggregated.services.AggregatedInstall
 import com.autoupdater.client.models.EUpdateStatus;
 import com.autoupdater.client.models.Package;
 import com.autoupdater.client.models.Program;
+import com.autoupdater.client.models.ProgramBuilder;
 import com.autoupdater.client.models.Update;
 import com.autoupdater.gui.adapters.Gui2ClientAdapter;
 import com.autoupdater.gui.adapters.listeners.CancelDownloadsTriggerListener;
@@ -33,11 +36,15 @@ import com.autoupdater.gui.adapters.listeners.InstallUpdateTriggerListener;
 import com.autoupdater.gui.adapters.listeners.PackagesInfoNotificationListener;
 import com.autoupdater.gui.adapters.runnables.CheckUpdatesRunnable;
 import com.autoupdater.gui.adapters.runnables.InstallUpdatesRunnable;
+import com.autoupdater.gui.window.EInfoTarget;
 import com.autoupdater.gui.window.GuiClientWindow;
+import com.google.common.base.Predicate;
 
 public class AdapterUtils {
     private final Gui2ClientAdapter adapter;
     private final Client client;
+
+    private Thread currentInstallationThread;
 
     public AdapterUtils(Gui2ClientAdapter adapter, Client client) {
         this.adapter = adapter;
@@ -91,15 +98,31 @@ public class AdapterUtils {
                 aggregatedChangelogInfoService, aggregatedBugsInfoService)).start();
     }
 
-    public FileAggregatedDownloadService installUpdates() throws ProgramSettingsNotFoundException,
-            IOException {
+    public FileAggregatedDownloadService installAllUpdates()
+            throws ProgramSettingsNotFoundException, IOException {
         FileAggregatedDownloadService aggregatedDownloadService = client
-                .createFileAggregatedDownloadService(adapter.getAvailableUpdates());
+                .createFileAggregatedDownloadService(getAllUpdates());
         AggregatedInstallationService aggregatedInstallationService = client
-                .createInstallationAggregatedService(adapter.getAvailableUpdates());
+                .createInstallationAggregatedService(getAllUpdates());
 
         new Thread(new InstallUpdatesRunnable(adapter, aggregatedDownloadService,
                 aggregatedInstallationService)).start();
+
+        return aggregatedDownloadService;
+    }
+
+    public FileAggregatedDownloadService installUpdatesForProgram(Program program)
+            throws ProgramSettingsNotFoundException, IOException {
+        SortedSet<Update> updatesForProgram = getUpdatesForProgram(program);
+
+        FileAggregatedDownloadService aggregatedDownloadService = client
+                .createFileAggregatedDownloadService(updatesForProgram);
+        AggregatedInstallationService aggregatedInstallationService = client
+                .createInstallationAggregatedService(updatesForProgram);
+
+        currentInstallationThread = new Thread(new InstallUpdatesRunnable(adapter,
+                aggregatedDownloadService, aggregatedInstallationService));
+        currentInstallationThread.start();
 
         return aggregatedDownloadService;
     }
@@ -122,30 +145,60 @@ public class AdapterUtils {
                 adapter.getAvailableOnServer());
     }
 
+    private SortedSet<Update> getAllUpdates() {
+        return adapter.getAvailableUpdates();
+    }
+
+    private SortedSet<Update> getUpdatesForProgram(final Program program) {
+        return new TreeSet<Update>(filter(adapter.getAvailableUpdates(), new Predicate<Update>() {
+            @Override
+            public boolean apply(Update update) {
+                return update != null && update.getPackage() != null
+                        && update.getPackage().getProgram() != null
+                        && update.getPackage().getProgram().equals(program);
+            }
+        }));
+    }
+
     private class RunCommandActionListener implements ActionListener {
         private final ProgramSettings programSettings;
+        private final Program program;
 
         RunCommandActionListener(ProgramSettings programSettings) {
             this.programSettings = programSettings;
+            this.program = ProgramBuilder.builder().setName(programSettings.getProgramName())
+                    .setPathToProgramDirectory(programSettings.getPathToProgramDirectory())
+                    .setServerAddress(programSettings.getServerAddress()).build();
         }
 
         @Override
         public void actionPerformed(ActionEvent e) {
             ExecutorService executorService = newSingleThreadExecutor();
-            executorService.submit(new RunCommand(programSettings));
+            executorService.submit(new RunCommand(programSettings, program));
         }
     }
 
     private class RunCommand implements Runnable {
         private final ProgramSettings programSettings;
+        private final Program program;
 
-        RunCommand(ProgramSettings programSettings) {
+        RunCommand(ProgramSettings programSettings, Program program) {
             this.programSettings = programSettings;
+            this.program = program;
         }
 
         @Override
         public void run() {
+            if (!getUpdatesForProgram(program).isEmpty())
+                try {
+                    adapter.installUpdatesForProgram(program);
+                    currentInstallationThread.join();
+                } catch (InterruptedException ex) {
+                }
+
             try {
+                adapter.reportInfo(programSettings.getProgramName(),
+                        programSettings.getProgramName() + " is starting up", EInfoTarget.ALL);
                 EOperatingSystem
                         .current()
                         .getProcessExecutor()
@@ -153,7 +206,8 @@ public class AdapterUtils {
                                 convertMultipleConsoleCommands(wrapArgument(programSettings
                                         .getPathToProgram()))).rewind();
             } catch (IOException | InvalidCommandException e) {
-                adapter.reportWarning(e.toString(), programSettings.getProgramName());
+                adapter.reportWarning(e.toString(), programSettings.getProgramName(),
+                        EInfoTarget.ALL);
             }
         }
     }

@@ -2,6 +2,7 @@ package com.autoupdater.gui.adapters.runnables;
 
 import static com.autoupdater.client.environment.AvailabilityFilter.filterUpdateSelection;
 import static com.autoupdater.client.models.VersionNumber.UNVERSIONED;
+import static com.autoupdater.gui.window.EInfoTarget.TOOLTIP;
 import static com.autoupdater.gui.window.EWindowStatus.*;
 
 import java.util.SortedSet;
@@ -62,7 +63,7 @@ public class CheckUpdatesRunnable implements Runnable {
             aggregatedBugsInfoService.joinThread();
             aggregatedBugsInfoService.getResult();
         } catch (DownloadResultException e) {
-            adapter.reportError("Error occured while checking updates", e.getMessage());
+            adapter.reportError("Error occured while checking updates", e.getMessage(), TOOLTIP);
             if (adapter.isInitiated())
                 adapter.setState(IDLE);
             else
@@ -87,7 +88,7 @@ public class CheckUpdatesRunnable implements Runnable {
 
                 adapter.setState(IDLE);
                 if (!notDisplayedUpdates.isEmpty()) {
-                    adapter.reportInfo("New updates are available", builder.toString());
+                    adapter.reportInfo("New updates are available", builder.toString(), TOOLTIP);
                     DISPLAYED_UPDATES.addAll(notDisplayedUpdates);
                 }
             }

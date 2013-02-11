@@ -88,7 +88,7 @@ public class PopupHelper {
         popup.addSeparator();
         checkUpdates = new MenuItem("Check updates");
         popup.add(checkUpdates);
-        installUpdates = new MenuItem("Install updates");
+        installUpdates = new MenuItem("Install all updates");
         popup.add(installUpdates);
         cancelDownload = new MenuItem("Cancel downloads");
         popup.add(cancelDownload);
@@ -103,7 +103,7 @@ public class PopupHelper {
         popup.addSeparator();
 
         for (final Program program : programs) {
-            MenuItem programLauncher = new MenuItem(program.getName());
+            MenuItem programLauncher = new MenuItem("Run " + program.getName());
             popup.add(programLauncher);
             programsLaunchers.put(program, programLauncher);
         }

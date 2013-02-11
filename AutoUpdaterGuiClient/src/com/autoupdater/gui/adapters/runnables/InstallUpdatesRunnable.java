@@ -1,6 +1,7 @@
 package com.autoupdater.gui.adapters.runnables;
 
 import static com.autoupdater.client.environment.AvailabilityFilter.filterUpdateNotInstalled;
+import static com.autoupdater.gui.window.EInfoTarget.ALL;
 import static com.autoupdater.gui.window.EWindowStatus.*;
 
 import com.autoupdater.client.download.DownloadResultException;
@@ -8,6 +9,7 @@ import com.autoupdater.client.download.aggregated.services.FileAggregatedDownloa
 import com.autoupdater.client.installation.aggregated.services.AggregatedInstallationService;
 import com.autoupdater.gui.adapters.Gui2ClientAdapter;
 import com.autoupdater.gui.adapters.listeners.InstallationNotificationListener;
+import com.autoupdater.gui.window.EInfoTarget;
 
 public class InstallUpdatesRunnable implements Runnable {
     private final Gui2ClientAdapter adapter;
@@ -33,36 +35,40 @@ public class InstallUpdatesRunnable implements Runnable {
                 return;
             }
 
-            adapter.reportInfo("Preparing to download", "Preparing download queues");
+            adapter.reportInfo("Preparing to download", "Preparing download queues.", ALL);
             adapter.bindDownloadServicesToUpdateInformationPanels(aggregatedDownloadService);
 
-            adapter.reportInfo("Downloading updates", "Downloading updates from repositories");
+            adapter.reportInfo("Downloading updates", "Downloading updates from repositories.", ALL);
             aggregatedDownloadService.start();
             aggregatedDownloadService.joinThread();
 
-            adapter.reportInfo("Preparing to install", "Preparing downloaded updates to install");
+            adapter.reportInfo("Preparing to install", "Preparing downloaded updates to install.",
+                    ALL);
             aggregatedDownloadService.getResult();
 
             aggregatedInstallationService.getNotifier().addObserver(
                     new InstallationNotificationListener(adapter, aggregatedInstallationService));
 
             adapter.setState(INSTALLING_UPDATES);
-            adapter.reportInfo("Installation in progress", "Updates are being installed");
+            adapter.reportInfo("Installation in progress", "Updates are being installed", ALL);
             aggregatedInstallationService.start();
             aggregatedInstallationService.joinThread();
             aggregatedInstallationService.getResult();
         } catch (DownloadResultException e) {
-            adapter.reportError("Error occured during installation", e.getMessage());
+            adapter.reportError("Error occured during installation", e.getMessage(),
+                    EInfoTarget.ALL);
             adapter.setState(IDLE);
         } finally {
             if (hasAllUpdatesInstalledSuccessfully()) {
                 adapter.cleanTemp();
                 adapter.reportInfo("Installation finished",
-                        "All updates were installed successfully.");
+                        "All updates were installed successfully.", ALL);
                 adapter.setState(UNINITIALIZED);
             } else {
-                adapter.reportError("Installation failed",
-                        "Not all updates were installed successfully, check details for more information.");
+                adapter.reportError(
+                        "Installation failed",
+                        "Not all updates were installed successfully, check details for more information.",
+                        EInfoTarget.TOOLTIP);
                 adapter.setState(IDLE);
             }
             adapter.refreshGUI();
