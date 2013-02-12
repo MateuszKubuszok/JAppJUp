@@ -28,7 +28,9 @@ Specific manuals
  * [Library's manual](README.LIBRARY.md) - contains basic information about
  building and using libray, as well as about requirements,
  * [Client's manual](README.CLIENT.md) - containg basic information about
- building, configuring and using client.
+ building, configuring and using client,
+ * [Misc's manual](README.MISC.md) - containg information about various utilities
+ usage.
 
 Development
 -----------
