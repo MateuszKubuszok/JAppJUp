@@ -4,12 +4,16 @@ import static java.lang.Thread.State.NEW;
 import static net.jsdpu.logger.Logger.getLogger;
 
 import java.net.HttpURLConnection;
+import java.util.HashSet;
+import java.util.Set;
 
 import net.jsdpu.logger.Logger;
 
 import com.autoupdater.client.download.DownloadResultException;
 import com.autoupdater.client.download.DownloadServiceMessage;
+import com.autoupdater.client.download.DownloadServiceProgressMessage;
 import com.autoupdater.client.download.EDownloadStatus;
+import com.autoupdater.client.download.events.IDownloadListener;
 import com.autoupdater.client.download.runnables.AbstractDownloadRunnable;
 import com.autoupdater.client.utils.services.IObserver;
 import com.autoupdater.client.utils.services.ObservableService;
@@ -48,6 +52,8 @@ import com.google.common.base.Objects;
 public abstract class AbstractDownloadService<Result> extends
         ObservableService<DownloadServiceMessage> implements IObserver<DownloadServiceMessage> {
     private static final Logger logger = getLogger(AbstractDownloadService.class);
+
+    private Set<IDownloadListener> listeners;
 
     private AbstractDownloadRunnable<Result> runnable;
     private Thread downloadThread;
@@ -91,6 +97,7 @@ public abstract class AbstractDownloadService<Result> extends
         this.fileDestinationPath = fileDestinationPath;
         runnable = getRunnable();
         runnable.addObserver(this);
+        listeners = new HashSet<IDownloadListener>();
         downloadThread = new Thread(runnable);
     }
 
@@ -161,14 +168,14 @@ public abstract class AbstractDownloadService<Result> extends
     }
 
     /**
-     * Returns state of download.
+     * Returns status of download.
      * 
      * @see com.autoupdater.client.download.EDownloadStatus
      * 
      * @return state of download
      */
-    public EDownloadStatus getState() {
-        return runnable.getState();
+    public EDownloadStatus getStatus() {
+        return runnable.getStatus();
     }
 
     /**
@@ -181,12 +188,33 @@ public abstract class AbstractDownloadService<Result> extends
         downloadThread.join();
     }
 
+    /**
+     * Adds listener to set of subscribers.
+     * 
+     * @param listener
+     *            download listener
+     */
+    public void addListener(IDownloadListener listener) {
+        listeners.add(listener);
+    }
+
+    /**
+     * Removes listener from set of subscribers.
+     * 
+     * @param listener
+     *            download listener
+     */
+    public void removeListener(IDownloadListener listener) {
+        listeners.remove(listener);
+    }
+
     @Override
     public void update(ObservableService<DownloadServiceMessage> observable,
             DownloadServiceMessage message) {
         if (Objects.equal(observable, runnable)) {
             hasChanged();
             notifyObservers(message);
+            notifyListeners(message);
         }
     }
 
@@ -196,4 +224,57 @@ public abstract class AbstractDownloadService<Result> extends
      * @return DownloadService instance
      */
     protected abstract AbstractDownloadRunnable<Result> getRunnable();
+
+    /**
+     * Notifies all listeners about changes.
+     * 
+     * @param message
+     *            message that should be processed for listeners
+     */
+    private void notifyListeners(DownloadServiceMessage message) {
+        DownloadEventImpl event = null;
+        if (message.getProgressMessage() != null) {
+            DownloadServiceProgressMessage progressMessage = message.getProgressMessage();
+            double progress = ((double) progressMessage.getCurrentAmount() / (double) progressMessage
+                    .getOverallAmount());
+            event = new DownloadEventImpl(this, message.getMessage(), progress);
+        } else
+            event = new DownloadEventImpl(this, message.getMessage());
+
+        switch (getStatus()) {
+        default:
+        case HASNT_STARTED:
+            break;
+        case CONNECTED:
+            for (IDownloadListener listener : listeners)
+                listener.downloadStarted(event);
+            break;
+        case IN_PROCESS:
+            for (IDownloadListener listener : listeners)
+                listener.downloadStarted(event);
+            break;
+        case COMPLETED:
+            for (IDownloadListener listener : listeners)
+                listener.downloadCompleted(event);
+            break;
+        case PROCESSED:
+            for (IDownloadListener listener : listeners) {
+                listener.downloadProcessed(event);
+                listener.downloadFinished(event);
+            }
+            break;
+        case FAILED:
+            for (IDownloadListener listener : listeners) {
+                listener.downloadFailed(event);
+                listener.downloadFinished(event);
+            }
+            break;
+        case CANCELLED:
+            for (IDownloadListener listener : listeners) {
+                listener.downloadCancelled(event);
+                listener.downloadFinished(event);
+            }
+            break;
+        }
+    }
 }

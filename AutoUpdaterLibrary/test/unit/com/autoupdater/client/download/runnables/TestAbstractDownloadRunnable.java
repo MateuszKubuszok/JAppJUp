@@ -38,7 +38,7 @@ public class TestAbstractDownloadRunnable {
         }
 
         // then
-        assertThat(downloadRunnable.getState()).as(
+        assertThat(downloadRunnable.getStatus()).as(
                 "Constructor should set initial state to HASNT_STARTED").isEqualTo(
                 EDownloadStatus.HASNT_STARTED);
         assertThat(exception)
@@ -64,7 +64,7 @@ public class TestAbstractDownloadRunnable {
         }
 
         // then
-        assertThat(downloadRunnable.getState()).as(
+        assertThat(downloadRunnable.getStatus()).as(
                 "Correct connection should set state to CONNECTED").isEqualTo(
                 EDownloadStatus.CONNECTED);
         assertThat(message)
@@ -95,7 +95,7 @@ public class TestAbstractDownloadRunnable {
         }
 
         // then
-        assertThat(downloadRunnable.getState()).as(
+        assertThat(downloadRunnable.getStatus()).as(
                 "Complete download should set state to COMPLETED").isEqualTo(
                 EDownloadStatus.COMPLETED);
         assertThat(message).as("Complete download should send message with current state")
@@ -128,7 +128,7 @@ public class TestAbstractDownloadRunnable {
         }
 
         // then
-        assertThat(downloadRunnable.getState()).as(
+        assertThat(downloadRunnable.getStatus()).as(
                 "Processed download should set state to PROCESSED").isEqualTo(
                 EDownloadStatus.PROCESSED);
         assertThat(message).as("Processed download should send message with current state")
@@ -158,7 +158,7 @@ public class TestAbstractDownloadRunnable {
         }
 
         // then
-        assertThat(downloadRunnable.getState()).as(
+        assertThat(downloadRunnable.getStatus()).as(
                 "Processed download should set state to PROCESSED").isEqualTo(
                 EDownloadStatus.PROCESSED);
         assertThat(message).as("Processed download should send message with current state")
@@ -185,7 +185,7 @@ public class TestAbstractDownloadRunnable {
         }
 
         // then
-        assertThat(downloadRunnable.getState()).as(
+        assertThat(downloadRunnable.getStatus()).as(
                 "Constructor should set initial state to HASNT_STARTED").isEqualTo(
                 EDownloadStatus.HASNT_STARTED);
         assertThat(exception)
@@ -212,7 +212,7 @@ public class TestAbstractDownloadRunnable {
         }
 
         // then
-        assertThat(downloadRunnable.getState()).as(
+        assertThat(downloadRunnable.getStatus()).as(
                 "Correct connection should set state to CONNECTED").isEqualTo(
                 EDownloadStatus.CONNECTED);
         assertThat(message)
@@ -244,7 +244,7 @@ public class TestAbstractDownloadRunnable {
         }
 
         // then
-        assertThat(downloadRunnable.getState()).as(
+        assertThat(downloadRunnable.getStatus()).as(
                 "Complete download should set state to COMPLETED").isEqualTo(
                 EDownloadStatus.COMPLETED);
         assertThat(message).as("Complete download should send message with current state")
@@ -279,7 +279,7 @@ public class TestAbstractDownloadRunnable {
         }
 
         // then
-        assertThat(downloadRunnable.getState()).as(
+        assertThat(downloadRunnable.getStatus()).as(
                 "Processed download should set state to PROCESSED").isEqualTo(
                 EDownloadStatus.PROCESSED);
         assertThat(message).as("Processed download should send message with current state")
@@ -314,7 +314,7 @@ public class TestAbstractDownloadRunnable {
         }
 
         // then
-        assertThat(downloadRunnable.getState()).as(
+        assertThat(downloadRunnable.getStatus()).as(
                 "Processed download should set state to PROCESSED").isEqualTo(
                 EDownloadStatus.PROCESSED);
         assertThat(message).as("Processed download should send message with current state")

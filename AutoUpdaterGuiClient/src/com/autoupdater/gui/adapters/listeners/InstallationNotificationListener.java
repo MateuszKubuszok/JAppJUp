@@ -7,6 +7,7 @@ import com.autoupdater.client.models.Update;
 import com.autoupdater.client.utils.services.IObserver;
 import com.autoupdater.client.utils.services.ObservableService;
 import com.autoupdater.gui.adapters.Gui2ClientAdapter;
+import com.autoupdater.gui.window.EInfoTarget;
 
 public class InstallationNotificationListener implements IObserver<InstallationServiceMessage> {
     private final Gui2ClientAdapter adapter;
@@ -22,7 +23,11 @@ public class InstallationNotificationListener implements IObserver<InstallationS
     public void update(ObservableService<InstallationServiceMessage> observable,
             InstallationServiceMessage message) {
         if (observable == aggregatedService.getNotifier()) {
-            adapter.reportQuiet("Installation: " + aggregatedService.getState());
+            if (message.isInterruptedByError())
+                adapter.reportError("Installation failed", message.getMessage(), EInfoTarget.ALL);
+            else
+                adapter.reportInfo("Installation", "Installation: " + aggregatedService.getState(),
+                        EInfoTarget.ALL);
         }
 
         if (aggregatedService.getState() == EInstallationStatus.INSTALLING) {

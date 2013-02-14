@@ -148,7 +148,7 @@ public abstract class AbstractDownloadRunnable<Result> extends
      * 
      * @return current download state
      */
-    public EDownloadStatus getState() {
+    public EDownloadStatus getStatus() {
         return state;
     }
 

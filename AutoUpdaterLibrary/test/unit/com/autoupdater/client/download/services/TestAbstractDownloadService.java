@@ -40,7 +40,7 @@ public class TestAbstractDownloadService {
         }
 
         // then
-        assertThat(service.getState()).as(
+        assertThat(service.getStatus()).as(
                 "When no error occured thread should finish with PROCESSED status").isEqualTo(
                 EDownloadStatus.PROCESSED);
         assertThat(exceptionThrown).as("Service should return result when processed corretly")
@@ -69,7 +69,7 @@ public class TestAbstractDownloadService {
         }
 
         // then
-        assertThat(service.getState()).as(
+        assertThat(service.getStatus()).as(
                 "Cancelled download thread should finish with CANCELLED status").isEqualTo(
                 EDownloadStatus.CANCELLED);
         assertThat(exceptionThrown)
@@ -97,7 +97,7 @@ public class TestAbstractDownloadService {
         }
 
         // then
-        assertThat(service.getState()).as(
+        assertThat(service.getStatus()).as(
                 "When no error occured thread should finish with PROCESSED status").isEqualTo(
                 EDownloadStatus.PROCESSED);
         assertThat(exceptionThrown).as("Service should return result when processed corretly")
@@ -126,7 +126,7 @@ public class TestAbstractDownloadService {
         }
 
         // then
-        assertThat(service.getState()).as(
+        assertThat(service.getStatus()).as(
                 "Cancelled download thread should finish with CANCELLED status").isEqualTo(
                 EDownloadStatus.CANCELLED);
         assertThat(exceptionThrown)

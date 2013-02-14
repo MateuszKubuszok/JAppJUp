@@ -55,7 +55,7 @@ public class FileDownloadRunnable extends AbstractDownloadRunnable<File> {
             }
         } else {
             super.run();
-            if (getState() == EDownloadStatus.PROCESSED)
+            if (getStatus() == EDownloadStatus.PROCESSED)
                 setFileDownloaded(getFileDestinationPath());
         }
     }

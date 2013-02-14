@@ -32,7 +32,7 @@ public class TestUpdateInfoDownloadService {
         }
 
         // then
-        assertThat(service.getState()).as(
+        assertThat(service.getStatus()).as(
                 "When no error occured thread should finish with PROCESSED status").isEqualTo(
                 EDownloadStatus.PROCESSED);
         assertThat(exceptionThrown).as("Service should return result when processed corretly")
