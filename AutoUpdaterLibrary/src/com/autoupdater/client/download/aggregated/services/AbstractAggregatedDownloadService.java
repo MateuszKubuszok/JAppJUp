@@ -137,18 +137,36 @@ public abstract class AbstractAggregatedDownloadService<Service extends Abstract
      */
     public void joinThread() {
         try {
-            while (!getState().isDownloadFinished())
+            while (!getStatus().isDownloadFinished())
                 sleep(10);
         } catch (InterruptedException e) {
         }
     }
 
     /**
-     * Returns current state of processing services.
+     * Returns number of total queued downloads.
      * 
-     * @return state of processing services
+     * @return number of all downloads
      */
-    public EDownloadStatus getState() {
+    public int getAllDownloadsNumber() {
+        return (int) threadPoolExecutor.getTaskCount();
+    }
+
+    /**
+     * Returns number of all finished downloads.
+     * 
+     * @return number of finished downloads
+     */
+    public int getFinishedDownloadsNumber() {
+        return (int) threadPoolExecutor.getCompletedTaskCount();
+    }
+
+    /**
+     * Returns current status of processing services.
+     * 
+     * @return status of processing services
+     */
+    public EDownloadStatus getStatus() {
         return state;
     }
 

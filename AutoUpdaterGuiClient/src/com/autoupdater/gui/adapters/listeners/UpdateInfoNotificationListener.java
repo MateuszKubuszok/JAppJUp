@@ -20,6 +20,6 @@ public class UpdateInfoNotificationListener implements IObserver<DownloadService
     public void update(ObservableService<DownloadServiceMessage> observable,
             DownloadServiceMessage message) {
         if (observable == aggregatedService.getNotifier())
-            adapter.reportQuiet("Fetching update information: " + aggregatedService.getState());
+            adapter.reportQuiet("Fetching update information: " + aggregatedService.getStatus());
     }
 }

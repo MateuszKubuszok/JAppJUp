@@ -12,6 +12,7 @@ import com.autoupdater.client.download.events.IDownloadEvent;
  */
 class DownloadEventImpl implements IDownloadEvent {
     private final AbstractDownloadService<?> downloadService;
+    private final EDownloadStatus status;
     private final String message;
     private final Double progress;
 
@@ -29,6 +30,7 @@ class DownloadEventImpl implements IDownloadEvent {
         this.downloadService = downloadService;
         this.message = message;
         this.progress = progress;
+        this.status = downloadService.getStatus();
     }
 
     /**
@@ -45,28 +47,33 @@ class DownloadEventImpl implements IDownloadEvent {
     }
 
     @Override
+    public boolean isInProcess() {
+        return status.equals(IN_PROCESS);
+    }
+
+    @Override
+    public boolean isCompleted() {
+        return status.equals(COMPLETED);
+    }
+
+    @Override
+    public boolean isProcessed() {
+        return status.equals(PROCESSED);
+    }
+
+    @Override
     public boolean isCancelled() {
-        return downloadService.getStatus().equals(CANCELLED);
+        return status.equals(CANCELLED);
     }
 
     @Override
     public boolean isFailed() {
-        return downloadService.getStatus().equals(FAILED);
+        return status.equals(FAILED);
     }
 
     @Override
     public boolean isFinished() {
-        return downloadService.getStatus().isDownloadFinished();
-    }
-
-    @Override
-    public boolean isInProcess() {
-        return downloadService.getStatus().equals(IN_PROCESS);
-    }
-
-    @Override
-    public boolean isSuccessful() {
-        return downloadService.getStatus().equals(PROCESSED);
+        return status.isDownloadFinished();
     }
 
     @Override
@@ -86,6 +93,6 @@ class DownloadEventImpl implements IDownloadEvent {
 
     @Override
     public EDownloadStatus getStatus() {
-        return downloadService.getStatus();
+        return status;
     }
 }

@@ -6,9 +6,32 @@ import com.autoupdater.client.download.services.AbstractDownloadService;
 /**
  * Contains information about download status progress.
  * 
+ * <p>
  * Sent by classes responsible for downloading content.
+ * </p>
  */
 public interface IDownloadEvent {
+    /**
+     * Whether download is in progress.
+     * 
+     * @return true if download in progress
+     */
+    public boolean isInProcess();
+
+    /**
+     * Whether download was completed successfully.
+     * 
+     * @return true if download completed successfully
+     */
+    public boolean isCompleted();
+
+    /**
+     * Whether download was completed and processed successfully.
+     * 
+     * @return true if download processed successfully
+     */
+    public boolean isProcessed();
+
     /**
      * Whether download was cancelled.
      * 
@@ -29,20 +52,6 @@ public interface IDownloadEvent {
      * @return true if download was finished one way or another
      */
     public boolean isFinished();
-
-    /**
-     * Whether download is in progress.
-     * 
-     * @return true if download in progress
-     */
-    public boolean isInProcess();
-
-    /**
-     * Whether download was completed successfully.
-     * 
-     * @return true if download completed successfully
-     */
-    public boolean isSuccessful();
 
     /**
      * Return message bound to the event.
