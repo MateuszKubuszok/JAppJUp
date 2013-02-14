@@ -1,6 +1,7 @@
 package net.jsdpu.process.executors;
 
 import static net.jsdpu.logger.Logger.getLogger;
+import static net.jsdpu.logger.LoggerUtils.listToString;
 import static net.jsdpu.process.executors.Commands.secureMultipleCommands;
 
 import java.io.IOException;
@@ -59,7 +60,7 @@ public abstract class AbstractProcessExecutor implements IProcessExecutor {
      *             thrown when error occurs in system dependent process
      */
     private ExecutionQueueReader executeCommands(List<String[]> commands) throws IOException {
-        logger.trace("Creating ExecutionQueue for: " + commands);
+        logger.trace("Creating ExecutionQueue for: " + listToString(commands));
 
         List<ProcessBuilder> processBuilders = new ArrayList<ProcessBuilder>();
         for (String[] command : commands)

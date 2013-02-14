@@ -4,9 +4,9 @@ import static com.google.common.base.Strings.repeat;
 import static java.lang.Math.max;
 import static java.util.regex.Pattern.*;
 import static net.jsdpu.logger.Logger.getLogger;
+import static net.jsdpu.logger.LoggerUtils.*;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -318,32 +318,5 @@ public class Commands {
      */
     public static String joinArguments(String... arguments) {
         return argJoiner.join(arguments);
-    }
-
-    /**
-     * Returns String representing array of Strings.
-     * 
-     * @param array
-     *            array of Strings
-     * @return String
-     */
-    private static String arrayToString(String[] array) {
-        return Arrays.toString(array);
-    }
-
-    /**
-     * Returns String representing list of arrays of Strings.
-     * 
-     * @param list
-     *            list of arrays of Strings
-     * @return String
-     */
-    private static String listToString(List<String[]> list) {
-        StringBuilder builder = new StringBuilder().append("{ ");
-        if (list.size() > 0)
-            builder.append(arrayToString(list.get(0)));
-        for (int i = 1; i < list.size(); i++)
-            builder.append(", ").append(list.get(i));
-        return builder.append(" }").toString();
     }
 }
