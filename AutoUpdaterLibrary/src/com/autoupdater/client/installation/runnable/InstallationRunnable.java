@@ -58,6 +58,7 @@ public class InstallationRunnable extends ObservableService<InstallationServiceM
      */
     @Override
     public void run() {
+        state = EInstallationStatus.PREPARING_INSTALLATION;
         try {
             killOpenUpdatedPrograms();
             prepareUpdateCommands();

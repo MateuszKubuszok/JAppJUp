@@ -192,7 +192,8 @@ public enum EUpdateStatus {
      * @return true if Update installation failed
      */
     public boolean isInstallationFailed() {
-        return isIntendedToBeChanged() && isUpdateAttemptFinished();
+        return equals(INSTALLATION_FAILED)
+                || (isIntendedToBeChanged() && !isUpdateAttemptFinished());
     }
 
     @Override
