@@ -2,7 +2,7 @@ package com.autoupdater.gui.adapters.utils;
 
 import static com.google.common.collect.Collections2.filter;
 import static java.util.concurrent.Executors.newSingleThreadExecutor;
-import static net.jsdpu.process.executors.Commands.*;
+import static net.jsdpu.process.executors.Commands.convertMultipleConsoleCommands;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -202,9 +202,8 @@ public class AdapterUtils {
                 EOperatingSystem
                         .current()
                         .getProcessExecutor()
-                        .execute(
-                                convertMultipleConsoleCommands(wrapArgument(programSettings
-                                        .getPathToProgram()))).rewind();
+                        .execute(convertMultipleConsoleCommands(programSettings.getPathToProgram()))
+                        .rewind();
             } catch (IOException | InvalidCommandException e) {
                 adapter.reportWarning(e.toString(), programSettings.getProgramName(),
                         EInfoTarget.ALL);
