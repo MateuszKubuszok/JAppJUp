@@ -1,4 +1,4 @@
-package net.jsdpu.executors;
+package net.jsdpu;
 
 import static java.lang.System.*;
 import static net.jsdpu.process.executors.Commands.*;
@@ -9,14 +9,16 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.jsdpu.EOperatingSystem;
 import net.jsdpu.process.executors.ExecutionQueueReader;
 import net.jsdpu.process.executors.IProcessExecutor;
 import net.jsdpu.process.executors.InvalidCommandException;
+import net.jsdpu.process.killers.IProcessKiller;
+import net.jsdpu.process.killers.ProcessKillerException;
 
-public class ProcessExecutorMain {
+public class ProcessHandler {
     final static EOperatingSystem operatingSystem = EOperatingSystem.current();
     final static IProcessExecutor processExecutor = operatingSystem.getProcessExecutor();
+    final static IProcessKiller processKiller = operatingSystem.getProcessKiller();
     private static ExecutionQueueReader resultReader;
 
     public static void main(String[] args) throws IOException {
@@ -29,6 +31,9 @@ public class ProcessExecutorMain {
         out.println("\t - to execute program with given arguments");
         out.println("[program][enter][argu1][enter]...[sudo exec][enter]");
         out.println("\t - to execute program with given arguments with elevation");
+        out.println("For testing ProcessKiller type:");
+        out.println("[process name][enter]...[kill][enter] - to kill process with given name");
+        out.println("reset - to reset state");
         out.println("exit - to quit tester");
 
         BufferedReader reader = new BufferedReader(new InputStreamReader(in));
@@ -71,10 +76,19 @@ public class ProcessExecutorMain {
                 } catch (InvalidCommandException e) {
                     e.printStackTrace();
                 }
-            else if (command.equals("exit"))
-                return;
-            else if (command.equals("reset"))
+            else if (command.equals("kill")) {
+                for (String processName : commands)
+                    try {
+                        processKiller.killProcess(processName);
+                    } catch (ProcessKillerException | InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                out.println("----------------");
+            } else if (command.equals("reset")) {
                 commands.clear();
+                out.println("----------------");
+            } else if (command.equals("exit"))
+                return;
             else
                 commands.add(command);
         }

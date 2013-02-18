@@ -8,14 +8,16 @@ project(':JSDPU') {
 			java {
 				srcDir 'src'
 				srcDir 'resources'
+				srcDir 'test/run'
 			}
             resources { srcDir 'resources' }
         }
         test { java {
 			srcDir 'test/unit'
-            srcDir 'test/run'
 		} }
     }
+	
+	jar { manifest { attributes "Main-Class": "net.jsdpu.ProcessHandler" } }
 }
 
 project(':AutoUpdaterCommons') {
