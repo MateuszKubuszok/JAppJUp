@@ -12,9 +12,9 @@ import net.jsdpu.logger.LogManager;
 
 import com.autoupdater.client.environment.ClientEnvironmentException;
 import com.autoupdater.client.environment.EnvironmentDataManager;
-import com.autoupdater.gui.adapters.Gui2ClientAdapter;
+import com.autoupdater.gui.adapter.Gui2ClientAdapter;
+import com.autoupdater.gui.client.window.GuiClientWindow;
 import com.autoupdater.gui.settings.editor.EditorWindow;
-import com.autoupdater.gui.window.GuiClientWindow;
 
 public class Main {
     public static void main(String[] args) {
