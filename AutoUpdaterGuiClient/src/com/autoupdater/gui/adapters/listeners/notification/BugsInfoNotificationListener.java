@@ -1,17 +1,17 @@
-package com.autoupdater.gui.adapters.listeners;
+package com.autoupdater.gui.adapters.listeners.notification;
 
 import com.autoupdater.client.download.DownloadServiceMessage;
-import com.autoupdater.client.download.aggregated.services.UpdateInfoAggregatedDownloadService;
+import com.autoupdater.client.download.aggregated.services.BugsInfoAggregatedDownloadService;
 import com.autoupdater.client.utils.services.IObserver;
 import com.autoupdater.client.utils.services.ObservableService;
 import com.autoupdater.gui.adapters.Gui2ClientAdapter;
 
-public class UpdateInfoNotificationListener implements IObserver<DownloadServiceMessage> {
+public class BugsInfoNotificationListener implements IObserver<DownloadServiceMessage> {
     private final Gui2ClientAdapter adapter;
-    private final UpdateInfoAggregatedDownloadService aggregatedService;
+    private final BugsInfoAggregatedDownloadService aggregatedService;
 
-    public UpdateInfoNotificationListener(Gui2ClientAdapter adapter,
-            UpdateInfoAggregatedDownloadService aggregatedService) {
+    public BugsInfoNotificationListener(Gui2ClientAdapter adapter,
+            BugsInfoAggregatedDownloadService aggregatedService) {
         this.adapter = adapter;
         this.aggregatedService = aggregatedService;
     }
@@ -20,6 +20,7 @@ public class UpdateInfoNotificationListener implements IObserver<DownloadService
     public void update(ObservableService<DownloadServiceMessage> observable,
             DownloadServiceMessage message) {
         if (observable == aggregatedService.getNotifier())
-            adapter.reportQuiet("Fetching update information: " + aggregatedService.getStatus());
+            adapter.windowOperations().reportQuiet(
+                    "Fetching known bugs: " + aggregatedService.getStatus());
     }
 }

@@ -1,4 +1,4 @@
-package com.autoupdater.gui.adapters.listeners;
+package com.autoupdater.gui.adapters.listeners.notification;
 
 import com.autoupdater.client.download.DownloadServiceMessage;
 import com.autoupdater.client.download.aggregated.services.PackagesInfoAggregatedDownloadService;
@@ -19,6 +19,7 @@ public class PackagesInfoNotificationListener implements IObserver<DownloadServi
     @Override
     public void update(ObservableService<DownloadServiceMessage> observable,
             DownloadServiceMessage message) {
-        adapter.reportQuiet("Checking repositories: " + aggregatedService.getStatus());
+        adapter.windowOperations().reportQuiet(
+                "Checking repositories: " + aggregatedService.getStatus());
     }
 }

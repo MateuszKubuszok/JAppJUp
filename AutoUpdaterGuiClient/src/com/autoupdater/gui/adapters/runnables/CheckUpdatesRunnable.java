@@ -14,9 +14,9 @@ import com.autoupdater.client.download.aggregated.services.ChangelogInfoAggregat
 import com.autoupdater.client.download.aggregated.services.UpdateInfoAggregatedDownloadService;
 import com.autoupdater.client.models.Update;
 import com.autoupdater.gui.adapters.Gui2ClientAdapter;
-import com.autoupdater.gui.adapters.listeners.BugsInfoNotificationListener;
-import com.autoupdater.gui.adapters.listeners.ChangelogInfoNotificationListener;
-import com.autoupdater.gui.adapters.listeners.UpdateInfoNotificationListener;
+import com.autoupdater.gui.adapters.listeners.notification.BugsInfoNotificationListener;
+import com.autoupdater.gui.adapters.listeners.notification.ChangelogInfoNotificationListener;
+import com.autoupdater.gui.adapters.listeners.notification.UpdateInfoNotificationListener;
 
 public class CheckUpdatesRunnable implements Runnable {
     private static final SortedSet<Update> DISPLAYED_UPDATES = new TreeSet<Update>();
@@ -38,16 +38,16 @@ public class CheckUpdatesRunnable implements Runnable {
 
     @Override
     public void run() {
-        SortedSet<Update> availableUpdates = adapter.getAvailableUpdates();
+        SortedSet<Update> availableUpdates = adapter.dataStorage().getAvailableUpdates();
         try {
             aggregatedUpdateInfoService.getNotifier().addObserver(
                     new UpdateInfoNotificationListener(adapter, aggregatedUpdateInfoService));
             aggregatedUpdateInfoService.start();
             aggregatedUpdateInfoService.joinThread();
             availableUpdates.addAll(aggregatedUpdateInfoService.getResult());
-            adapter.setAvailableUpdates(availableUpdates);
+            adapter.dataStorage().setAvailableUpdates(availableUpdates);
 
-            adapter.refreshGUI();
+            adapter.windowOperations().refreshGUI();
 
             aggregatedChangelogInfoService.getNotifier().addObserver(
                     new ChangelogInfoNotificationListener(adapter, aggregatedChangelogInfoService));
@@ -55,7 +55,7 @@ public class CheckUpdatesRunnable implements Runnable {
             aggregatedChangelogInfoService.joinThread();
             aggregatedChangelogInfoService.getResult();
 
-            adapter.refreshGUI();
+            adapter.windowOperations().refreshGUI();
 
             aggregatedBugsInfoService.getNotifier().addObserver(
                     new BugsInfoNotificationListener(adapter, aggregatedBugsInfoService));
@@ -63,16 +63,17 @@ public class CheckUpdatesRunnable implements Runnable {
             aggregatedBugsInfoService.joinThread();
             aggregatedBugsInfoService.getResult();
         } catch (DownloadResultException e) {
-            adapter.reportError("Error occured while checking updates", e.getMessage(), TOOLTIP);
-            if (adapter.isInitiated())
-                adapter.setState(IDLE);
+            adapter.windowOperations().reportError("Error occured while checking updates",
+                    e.getMessage(), TOOLTIP);
+            if (adapter.dataStorage().isInitiated())
+                adapter.windowOperations().setState(IDLE);
             else
-                adapter.setState(UNINITIALIZED);
+                adapter.windowOperations().setState(UNINITIALIZED);
         } finally {
-            adapter.markAllUpdatesAsIntendedToInstall();
+            adapter.installationUtils().markAllUpdatesAsIntendedToInstall();
 
             if (availableUpdates == null || filterUpdateSelection(availableUpdates).isEmpty())
-                adapter.setState(UNINITIALIZED);
+                adapter.windowOperations().setState(UNINITIALIZED);
             else {
                 SortedSet<Update> notDisplayedUpdates = filterUpdatesNotification(filterUpdateSelection(availableUpdates));
                 StringBuilder builder = new StringBuilder();
@@ -86,14 +87,15 @@ public class CheckUpdatesRunnable implements Runnable {
                             .append(update.getVersionNumber()).append("\n")
                             .append(update.getChanges()).append("\n");
 
-                adapter.setState(IDLE);
+                adapter.windowOperations().setState(IDLE);
                 if (!notDisplayedUpdates.isEmpty()) {
-                    adapter.reportInfo("New updates are available", builder.toString(), TOOLTIP);
+                    adapter.windowOperations().reportInfo("New updates are available",
+                            builder.toString(), TOOLTIP);
                     DISPLAYED_UPDATES.addAll(notDisplayedUpdates);
                 }
             }
 
-            adapter.refreshGUI();
+            adapter.windowOperations().refreshGUI();
         }
     }
 

@@ -1,4 +1,4 @@
-package com.autoupdater.gui.adapters.listeners;
+package com.autoupdater.gui.adapters.listeners.triggers;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -16,7 +16,7 @@ public class CheckUpdateTriggerListener implements MouseListener, ActionListener
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        adapter.checkUpdates();
+        adapter.clientOperations().checkUpdates();
     }
 
     @Override
@@ -37,7 +37,7 @@ public class CheckUpdateTriggerListener implements MouseListener, ActionListener
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        adapter.checkUpdates();
+        adapter.clientOperations().checkUpdates();
     }
 
 }

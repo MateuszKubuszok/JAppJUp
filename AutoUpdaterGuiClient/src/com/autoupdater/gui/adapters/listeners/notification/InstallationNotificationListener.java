@@ -1,4 +1,4 @@
-package com.autoupdater.gui.adapters.listeners;
+package com.autoupdater.gui.adapters.listeners.notification;
 
 import com.autoupdater.client.installation.EInstallationStatus;
 import com.autoupdater.client.installation.InstallationServiceMessage;
@@ -24,10 +24,11 @@ public class InstallationNotificationListener implements IObserver<InstallationS
             InstallationServiceMessage message) {
         if (observable == aggregatedService.getNotifier()) {
             if (message.isInterruptedByError())
-                adapter.reportError("Installation failed", message.getMessage(), EInfoTarget.ALL);
-            else
-                adapter.reportInfo("Installation", "Installation: " + aggregatedService.getState(),
+                adapter.windowOperations().reportError("Installation failed", message.getMessage(),
                         EInfoTarget.ALL);
+            else
+                adapter.windowOperations().reportInfo("Installation",
+                        "Installation: " + aggregatedService.getState(), EInfoTarget.ALL);
         }
 
         if (aggregatedService.getState() == EInstallationStatus.INSTALLING) {
@@ -38,7 +39,7 @@ public class InstallationNotificationListener implements IObserver<InstallationS
                 if (update.getStatus().isUpdateAttemptFinished())
                     numberOfUpdatesMarkedAsDone++;
 
-            adapter.setInstallationProgress(numberOfUpdatesBeingInstalled,
+            adapter.windowOperations().setInstallationProgress(numberOfUpdatesBeingInstalled,
                     numberOfUpdatesMarkedAsDone);
         }
     }

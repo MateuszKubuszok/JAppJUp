@@ -1,4 +1,4 @@
-package com.autoupdater.gui.adapters.listeners;
+package com.autoupdater.gui.adapters.listeners.triggers;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -7,16 +7,16 @@ import java.awt.event.MouseListener;
 
 import com.autoupdater.gui.adapters.Gui2ClientAdapter;
 
-public class InstallUpdateTriggerListener implements MouseListener, ActionListener {
+public class CancelDownloadsTriggerListener implements MouseListener, ActionListener {
     private final Gui2ClientAdapter adapter;
 
-    public InstallUpdateTriggerListener(Gui2ClientAdapter adapter) {
+    public CancelDownloadsTriggerListener(Gui2ClientAdapter adapter) {
         this.adapter = adapter;
     }
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        adapter.installAllUpdates();
+        adapter.installationUtils().cancelDownloads();
     }
 
     @Override
@@ -37,6 +37,6 @@ public class InstallUpdateTriggerListener implements MouseListener, ActionListen
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        adapter.installAllUpdates();
+        adapter.installationUtils().cancelDownloads();
     }
 }

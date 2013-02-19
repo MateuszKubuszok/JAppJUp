@@ -1,4 +1,4 @@
-package com.autoupdater.gui.adapters.listeners;
+package com.autoupdater.gui.adapters.listeners.notification;
 
 import com.autoupdater.client.download.DownloadServiceMessage;
 import com.autoupdater.client.download.aggregated.services.ChangelogInfoAggregatedDownloadService;
@@ -20,6 +20,7 @@ public class ChangelogInfoNotificationListener implements IObserver<DownloadServ
     public void update(ObservableService<DownloadServiceMessage> observable,
             DownloadServiceMessage message) {
         if (observable == aggregatedService.getNotifier())
-            adapter.reportQuiet("Fetching changelogs: " + aggregatedService.getStatus());
+            adapter.windowOperations().reportQuiet(
+                    "Fetching changelogs: " + aggregatedService.getStatus());
     }
 }

@@ -8,7 +8,7 @@ import com.autoupdater.client.download.DownloadResultException;
 import com.autoupdater.client.download.aggregated.services.FileAggregatedDownloadService;
 import com.autoupdater.client.installation.aggregated.services.AggregatedInstallationService;
 import com.autoupdater.gui.adapters.Gui2ClientAdapter;
-import com.autoupdater.gui.adapters.listeners.InstallationNotificationListener;
+import com.autoupdater.gui.adapters.listeners.notification.InstallationNotificationListener;
 import com.autoupdater.gui.window.EInfoTarget;
 
 public class InstallUpdatesRunnable implements Runnable {
@@ -29,53 +29,55 @@ public class InstallUpdatesRunnable implements Runnable {
         try {
             if (aggregatedDownloadService.getServices() == null
                     || aggregatedDownloadService.getServices().isEmpty()) {
-                adapter.setState(UNINITIALIZED);
-                adapter.setInstallationInactive();
-                adapter.reportQuiet("There are no updates available to install");
+                adapter.windowOperations().setState(UNINITIALIZED).setInstallationInactive()
+                        .reportQuiet("There are no updates available to install");
                 return;
             }
 
-            adapter.reportInfo("Preparing to download", "Preparing download queues.", ALL);
-            adapter.bindDownloadServicesToUpdateInformationPanels(aggregatedDownloadService);
+            adapter.windowOperations()
+                    .reportInfo("Preparing to download", "Preparing download queues.", ALL)
+                    .bindDownloadServicesToUpdateInformationPanels(aggregatedDownloadService);
 
-            adapter.reportInfo("Downloading updates", "Downloading updates from repositories.", ALL);
+            adapter.windowOperations().reportInfo("Downloading updates",
+                    "Downloading updates from repositories.", ALL);
             aggregatedDownloadService.start();
             aggregatedDownloadService.joinThread();
 
-            adapter.reportInfo("Preparing to install", "Preparing downloaded updates to install.",
-                    ALL);
+            adapter.windowOperations().reportInfo("Preparing to install",
+                    "Preparing downloaded updates to install.", ALL);
             aggregatedDownloadService.getResult();
 
             aggregatedInstallationService.getNotifier().addObserver(
                     new InstallationNotificationListener(adapter, aggregatedInstallationService));
 
-            adapter.setState(INSTALLING_UPDATES);
-            adapter.reportInfo("Installation in progress", "Updates are being installed", ALL);
+            adapter.windowOperations().setState(INSTALLING_UPDATES)
+                    .reportInfo("Installation in progress", "Updates are being installed", ALL);
             aggregatedInstallationService.start();
             aggregatedInstallationService.joinThread();
             aggregatedInstallationService.getResult();
         } catch (DownloadResultException e) {
-            adapter.reportError("Error occured during installation", e.getMessage(),
-                    EInfoTarget.ALL);
-            adapter.setState(IDLE);
+            adapter.windowOperations()
+                    .reportError("Error occured during installation", e.getMessage(),
+                            EInfoTarget.ALL).setState(IDLE);
         } finally {
             if (hasAllUpdatesInstalledSuccessfully()) {
-                adapter.cleanTemp();
-                adapter.reportInfo("Installation finished",
-                        "All updates were installed successfully.", ALL);
-                adapter.setState(UNINITIALIZED);
+                adapter.clientOperations().cleanTemp();
+                adapter.windowOperations()
+                        .reportInfo("Installation finished",
+                                "All updates were installed successfully.", ALL)
+                        .setState(UNINITIALIZED);
             } else {
-                adapter.reportError(
-                        "Installation failed",
-                        "Not all updates were installed successfully, check details for more information.",
-                        EInfoTarget.TOOLTIP);
-                adapter.setState(IDLE);
+                adapter.windowOperations()
+                        .reportError(
+                                "Installation failed",
+                                "Not all updates were installed successfully, check details for more information.",
+                                EInfoTarget.TOOLTIP).setState(IDLE);
             }
-            adapter.refreshGUI();
+            adapter.windowOperations().refreshGUI();
         }
     }
 
     private boolean hasAllUpdatesInstalledSuccessfully() {
-        return filterUpdateNotInstalled(adapter.getAvailableUpdates()).isEmpty();
+        return filterUpdateNotInstalled(adapter.dataStorage().getAvailableUpdates()).isEmpty();
     }
 }
