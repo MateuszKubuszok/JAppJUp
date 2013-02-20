@@ -79,17 +79,17 @@ public class AggregatedInstallationService
 
     @Override
     public void addService(InstallationService service) {
-        throw new RuntimeException();
+        throw new UnsupportedOperationException("Method is not supported");
     }
 
     @Override
     public void addService(InstallationService service, Update message) {
-        throw new RuntimeException();
+        throw new UnsupportedOperationException("Method is not supported");
     }
 
     @Override
     public Set<InstallationService> getServices() {
-        throw new RuntimeException();
+        throw new UnsupportedOperationException("Method is not supported");
     }
 
     @Override

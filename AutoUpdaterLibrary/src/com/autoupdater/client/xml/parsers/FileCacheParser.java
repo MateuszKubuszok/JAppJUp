@@ -34,7 +34,8 @@ public class FileCacheParser extends AbstractXMLParser<Map<String, String>> {
         } catch (Exception e) {
             logger.error("Cannot parse file cache's data file's document: " + e.getMessage()
                     + " (exception thrown)", e);
-            throw new ParserException("Error occured while parsing file cache's data file");
+            throw new ParserException("Error occured while parsing file cache's data file")
+                    .addSuppresed(e, ParserException.class);
         }
     }
 }

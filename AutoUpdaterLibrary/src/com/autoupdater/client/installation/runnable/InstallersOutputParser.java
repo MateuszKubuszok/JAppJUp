@@ -1,5 +1,6 @@
 package com.autoupdater.client.installation.runnable;
 
+import static com.google.common.base.Throwables.propagate;
 import static java.util.regex.Pattern.compile;
 
 import java.io.IOException;
@@ -102,7 +103,7 @@ class InstallersOutputParser {
                 else if (Enums.parseField(EErrorCode.class, "description", message) == EErrorCode.SUCCESS)
                     update.setStatus(EUpdateStatus.INSTALLED);
             } catch (NoSuchFieldException e) {
-                throw new RuntimeException("Wrong error code/installer message field name");
+                propagate(e);
             }
     }
 

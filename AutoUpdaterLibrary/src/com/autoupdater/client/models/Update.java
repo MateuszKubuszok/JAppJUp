@@ -411,7 +411,7 @@ public class Update extends ObservableService<EUpdateStatus> implements IModel<U
 
     @Override
     public Comparator<Update> getInstallationsServerPropertiesComparator() {
-        throw new RuntimeException("Not implemented - not need to use this!");
+        throw new UnsupportedOperationException("Not implemented - not need to use this!");
     }
 
     @Override

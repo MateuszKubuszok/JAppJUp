@@ -62,7 +62,8 @@ public abstract class AbstractXMLParser<Result> {
             return parseDocument(getXMLParser().read(file));
         } catch (DocumentException | IOException e) {
             logger.error("Cannot parse document: " + e.getMessage() + " (exception thrown)", e);
-            throw new ParserException("Cannot parse document: " + e.getMessage());
+            throw new ParserException("Cannot parse document: " + e.getMessage()).addSuppresed(e,
+                    ParserException.class);
         }
     }
 
@@ -83,7 +84,8 @@ public abstract class AbstractXMLParser<Result> {
             return parseDocument(getXMLParser().read(in));
         } catch (DocumentException e) {
             logger.error("Cannot parse document: " + e.getMessage() + " (exception thrown)", e);
-            throw new ParserException("Cannot parse document: " + e.getMessage());
+            throw new ParserException("Cannot parse document: " + e.getMessage()).addSuppresed(e,
+                    ParserException.class);
         }
     }
 
@@ -106,7 +108,8 @@ public abstract class AbstractXMLParser<Result> {
                             ConnectionConfiguration.XML_ENCODING))));
         } catch (DocumentException e) {
             logger.error("Cannot parse document: " + e.getMessage() + " (exception thrown)", e);
-            throw new ParserException("Cannot parse document: " + e.getMessage());
+            throw new ParserException("Cannot parse document: " + e.getMessage()).addSuppresed(e,
+                    ParserException.class);
         }
     }
 

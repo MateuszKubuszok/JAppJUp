@@ -38,7 +38,8 @@ public abstract class AbstractXMLPostDownloadStrategy<Result> implements
         try {
             return getParser().parseXML(getXml());
         } catch (UnsupportedEncodingException e) {
-            throw new DownloadResultException(e.getMessage());
+            throw new DownloadResultException(e.getMessage()).addSuppresed(e,
+                    DownloadResultException.class);
         }
     }
 

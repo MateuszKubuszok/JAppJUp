@@ -87,7 +87,8 @@ public class ConfigurationParser extends AbstractXMLParser<EnvironmentData> {
         } catch (Exception e) {
             logger.error("Cannot parse configuration file's document: " + e.getMessage()
                     + " (exception thrown)", e);
-            throw new ParserException("Error occured while parsing configuration file");
+            throw new ParserException("Error occured while parsing configuration file")
+                    .addSuppresed(e, ParserException.class);
         }
     }
 }

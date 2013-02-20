@@ -65,7 +65,8 @@ public class InstallationDataParser extends AbstractXMLParser<SortedSet<Program>
         } catch (Exception e) {
             logger.error("Cannot parse installation data file's document: " + e.getMessage()
                     + " (exception thrown)", e);
-            throw new ParserException("Error occured while parsing installation data file");
+            throw new ParserException("Error occured while parsing installation data file")
+                    .addSuppresed(e, ParserException.class);
         }
     }
 }

@@ -328,6 +328,6 @@ public abstract class AbstractDownloadRunnable<Result> extends
      */
     private synchronized void checkInterruption() throws InterruptedException {
         if (interrupted())
-            throw new InterruptedException();
+            throw new InterruptedException("Download cancelled");
     }
 }

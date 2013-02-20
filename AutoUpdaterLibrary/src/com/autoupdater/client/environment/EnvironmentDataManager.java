@@ -94,7 +94,8 @@ public class EnvironmentDataManager {
             return environmentData.setEnvironmentDataManager(this);
         } catch (ParserException e) {
             logger.warning("Settings read failed", e);
-            throw new ClientEnvironmentException(e.getMessage());
+            throw new ClientEnvironmentException(e.getMessage()).addSuppresed(e,
+                    ClientEnvironmentException.class);
         }
     }
 

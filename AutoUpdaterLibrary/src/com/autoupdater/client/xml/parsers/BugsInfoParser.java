@@ -38,7 +38,8 @@ public class BugsInfoParser extends AbstractXMLParser<SortedSet<BugEntry>> {
         } catch (Exception e) {
             logger.error("Cannot parse bugs info data's document: " + e.getMessage()
                     + " (exception thrown)", e);
-            throw new ParserException("Error occured while parsing response");
+            throw new ParserException("Error occured while parsing response").addSuppresed(e,
+                    ParserException.class);
         }
     }
 }
