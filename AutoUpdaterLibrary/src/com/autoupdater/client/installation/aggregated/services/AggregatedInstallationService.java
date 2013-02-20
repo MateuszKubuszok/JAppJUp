@@ -15,6 +15,7 @@ import com.autoupdater.client.installation.services.InstallationService;
 import com.autoupdater.client.models.EUpdateStatus;
 import com.autoupdater.client.models.Update;
 import com.autoupdater.client.utils.aggregated.services.AbstractAggregatedService;
+import com.autoupdater.client.utils.executions.ExecutionWithErrors;
 
 /**
  * Wrapper that makes InstallationService compatible with convention of other
@@ -30,7 +31,8 @@ import com.autoupdater.client.utils.aggregated.services.AbstractAggregatedServic
  */
 public class AggregatedInstallationService
         extends
-        AbstractAggregatedService<InstallationService, InstallationNotifier, InstallationServiceMessage, InstallationServiceMessage, Update> {
+        AbstractAggregatedService<InstallationService, InstallationNotifier, InstallationServiceMessage, InstallationServiceMessage, Update>
+        implements ExecutionWithErrors {
     private final SortedSet<Update> updates;
     private final Map<Update, UpdateNotifier> updateNotifiers;
     private final InstallationService installationService;
@@ -128,6 +130,21 @@ public class AggregatedInstallationService
      */
     public EInstallationStatus getState() {
         return installationService.getState();
+    }
+
+    @Override
+    public Throwable getThrownException() {
+        return installationService.getThrownException();
+    }
+
+    @Override
+    public void setThrownException(Throwable throwable) {
+        installationService.setThrownException(throwable);
+    }
+
+    @Override
+    public void throwExceptionIfErrorOccured() throws Throwable {
+        installationService.throwExceptionIfErrorOccured();
     }
 
     @Override

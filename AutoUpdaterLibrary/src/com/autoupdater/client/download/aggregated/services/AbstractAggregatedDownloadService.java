@@ -1,7 +1,10 @@
 package com.autoupdater.client.download.aggregated.services;
 
 import static com.autoupdater.client.download.ConnectionConfiguration.DEFAULT_MAX_PARALLEL_DOWNLOADS_NUMBER;
+import static com.autoupdater.client.download.EDownloadStatus.*;
+import static java.lang.Long.MAX_VALUE;
 import static java.lang.Thread.sleep;
+import static java.util.concurrent.TimeUnit.SECONDS;
 import static net.jsdpu.logger.Logger.getLogger;
 
 import java.util.ArrayList;
@@ -19,6 +22,7 @@ import com.autoupdater.client.download.EDownloadStatus;
 import com.autoupdater.client.download.aggregated.notifiers.AbstractAggregatedDownloadNotifier;
 import com.autoupdater.client.download.services.AbstractDownloadService;
 import com.autoupdater.client.utils.aggregated.services.AbstractAggregatedService;
+import com.autoupdater.client.utils.executions.ExecutionWithErrors;
 
 /**
  * Superclass of all AggeregatedDownloadServices.
@@ -54,13 +58,16 @@ import com.autoupdater.client.utils.aggregated.services.AbstractAggregatedServic
  */
 public abstract class AbstractAggregatedDownloadService<Service extends AbstractDownloadService<Result>, Notifier extends AbstractAggregatedDownloadNotifier<AdditionalMessage>, Result, AggregatedResult, AdditionalMessage>
         extends
-        AbstractAggregatedService<Service, Notifier, DownloadServiceMessage, DownloadServiceMessage, AdditionalMessage> {
+        AbstractAggregatedService<Service, Notifier, DownloadServiceMessage, DownloadServiceMessage, AdditionalMessage>
+        implements ExecutionWithErrors {
     private static final Logger logger = getLogger(AbstractAggregatedDownloadService.class);
 
     private EDownloadStatus state;
     private final ThreadPoolExecutor threadPoolExecutor;
     private final List<Future<?>> queuedFutures;
     private boolean cancelled = false;
+
+    private Throwable thrownException = null;
 
     /**
      * Creates new AbstractAggregatedDownloadService instance.
@@ -90,6 +97,22 @@ public abstract class AbstractAggregatedDownloadService<Service extends Abstract
                 maxParallelDownloadsNumber, 2L, TimeUnit.HOURS, new LinkedBlockingQueue<Runnable>());
     }
 
+    @Override
+    public Throwable getThrownException() {
+        return thrownException;
+    }
+
+    @Override
+    public void setThrownException(Throwable throwable) {
+        this.thrownException = throwable;
+    }
+
+    @Override
+    public void throwExceptionIfErrorOccured() throws Throwable {
+        if (thrownException != null)
+            throw thrownException;
+    }
+
     /**
      * Starts all services at once, and begins to listen when they are all
      * finished.
@@ -106,17 +129,17 @@ public abstract class AbstractAggregatedDownloadService<Service extends Abstract
             public void run() {
                 try {
                     threadPoolExecutor.shutdown();
-                    setState(EDownloadStatus.IN_PROCESS);
-                    threadPoolExecutor.awaitTermination(Long.MAX_VALUE, TimeUnit.SECONDS);
+                    setState(IN_PROCESS);
+                    threadPoolExecutor.awaitTermination(MAX_VALUE, SECONDS);
                     if (cancelled) {
-                        setState(EDownloadStatus.CANCELLED);
+                        setState(CANCELLED);
                         logger.warning("Queue download cancelled");
                     } else {
-                        setState(EDownloadStatus.PROCESSED);
+                        setState(PROCESSED);
                         logger.info("Queue download finished");
                     }
                 } catch (InterruptedException e) {
-                    setState(EDownloadStatus.CANCELLED);
+                    setState(CANCELLED);
                     logger.warning("Queue download cancelled");
                 }
             }
@@ -224,6 +247,10 @@ public abstract class AbstractAggregatedDownloadService<Service extends Abstract
             try {
                 service.joinThread();
             } catch (InterruptedException e) {
+            } finally {
+                Throwable thrown = service.getThrownException();
+                if (thrown != null)
+                    setThrownException(thrown);
             }
         }
     }

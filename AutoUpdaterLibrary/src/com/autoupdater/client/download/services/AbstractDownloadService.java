@@ -15,6 +15,7 @@ import com.autoupdater.client.download.DownloadServiceProgressMessage;
 import com.autoupdater.client.download.EDownloadStatus;
 import com.autoupdater.client.download.events.IDownloadListener;
 import com.autoupdater.client.download.runnables.AbstractDownloadRunnable;
+import com.autoupdater.client.utils.executions.ExecutionWithErrors;
 import com.autoupdater.client.utils.services.IObserver;
 import com.autoupdater.client.utils.services.ObservableService;
 import com.google.common.base.Objects;
@@ -50,7 +51,8 @@ import com.google.common.base.Objects;
  *            type of result returned by download service
  */
 public abstract class AbstractDownloadService<Result> extends
-        ObservableService<DownloadServiceMessage> implements IObserver<DownloadServiceMessage> {
+        ObservableService<DownloadServiceMessage> implements IObserver<DownloadServiceMessage>,
+        ExecutionWithErrors {
     private static final Logger logger = getLogger(AbstractDownloadService.class);
 
     private Set<IDownloadListener> listeners;
@@ -176,6 +178,21 @@ public abstract class AbstractDownloadService<Result> extends
      */
     public EDownloadStatus getStatus() {
         return runnable.getStatus();
+    }
+
+    @Override
+    public Throwable getThrownException() {
+        return runnable.getThrownException();
+    }
+
+    @Override
+    public void setThrownException(Throwable throwable) {
+        runnable.setThrownException(throwable);
+    }
+
+    @Override
+    public void throwExceptionIfErrorOccured() throws Throwable {
+        runnable.throwExceptionIfErrorOccured();
     }
 
     /**

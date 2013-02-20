@@ -7,6 +7,7 @@ import com.autoupdater.client.installation.EInstallationStatus;
 import com.autoupdater.client.installation.InstallationServiceMessage;
 import com.autoupdater.client.installation.runnable.InstallationRunnable;
 import com.autoupdater.client.models.Update;
+import com.autoupdater.client.utils.executions.ExecutionWithErrors;
 import com.autoupdater.client.utils.services.IObserver;
 import com.autoupdater.client.utils.services.ObservableService;
 import com.google.common.base.Objects;
@@ -17,7 +18,7 @@ import com.google.common.base.Objects;
  * @see com.autoupdater.client.installation.runnable.InstallationRunnable
  */
 public class InstallationService extends ObservableService<InstallationServiceMessage> implements
-        IObserver<InstallationServiceMessage> {
+        IObserver<InstallationServiceMessage>, ExecutionWithErrors {
     private final InstallationRunnable installationRunnable;
     private final Thread installationThread;
 
@@ -34,6 +35,21 @@ public class InstallationService extends ObservableService<InstallationServiceMe
         installationRunnable = new InstallationRunnable(environmentData, updates);
         installationThread = new Thread(installationRunnable);
         installationRunnable.addObserver(this);
+    }
+
+    @Override
+    public Throwable getThrownException() {
+        return installationRunnable.getThrownException();
+    }
+
+    @Override
+    public void setThrownException(Throwable throwable) {
+        installationRunnable.setThrownException(throwable);
+    }
+
+    @Override
+    public void throwExceptionIfErrorOccured() throws Throwable {
+        installationRunnable.throwExceptionIfErrorOccured();
     }
 
     /**

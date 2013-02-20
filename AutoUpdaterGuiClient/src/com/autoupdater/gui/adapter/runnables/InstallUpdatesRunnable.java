@@ -1,15 +1,13 @@
 package com.autoupdater.gui.adapter.runnables;
 
 import static com.autoupdater.client.environment.AvailabilityFilter.filterUpdateNotInstalled;
-import static com.autoupdater.gui.client.window.EInfoTarget.ALL;
+import static com.autoupdater.gui.client.window.EInfoTarget.*;
 import static com.autoupdater.gui.client.window.EWindowStatus.*;
 
-import com.autoupdater.client.download.DownloadResultException;
 import com.autoupdater.client.download.aggregated.services.FileAggregatedDownloadService;
 import com.autoupdater.client.installation.aggregated.services.AggregatedInstallationService;
 import com.autoupdater.gui.adapter.Gui2ClientAdapter;
 import com.autoupdater.gui.adapter.listeners.notification.InstallationNotificationListener;
-import com.autoupdater.gui.client.window.EInfoTarget;
 
 public class InstallUpdatesRunnable implements Runnable {
     private final Gui2ClientAdapter adapter;
@@ -42,6 +40,7 @@ public class InstallUpdatesRunnable implements Runnable {
                     "Downloading updates from repositories.", ALL);
             aggregatedDownloadService.start();
             aggregatedDownloadService.joinThread();
+            aggregatedDownloadService.throwExceptionIfErrorOccured();
 
             adapter.windowOperations().reportInfo("Preparing to install",
                     "Preparing downloaded updates to install.", ALL);
@@ -54,11 +53,12 @@ public class InstallUpdatesRunnable implements Runnable {
                     .reportInfo("Installation in progress", "Updates are being installed", ALL);
             aggregatedInstallationService.start();
             aggregatedInstallationService.joinThread();
+            aggregatedInstallationService.throwExceptionIfErrorOccured();
             aggregatedInstallationService.getResult();
-        } catch (DownloadResultException e) {
+        } catch (Throwable e) {
             adapter.windowOperations()
-                    .reportError("Error occured during installation", e.getMessage(),
-                            EInfoTarget.ALL).setState(IDLE);
+                    .reportError("Error occured during installation", e.getMessage(), ALL)
+                    .setState(IDLE);
         } finally {
             if (hasAllUpdatesInstalledSuccessfully()) {
                 adapter.clientOperations().cleanTemp();
@@ -71,7 +71,7 @@ public class InstallUpdatesRunnable implements Runnable {
                         .reportError(
                                 "Installation failed",
                                 "Not all updates were installed successfully, check details for more information.",
-                                EInfoTarget.TOOLTIP).setState(IDLE).setInstallationInactive();
+                                TOOLTIP).setState(IDLE).setInstallationInactive();
             }
             adapter.windowOperations().refreshGUI();
             adapter.installationUtils().CurrentInstallationThreadFinished();

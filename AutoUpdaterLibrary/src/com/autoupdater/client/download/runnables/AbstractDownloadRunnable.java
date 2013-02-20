@@ -17,6 +17,7 @@ import com.autoupdater.client.download.DownloadServiceMessage;
 import com.autoupdater.client.download.DownloadServiceProgressMessage;
 import com.autoupdater.client.download.EDownloadStatus;
 import com.autoupdater.client.download.runnables.post.download.strategies.IPostDownloadStrategy;
+import com.autoupdater.client.utils.executions.RunnableWithErrors;
 import com.autoupdater.client.utils.services.ObservableService;
 
 /**
@@ -43,7 +44,7 @@ import com.autoupdater.client.utils.services.ObservableService;
  *            type of returned result
  */
 public abstract class AbstractDownloadRunnable<Result> extends
-        ObservableService<DownloadServiceMessage> implements Runnable {
+        ObservableService<DownloadServiceMessage> implements RunnableWithErrors {
     private static final Logger logger = getLogger(AbstractDownloadRunnable.class);
 
     private final HttpURLConnection httpURLConnection;
@@ -52,6 +53,8 @@ public abstract class AbstractDownloadRunnable<Result> extends
     private IPostDownloadStrategy<Result> downloadStrategy;
     private long contentLength = -1;
     protected Result result;
+
+    private Throwable thrownException = null;
 
     /**
      * Creates AbstractDownloadRunnable instance.
@@ -88,8 +91,10 @@ public abstract class AbstractDownloadRunnable<Result> extends
             downloadContent();
             processDownload();
         } catch (IOException | AutoUpdaterClientException e) {
+            setThrownException(e);
             reportError(e.getMessage());
         } catch (InterruptedException e) {
+            setThrownException(e);
             reportCancelled();
         }
     }
@@ -150,6 +155,22 @@ public abstract class AbstractDownloadRunnable<Result> extends
      */
     public EDownloadStatus getStatus() {
         return state;
+    }
+
+    @Override
+    public Throwable getThrownException() {
+        return thrownException;
+    }
+
+    @Override
+    public void setThrownException(Throwable throwable) {
+        thrownException = throwable;
+    }
+
+    @Override
+    public void throwExceptionIfErrorOccured() throws Throwable {
+        if (thrownException != null)
+            throw thrownException;
     }
 
     /**

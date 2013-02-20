@@ -15,6 +15,7 @@ import com.autoupdater.client.installation.EInstallationStatus;
 import com.autoupdater.client.installation.InstallationServiceMessage;
 import com.autoupdater.client.models.EUpdateStatus;
 import com.autoupdater.client.models.Update;
+import com.autoupdater.client.utils.executions.RunnableWithErrors;
 import com.autoupdater.client.utils.services.ObservableService;
 
 /**
@@ -28,15 +29,17 @@ import com.autoupdater.client.utils.services.ObservableService;
  * @see com.autoupdater.client.installation.aggregated.services.AggregatedInstallationService
  */
 public class InstallationRunnable extends ObservableService<InstallationServiceMessage> implements
-        Runnable {
+        RunnableWithErrors {
     private final EnvironmentData environmentData;
     private final CommandGenerationHelper commandGenerationHelper;
     private final ProcessShutdownHelper processHelper;
     private final SortedSet<Update> updates;
     private EInstallationStatus state = EInstallationStatus.PREPARING_INSTALLATION;
 
-    List<String[]> updateExecutionCommands;
-    ExecutionQueueReader reader;
+    private List<String[]> updateExecutionCommands;
+    private ExecutionQueueReader reader;
+
+    private Throwable thrownException = null;
 
     /**
      * Creates runnable that will attempt to install required Updates.
@@ -65,7 +68,8 @@ public class InstallationRunnable extends ObservableService<InstallationServiceM
             installUpdates();
         } catch (ProgramSettingsNotFoundException | IOException | InterruptedException
                 | ProcessKillerException | InvalidCommandException e) {
-            reportError(e.toString());
+            setThrownException(e);
+            reportError(e.getMessage());
         } finally {
             updateEnvironmentDataAndPackagesIfNeccessary();
         }
@@ -78,6 +82,22 @@ public class InstallationRunnable extends ObservableService<InstallationServiceM
      */
     public EInstallationStatus getState() {
         return state;
+    }
+
+    @Override
+    public Throwable getThrownException() {
+        return thrownException;
+    }
+
+    @Override
+    public void setThrownException(Throwable throwable) {
+        thrownException = throwable;
+    }
+
+    @Override
+    public void throwExceptionIfErrorOccured() throws Throwable {
+        if (thrownException != null)
+            throw thrownException;
     }
 
     /**

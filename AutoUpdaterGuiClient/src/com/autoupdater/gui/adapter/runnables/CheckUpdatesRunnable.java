@@ -8,7 +8,6 @@ import static com.autoupdater.gui.client.window.EWindowStatus.*;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import com.autoupdater.client.download.DownloadResultException;
 import com.autoupdater.client.download.aggregated.services.BugsInfoAggregatedDownloadService;
 import com.autoupdater.client.download.aggregated.services.ChangelogInfoAggregatedDownloadService;
 import com.autoupdater.client.download.aggregated.services.UpdateInfoAggregatedDownloadService;
@@ -44,6 +43,7 @@ public class CheckUpdatesRunnable implements Runnable {
                     new UpdateInfoNotificationListener(adapter, aggregatedUpdateInfoService));
             aggregatedUpdateInfoService.start();
             aggregatedUpdateInfoService.joinThread();
+            aggregatedUpdateInfoService.throwExceptionIfErrorOccured();
             availableUpdates.addAll(aggregatedUpdateInfoService.getResult());
             adapter.dataStorage().setAvailableUpdates(availableUpdates);
 
@@ -53,6 +53,7 @@ public class CheckUpdatesRunnable implements Runnable {
                     new ChangelogInfoNotificationListener(adapter, aggregatedChangelogInfoService));
             aggregatedChangelogInfoService.start();
             aggregatedChangelogInfoService.joinThread();
+            aggregatedChangelogInfoService.throwExceptionIfErrorOccured();
             aggregatedChangelogInfoService.getResult();
 
             adapter.windowOperations().refreshGUI();
@@ -61,8 +62,9 @@ public class CheckUpdatesRunnable implements Runnable {
                     new BugsInfoNotificationListener(adapter, aggregatedBugsInfoService));
             aggregatedBugsInfoService.start();
             aggregatedBugsInfoService.joinThread();
+            aggregatedBugsInfoService.throwExceptionIfErrorOccured();
             aggregatedBugsInfoService.getResult();
-        } catch (DownloadResultException e) {
+        } catch (Throwable e) {
             adapter.windowOperations().reportError("Error occured while checking updates",
                     e.getMessage(), TOOLTIP);
             if (adapter.dataStorage().isInitiated())
