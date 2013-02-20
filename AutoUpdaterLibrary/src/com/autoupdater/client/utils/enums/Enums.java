@@ -1,5 +1,7 @@
 package com.autoupdater.client.utils.enums;
 
+import static com.google.common.base.Throwables.propagate;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 
@@ -67,7 +69,7 @@ public class Enums {
         } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException
                 | NoSuchMethodException | SecurityException e) {
             // should never happen since all enum E got method (E[] values())
-            throw new RuntimeException(e);
+            propagate(e);
         } finally {
             messageField.setAccessible(accessible);
         }
@@ -116,6 +118,14 @@ public class Enums {
             public Object obtain(Field field, Object source) throws IllegalArgumentException,
                     IllegalAccessException {
                 return field.getInt(source);
+            }
+        }),
+
+        SHORT(Short.class, new IFieldObtainer() {
+            @Override
+            public Object obtain(Field field, Object source) throws IllegalArgumentException,
+                    IllegalAccessException {
+                return field.getShort(source);
             }
         }),
 
