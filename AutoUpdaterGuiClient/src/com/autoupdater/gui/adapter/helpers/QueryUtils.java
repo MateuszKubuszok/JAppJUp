@@ -34,7 +34,7 @@ public class QueryUtils {
         return aggregatedService.getResult();
     }
 
-    public void queryServerForInformation() throws DownloadResultException, IOException,
+    public Thread queryServerForInformation() throws DownloadResultException, IOException,
             ProgramSettingsNotFoundException {
         SortedSet<Program> selectedPrograms = adapter.dataStorage().getSelectedPrograms();
         SortedSet<Package> selectedPackages = adapter.dataStorage().getSelectedPackages();
@@ -48,7 +48,9 @@ public class QueryUtils {
         BugsInfoAggregatedDownloadService aggregatedBugsInfoService = adapter.client()
                 .createBugsInfoAggregatedDownloadService(selectedPrograms);
 
-        new Thread(new CheckUpdatesRunnable(adapter, aggregatedUpdateInfoService,
-                aggregatedChangelogInfoService, aggregatedBugsInfoService)).start();
+        Thread query = new Thread(new CheckUpdatesRunnable(adapter, aggregatedUpdateInfoService,
+                aggregatedChangelogInfoService, aggregatedBugsInfoService));
+        query.start();
+        return query;
     }
 }

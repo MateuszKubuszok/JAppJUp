@@ -1,5 +1,6 @@
 package com.autoupdater.gui.adapter.helpers;
 
+import static com.autoupdater.gui.client.window.EInfoTarget.*;
 import static com.autoupdater.gui.client.window.EWindowStatus.*;
 import static java.lang.Thread.sleep;
 
@@ -8,7 +9,6 @@ import java.io.IOException;
 import com.autoupdater.client.download.DownloadResultException;
 import com.autoupdater.client.environment.ProgramSettingsNotFoundException;
 import com.autoupdater.gui.adapter.Gui2ClientAdapter;
-import com.autoupdater.gui.client.window.EInfoTarget;
 
 public class ClientOperations {
     private final Gui2ClientAdapter adapter;
@@ -26,7 +26,11 @@ public class ClientOperations {
         informationUpdatingThread.start();
     }
 
-    public synchronized void checkUpdates() {
+    public synchronized void checkUpdates(final boolean onDemand) {
+        if (onDemand)
+            adapter.windowOperations().reportInfo("Checking updates", "Checking updates on demand",
+                    TOOLTIP);
+
         if (adapter.clientWindow() == null
                 || (adapter.clientWindow().getStatus() != UNINITIALIZED && adapter.clientWindow()
                         .getStatus() != IDLE))
@@ -40,10 +44,14 @@ public class ClientOperations {
             @Override
             public void run() {
                 try {
-                    adapter.queryUtils().queryServerForInformation();
-                } catch (DownloadResultException | IOException | ProgramSettingsNotFoundException e) {
+                    adapter.queryUtils().queryServerForInformation().join();
+                    if (onDemand)
+                        adapter.windowOperations().reportInfo("Checking updates",
+                                "Updates fetched", TOOLTIP);
+                } catch (DownloadResultException | IOException | ProgramSettingsNotFoundException
+                        | InterruptedException e) {
                     adapter.windowOperations().reportError("Error occured during update checking",
-                            e.getMessage(), EInfoTarget.TOOLTIP);
+                            e.getMessage(), ALL);
                     adapter.windowOperations().setState(
                             adapter.dataStorage().isInitiated() ? IDLE : UNINITIALIZED);
                 }
@@ -66,11 +74,11 @@ public class ClientOperations {
     private class InformationUpdater implements Runnable {
         @Override
         public void run() {
-            checkUpdates();
+            checkUpdates(false);
 
             while (!informationUpdatingThread.isInterrupted()) {
                 if (minutesSinceLastUpdateCheck >= MINUTES_BETWEEN_EACH_UPDATE_CHECK)
-                    checkUpdates();
+                    checkUpdates(false);
 
                 try {
                     waitOneMinute();

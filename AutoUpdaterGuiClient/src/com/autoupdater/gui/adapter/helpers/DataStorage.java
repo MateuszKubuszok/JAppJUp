@@ -1,5 +1,6 @@
 package com.autoupdater.gui.adapter.helpers;
 
+import static com.autoupdater.gui.client.window.EInfoTarget.ALL;
 import static com.google.common.collect.Collections2.filter;
 
 import java.io.IOException;
@@ -50,12 +51,12 @@ public class DataStorage {
     public synchronized SortedSet<Program> getAvailableOnServer() throws IOException,
             DownloadResultException {
         if (availableOnServer == null) {
-            adapter.windowOperations()
-                    .setStatusMessage(
-                            "No available programs list found - attempting to download it from repostories");
+            adapter.windowOperations().reportInfo("Repository checkout",
+                    "Attempting to download available programs from repositories", ALL);
             availableOnServer = adapter.queryUtils().queryServerForPackages();
             adapter.windowOperations()
-                    .setStatusMessage("Fetched available programs from repositories").refreshGUI();
+                    .reportInfo("Repository checkout",
+                            "Fetched available programs from repositories", ALL).refreshGUI();
         }
 
         return availableOnServer;

@@ -16,7 +16,7 @@ public class CheckUpdateTriggerListener implements MouseListener, ActionListener
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        adapter.clientOperations().checkUpdates();
+        adapter.clientOperations().checkUpdates(true);
     }
 
     @Override
@@ -37,7 +37,7 @@ public class CheckUpdateTriggerListener implements MouseListener, ActionListener
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        adapter.clientOperations().checkUpdates();
+        adapter.clientOperations().checkUpdates(true);
     }
 
 }
