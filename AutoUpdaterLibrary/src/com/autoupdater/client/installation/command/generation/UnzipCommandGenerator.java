@@ -13,7 +13,11 @@ public class UnzipCommandGenerator implements ICommandGenerator {
     @Override
     public String[] generateCommand(Update update, String pathToInstaller,
             ProgramSettings programSettings) throws InvalidCommandException {
-        return new String[] { "java", "-jar", pathToInstaller, update.getUniqueIdentifer(),
+        if (pathToInstaller.toLowerCase().endsWith(".jar"))
+            return new String[] { "java", "-jar", pathToInstaller, update.getUniqueIdentifer(),
+                    update.getUpdateStrategy().toString(), update.getFile().getAbsolutePath(),
+                    calculateTarget(programSettings, update) };
+        return new String[] { pathToInstaller, update.getUniqueIdentifer(),
                 update.getUpdateStrategy().toString(), update.getFile().getAbsolutePath(),
                 calculateTarget(programSettings, update) };
     }

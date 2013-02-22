@@ -12,7 +12,7 @@ public final class ConnectionConfiguration {
     /**
      * Defines connection time out.
      */
-    public static final int CONNECTION_TIME_OUT = 60000;
+    public static final int CONNECTION_TIME_OUT = 60 * 1000;
 
     /**
      * Defines size of buffer used for loading data from stream.
