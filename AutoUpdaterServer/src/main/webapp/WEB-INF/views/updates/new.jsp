@@ -16,6 +16,7 @@
 		<legend><spring:message code="model.update.add" arguments="${newUpdate.thePackage.program.name},${newUpdate.thePackage.name}" /></legend>
 		<c:url value="/updates/add" var="actionURL" />
 		<form:form modelAttribute="newUpdate" method="POST" enctype="multipart/form-data" commandName="newUpdate" action="${actionURL}">
+			<form:errors path="uploader" />
 			<p>
 				<form:label path="version" for="version"><spring:message code="model.update.version" />:</form:label>
 				<form:errors path="version" class="error" />
