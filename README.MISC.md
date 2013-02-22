@@ -4,6 +4,24 @@ Misc's manual
 Misc contains elements not being a part of main program, but helping with
 using/debuging it.
 
+Exampliary launch4j installation
+-----------
+
+Placed at `Misc/Launch4j`.
+
+Your can create package independent from local Java by using launch4j to create
+`Client.exe` and `Installer.exe` files.
+
+Later on You can add your own initial configuration to `installer/settings.xml`.
+Keep in mind that it should point to Installer.exe as installer executable.
+
+Finally add portable JRE installation e.g. created by jPortable, to `jre`
+directory. Prepared installation can be packed with some installer or just
+installed with install.bat script.
+
+If You want to debug You can use loggers *.properties files (see below.)
+
+
 Loggers' properties
 -----------
 
