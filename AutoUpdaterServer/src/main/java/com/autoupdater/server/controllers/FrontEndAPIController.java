@@ -163,12 +163,13 @@ public final class FrontEndAPIController extends AppController {
      *            update's ID
      * @param response
      *            response to be sent
-     * @return response's content - file
      */
+    @SuppressWarnings("resource")
     @RequestMapping(value = "/download/{updateID}", method = GET)
     public @ResponseBody
     void getFile(@PathVariable int updateID, HttpServletResponse response,
             HttpServletRequest request) {
+        InputStream is = null;
         try {
             logger.debug("Received request: GET /api/download/" + updateID);
 
@@ -180,7 +181,7 @@ public final class FrontEndAPIController extends AppController {
                 return;
             }
 
-            InputStream is = fileService.loadFile(update.getFileData());
+            is = fileService.loadFile(update.getFileData());
 
             String range = request.getHeader("Range");
             long skip = 0;
@@ -191,7 +192,6 @@ public final class FrontEndAPIController extends AppController {
 
                 is.skip(skip);
             }
-
             response.setContentType(update.getFileType());
             response.setContentLength((int) (update.getFileSize() - skip));
 
@@ -201,6 +201,13 @@ public final class FrontEndAPIController extends AppController {
         } catch (NumberFormatException | IOException e) {
             logger.error("Error sending file updateID=" + updateID + ": " + e);
             sendError(response, SC_INTERNAL_SERVER_ERROR, "Couldn't prepare file to send");
+        } finally {
+            if (is != null)
+                try {
+                    is.close();
+                } catch (IOException e) {
+                    logger.debug(e);
+                }
         }
     }
 
@@ -209,8 +216,8 @@ public final class FrontEndAPIController extends AppController {
      * 
      * Runs on GET /server/api/upload_file request.
      * 
-     * @param model
-     * @return
+     * @param model model of an upload form
+     * @return facelet's name
      */
     @RequestMapping(value = "/upload_file", method = GET)
     public String remoteUploadByFileForm(Model model) {

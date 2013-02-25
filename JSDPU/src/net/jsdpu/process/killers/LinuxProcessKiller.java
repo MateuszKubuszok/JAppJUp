@@ -1,7 +1,8 @@
 package net.jsdpu.process.killers;
 
 import static java.lang.Thread.sleep;
-import static java.util.regex.Pattern.*;
+import static java.util.regex.Pattern.compile;
+import static java.util.regex.Pattern.quote;
 import static net.jsdpu.logger.Logger.getLogger;
 
 import java.io.BufferedReader;
@@ -85,6 +86,7 @@ public class LinuxProcessKiller implements IProcessKiller {
      *             thrown when thread is interrupted, while waiting for system
      *             dependent process
      * @throws ProcessKillerException
+     *             thrown when process coudln't be killed
      */
     private void killAllResistants(String pid) throws IOException, InterruptedException,
             ProcessKillerException {

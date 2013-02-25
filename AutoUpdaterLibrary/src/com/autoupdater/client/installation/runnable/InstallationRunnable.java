@@ -129,6 +129,7 @@ public class InstallationRunnable extends ObservableService<InstallationServiceM
      * @throws InvalidCommandException
      *             thrown if command passed into ProcessExecutor is invalid
      * @throws IOException
+     *             thrown when error occurs in system dependent process
      */
     private void prepareUpdateCommands() throws ProgramSettingsNotFoundException,
             InvalidCommandException, IOException {

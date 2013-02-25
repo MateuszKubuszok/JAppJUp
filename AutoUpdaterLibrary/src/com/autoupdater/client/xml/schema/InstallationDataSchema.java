@@ -29,7 +29,9 @@ public class InstallationDataSchema {
             public static final String package_ = program_ + "/" + name;
 
             public static final class Package {
+                @SuppressWarnings("hiding")
                 public static final String name = "name";
+                @SuppressWarnings("hiding")
                 public static final String name_ = package_ + "/" + name;
 
                 public static final String id = "id";

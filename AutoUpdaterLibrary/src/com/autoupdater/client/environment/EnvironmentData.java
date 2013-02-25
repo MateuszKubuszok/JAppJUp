@@ -153,7 +153,7 @@ public class EnvironmentData {
      * @see #complimentInstallationsDataWithNotInstalledButDefinedBySettings(SortedSet,
      *      SortedSet)
      * 
-     * @param installationsData
+     * @param installationsData set of Programs installed locally
      */
     void setInstallationsData(SortedSet<Program> installationsData) {
         (this.installationsData = this.installationsData == null ? new TreeSet<Program>()
@@ -346,8 +346,8 @@ public class EnvironmentData {
      * @see #complimentInstallationsDataWithInstalledProgramsWithSettings(SortedSet,
      *      SortedSet)
      * 
-     * @param programsDefinedBySettings
-     * @param programsDefinedByInstallationsData
+     * @param programsDefinedBySettings Programs defined by ProgramSettings'
+     * @param programsDefinedByInstallationsData Programs defined by installation data (actually installed Programs)
      */
     private void complimentInstallationsDataWithNotInstalledButDefinedBySettings(
             SortedSet<Program> programsDefinedBySettings,

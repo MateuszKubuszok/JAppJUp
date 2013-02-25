@@ -1,7 +1,8 @@
 package com.autoupdater.server.controllers;
 
 import static org.apache.log4j.Logger.getLogger;
-import static org.springframework.web.bind.annotation.RequestMethod.*;
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 import javax.validation.Valid;
 
@@ -144,8 +145,6 @@ public final class BugsController extends AppController {
      * 
      * @param bug
      *            bug
-     * @param id
-     *            bug's id
      * @param model
      *            passed model
      * @return facelet name

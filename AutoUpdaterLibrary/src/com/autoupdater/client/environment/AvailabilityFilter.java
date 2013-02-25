@@ -54,7 +54,7 @@ public class AvailabilityFilter {
      * platform and available on repositories. Packages are complemented with
      * Packages not installed locally but available on server.
      * 
-     * @param programsAvailableOnServers
+     * @param programsAvailableOnServers set of available programs
      * @return set of complimented Programs
      */
     public SortedSet<Program> findProgramsAvailableToInstallOrInstalledWithDefinedSettings(

@@ -1,6 +1,7 @@
 package com.autoupdater.installer;
 
-import static java.lang.System.*;
+import static java.lang.System.err;
+import static java.lang.System.out;
 import static net.jsdpu.logger.Logger.getLogger;
 import static net.jsdpu.process.executors.Commands.convertSingleConsoleCommand;
 
@@ -36,6 +37,7 @@ public class InstallationPerformer {
      * </ul>
      * 
      * @param args
+     *            arguments passed by main
      * @return result of installation
      */
     public EErrorCode install(String[] args) {

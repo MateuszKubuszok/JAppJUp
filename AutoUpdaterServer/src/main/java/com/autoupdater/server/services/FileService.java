@@ -19,7 +19,7 @@ public interface FileService {
      *            path relative to storage directory
      * @param content
      *            saved content
-     * @throws IOExcpetion
+     * @throws IOException
      *             if exception occurred while trying to save file
      */
     public void saveFile(String storagePath, byte[] content) throws IOException;
@@ -31,7 +31,7 @@ public interface FileService {
      *            uploaded file
      * @return storagePath under which file was placed, null if file couldn't be
      *         saved
-     * @throws IOExcpetion
+     * @throws IOException
      *             if exception occurred while trying to save file
      */
     public String saveMultipartFile(CommonsMultipartFile multipartFile) throws IOException;
@@ -46,14 +46,12 @@ public interface FileService {
      *             if file wasn't found
      */
     public InputStream loadFile(String storagePath) throws FileNotFoundException;
-    
+
     /**
      * Removes file from disc.
      * 
      * @param storagePath
-     *            path relative to storage directory.
-     * 
-     * @param storagePath
+     *            path relative to storage directory
      */
     public void removeFile(String storagePath);
 }

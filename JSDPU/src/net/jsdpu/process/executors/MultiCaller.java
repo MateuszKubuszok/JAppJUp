@@ -1,9 +1,12 @@
 package net.jsdpu.process.executors;
 
-import static java.lang.System.*;
+import static java.lang.System.err;
+import static java.lang.System.getProperty;
+import static java.lang.System.out;
 import static java.util.regex.Pattern.compile;
 import static net.jsdpu.logger.Logger.getLogger;
-import static net.jsdpu.process.executors.Commands.*;
+import static net.jsdpu.process.executors.Commands.convertMultipleConsoleCommands;
+import static net.jsdpu.process.executors.Commands.joinArguments;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -38,6 +41,7 @@ public class MultiCaller {
      * </p>
      * 
      * @param commands
+     *            commands that should be run by MultiCaller
      * @return list of commands for ProcessBulder/ProcessExecutor
      */
     static String[] prepareCommand(List<String[]> commands) {

@@ -37,7 +37,7 @@ class CommandGenerationHelper {
     /**
      * Creates list of installation commands for a set of Updates to install.
      * 
-     * @param updates
+     * @param updates Updates that should be installed
      * @return list of installation commands
      * @throws ProgramSettingsNotFoundException
      *             thrown if not ProgramSettings could be found for some of

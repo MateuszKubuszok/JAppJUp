@@ -13,6 +13,7 @@ package com.autoupdater.client.utils.services;
  * @see com.autoupdater.client.download.services.FileDownloadService
  * 
  * @param <Message>
+ *            type of message that will be sent to Observers
  */
 public interface IService<Message> {
     /**

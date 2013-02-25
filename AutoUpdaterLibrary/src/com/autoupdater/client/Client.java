@@ -344,7 +344,7 @@ public class Client {
      * 
      * </p>
      * 
-     * @param updatesToInstall
+     * @param updatesToInstall Updates that should be installed
      * @return service prepared to use
      */
     public AggregatedInstallationService createInstallationAggregatedService(

@@ -38,6 +38,7 @@ public class FileAggregatedDownloadService
      * compliment.
      * 
      * @param allUpdates
+     *            all known Updates
      */
     public void setAllUpdates(SortedSet<Update> allUpdates) {
         this.allUpdates = allUpdates;

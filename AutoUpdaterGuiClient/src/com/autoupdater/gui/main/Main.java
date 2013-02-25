@@ -1,7 +1,8 @@
 package com.autoupdater.gui.main;
 
 import static java.awt.EventQueue.invokeLater;
-import static javax.swing.JOptionPane.*;
+import static javax.swing.JOptionPane.ERROR_MESSAGE;
+import static javax.swing.JOptionPane.showMessageDialog;
 
 import java.awt.EventQueue;
 import java.io.FileInputStream;
@@ -47,10 +48,17 @@ public class Main {
     }
 
     private static void setUpLogger() {
+        FileInputStream configFile = null;
         try {
-            FileInputStream configFile = new FileInputStream("./client.logger.properties");
+            configFile = new FileInputStream("./client.logger.properties");
             LogManager.getLogManager().readConfiguration(configFile);
         } catch (SecurityException | IOException e) {
+        } finally {
+            if (configFile != null)
+                try {
+                    configFile.close();
+                } catch (IOException e) {
+                }
         }
     }
 
@@ -73,7 +81,8 @@ public class Main {
             public void run() {
                 try {
                     final Gui2ClientAdapter gca = new Gui2ClientAdapter(edm);
-                    gca.clientWindow(new GuiClientWindow(gca.dataStorage().getProgramsThatShouldBeDisplayed()));
+                    gca.clientWindow(new GuiClientWindow(gca.dataStorage()
+                            .getProgramsThatShouldBeDisplayed()));
                 } catch (Exception e) {
                     showError(e);
                 }

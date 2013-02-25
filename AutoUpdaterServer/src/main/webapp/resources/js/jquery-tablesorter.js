@@ -322,7 +322,7 @@
             function appendToTable(table, cache) {
 
                 if (table.config.debug) {
-                    var appendTime = new Date()
+                    var appendTime = new Date();
                 }
 
                 var c = cache,
@@ -379,8 +379,6 @@
                 if (table.config.debug) {
                     var time = new Date();
                 }
-
-                var meta = ($.metadata) ? true : false;
                 
                 var header_index = computeTableHeaderCellIndexes(table);
 
@@ -433,7 +431,7 @@
                         var rowIndex = c.parentNode.rowIndex;
                         var cellId = rowIndex + "-" + c.cellIndex;
                         var rowSpan = c.rowSpan || 1;
-                        var colSpan = c.colSpan || 1
+                        var colSpan = c.colSpan || 1;
                         var firstAvailCol;
                         if (typeof(matrix[rowIndex]) == "undefined") {
                             matrix[rowIndex] = [];
@@ -586,7 +584,6 @@
                 var dynamicExp = "var sortWrapper = function(a,b) {",
                     l = sortList.length;
 
-                // TODO: inline functions.
                 for (var i = 0; i < l; i++) {
 
                     var c = sortList[i][0];
@@ -779,7 +776,7 @@
                     }).mousedown(function () {
                         if (config.cancelSelection) {
                             this.onselectstart = function () {
-                                return false
+                                return false;
                             };
                             return false;
                         }
@@ -1021,7 +1018,7 @@
                 odd = (row % 2 == 0);
                 $tr.removeClass(
                 table.config.widgetZebra.css[odd ? 0 : 1]).addClass(
-                table.config.widgetZebra.css[odd ? 1 : 0])
+                table.config.widgetZebra.css[odd ? 1 : 0]);
             });
             if (table.config.debug) {
                 $.tablesorter.benchmark("Applying Zebra widget", time);

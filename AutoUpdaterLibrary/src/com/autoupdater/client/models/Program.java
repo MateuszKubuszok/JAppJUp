@@ -74,9 +74,9 @@ public class Program implements IModel<Program> {
         this.serverAddress = serverAddress != null ? serverAddress : "";
 
         if (this.serverAddress.endsWith("/"))
-            this.serverAddress = serverAddress.substring(0, this.serverAddress.length() - 1);
+            this.serverAddress = this.serverAddress.substring(0, this.serverAddress.length() - 1);
         if (!this.serverAddress.startsWith("http://") && !this.serverAddress.startsWith("https://"))
-            this.serverAddress = "http://" + serverAddress;
+            this.serverAddress = "http://" + this.serverAddress;
     }
 
     /**

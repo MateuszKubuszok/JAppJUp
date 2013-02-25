@@ -81,7 +81,7 @@ public interface UpdateService {
      * 
      * @param _package package to check
      * @param update update with versions to check
-     * @return
+     * @return true if version is available for a package, false otherwise
      */
     public boolean checkIfVersionAvailableForPackage(Package _package, Update update);
 }

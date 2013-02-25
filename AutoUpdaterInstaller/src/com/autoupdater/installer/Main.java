@@ -1,6 +1,8 @@
 package com.autoupdater.installer;
 
-import static java.lang.System.*;
+import static java.lang.System.err;
+import static java.lang.System.exit;
+import static java.lang.System.out;
 import static net.jsdpu.logger.Logger.getLogger;
 
 import java.io.FileInputStream;
@@ -46,10 +48,17 @@ public class Main {
      * Sets up logger.
      */
     private static void setUpLogger() {
+        FileInputStream configFile = null;
         try {
-            FileInputStream configFile = new FileInputStream("./installer.logger.properties");
+            configFile = new FileInputStream("./installer.logger.properties");
             LogManager.getLogManager().readConfiguration(configFile);
         } catch (SecurityException | IOException e) {
+        } finally {
+            if (configFile != null)
+                try {
+                    configFile.close();
+                } catch (IOException e) {
+                }
         }
     }
 }

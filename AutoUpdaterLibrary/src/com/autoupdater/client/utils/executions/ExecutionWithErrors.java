@@ -18,8 +18,10 @@ public interface ExecutionWithErrors {
     public Throwable getThrownException();
 
     /**
+     * Exception, that occurred during execution.
      * 
      * @param throwable
+     *            Exception that occurred
      */
     void setThrownException(Throwable throwable);
 

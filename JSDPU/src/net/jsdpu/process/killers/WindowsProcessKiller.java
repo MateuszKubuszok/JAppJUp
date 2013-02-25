@@ -2,7 +2,8 @@ package net.jsdpu.process.killers;
 
 import static java.lang.Thread.sleep;
 import static net.jsdpu.logger.Logger.getLogger;
-import static net.jsdpu.process.killers.ProcessKillerConfiguration.*;
+import static net.jsdpu.process.killers.ProcessKillerConfiguration.HOW_MANY_ATTEMPTS_BEFORE_FAIL;
+import static net.jsdpu.process.killers.ProcessKillerConfiguration.HOW_MANY_SECONDS_BETWEEN_ATTEMPTS;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -81,6 +82,7 @@ public class WindowsProcessKiller implements IProcessKiller {
      *             thrown when thread is interrupted, while waiting for system
      *             dependent process
      * @throws ProcessKillerException
+     *             thrown when process couldn't be killed
      */
     private void killAllResistants(String programName) throws IOException, InterruptedException,
             ProcessKillerException {

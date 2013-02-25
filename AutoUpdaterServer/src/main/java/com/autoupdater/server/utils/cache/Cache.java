@@ -81,7 +81,6 @@ public class Cache<I extends Comparable<I>, O> {
      * 
      * @param source
      *            CacheSource object
-     * @param boolean whether or not create Cleaner thread
      */
     public Cache(CacheSource<I, O> source, boolean createCleaner) {
         initialize(source, createCleaner);
@@ -160,7 +159,7 @@ public class Cache<I extends Comparable<I>, O> {
      * 
      * For cases like change of the original value.
      * 
-     * @param input
+     * @param input some input that should be reloaded
      */
     public void forceReload(I input) {
         synchronized (getMutex(input)) {

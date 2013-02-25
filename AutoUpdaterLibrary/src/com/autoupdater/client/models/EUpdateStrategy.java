@@ -37,7 +37,7 @@ public enum EUpdateStrategy {
 
     /**
      * Returns message describing update strategy.
-     *
+     * 
      * @return message
      */
     public String getMessage() {
@@ -48,7 +48,7 @@ public enum EUpdateStrategy {
      * Returns command generator for update strategy.
      * 
      * @see com.autoupdater.client.installation.command.generation.ICommandGenerator
-     *
+     * 
      * @return command generator
      */
     public ICommandGenerator getCommandGenerator() {

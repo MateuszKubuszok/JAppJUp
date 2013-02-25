@@ -11,6 +11,7 @@ public class ProgramSettingsNotFoundException extends ClientEnvironmentException
      * Creates new ProgramSettingsNotFoundException instance.
      * 
      * @param message
+     *            message to pass
      */
     public ProgramSettingsNotFoundException(String message) {
         super(message);
