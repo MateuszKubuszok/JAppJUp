@@ -13,6 +13,7 @@ public class BugEntry implements IModel<BugEntry> {
     private String description;
 
     BugEntry() {
+        description = "";
     }
 
     /**
@@ -74,7 +75,10 @@ public class BugEntry implements IModel<BugEntry> {
         return new GeneralComparator();
     }
 
-    private class GeneralComparator implements Comparator<BugEntry> {
+    /**
+     * Comparator for everything.
+     */
+    static class GeneralComparator implements Comparator<BugEntry> {
         @Override
         public int compare(BugEntry o1, BugEntry o2) {
             return (o1 == null) ? (o2 == null ? 0 : -1) : Comparables.compare(o1.description,
