@@ -61,9 +61,9 @@ public interface IDownloadEvent {
     public String getMessage();
 
     /**
-     * Return current process of download.
+     * Return current progress of download.
      * 
-     * @return
+     * @return current download's progress as a number from 0.0 to 1.0
      */
     public Double getProgress();
 

@@ -132,10 +132,10 @@ public class TestBugEntry {
 
         // then
         assertThat(bug1.compareTo(bug2)).as(
-                "Bugs with different descriptions should have compareTos of thei descriptions")
+                "Bugs with different descriptions should have compareTos of the descriptions")
                 .isLessThan(0);
         assertThat(bug2.compareTo(bug1)).as(
-                "Bugs with different descriptions should have compareTos of thei descriptions")
+                "Bugs with different descriptions should have compareTos of the descriptions")
                 .isGreaterThan(0);
     }
 
@@ -158,9 +158,11 @@ public class TestBugEntry {
 
         // then
         assertThat(comparator.compare(bug1, bug2)).as(
-                "Bugs with equal attributes should have compareTos equal to 0").isEqualTo(0);
+                "Bugs with equal attributes should have comparator's compareTos equal to 0")
+                .isEqualTo(0);
         assertThat(comparator.compare(bug2, bug1)).as(
-                "Bugs with equal attributes should have compareTos equal to 0").isEqualTo(0);
+                "Bugs with equal attributes should have comparator's compareTos equal to 0")
+                .isEqualTo(0);
     }
 
     private void forNotEqualDescriptionsShouldHaveGeneralComparatorsCompareTosDifferentTo0() {
@@ -176,11 +178,11 @@ public class TestBugEntry {
         Comparator<BugEntry> comparator = new BugEntry.GeneralComparator();
 
         // then
-        assertThat(comparator.compare(bug1, bug2)).as(
-                "Bugs with different descriptions should have compareTos of thei descriptions")
+        assertThat(comparator.compare(bug1, bug2))
+                .as("Bugs with different descriptions should have comparator's compareTos of the descriptions")
                 .isLessThan(0);
-        assertThat(comparator.compare(bug2, bug1)).as(
-                "Bugs with different descriptions should have compareTos of thei descriptions")
+        assertThat(comparator.compare(bug2, bug1))
+                .as("Bugs with different descriptions should have comparator's compareTos of the descriptions")
                 .isGreaterThan(0);
     }
 }

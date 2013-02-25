@@ -441,7 +441,7 @@ public class Update extends ObservableService<EUpdateStatus> implements IModel<U
             if (o1 == null)
                 return o2 == null ? 0 : -1;
             if (!equal(o1.packageName, o2.packageName))
-                Comparables.compare(o1.packageName, o2.packageName);
+                return Comparables.compare(o1.packageName, o2.packageName);
             if (!equal(o1.developmentVersion, o2.developmentVersion))
                 return o1.developmentVersion ? 1 : -1;
             if (!equal(o1._package, o2._package, Models.EComparisionType.LOCAL_TO_SERVER))

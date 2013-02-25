@@ -1,8 +1,8 @@
 package com.autoupdater.client.models;
 
+import static com.autoupdater.client.models.VersionNumber.UNVERSIONED;
 import static com.autoupdater.client.utils.comparables.Comparables.compare;
 import static com.google.common.base.Objects.equal;
-import static java.lang.Math.pow;
 
 import java.util.Comparator;
 
@@ -17,6 +17,8 @@ public class ChangelogEntry implements IModel<ChangelogEntry> {
     private VersionNumber versionNumber;
 
     ChangelogEntry() {
+        changes = "";
+        versionNumber = UNVERSIONED;
     }
 
     /**
@@ -80,7 +82,7 @@ public class ChangelogEntry implements IModel<ChangelogEntry> {
 
     @Override
     public int hashCode() {
-        return (int) pow(changes.hashCode(), 10) + versionNumber.hashCode();
+        return Objects.hashCode(changes, versionNumber);
     }
 
     @Override
@@ -114,13 +116,16 @@ public class ChangelogEntry implements IModel<ChangelogEntry> {
         return new GeneralComparator();
     }
 
-    private class GeneralComparator implements Comparator<ChangelogEntry> {
+    /**
+     * Comparator for everything.
+     */
+    static class GeneralComparator implements Comparator<ChangelogEntry> {
         @Override
         public int compare(ChangelogEntry o1, ChangelogEntry o2) {
             if (o1 == null)
                 return o2 == null ? 0 : -1;
-            if (Objects.equal(o1.versionNumber, o2.versionNumber))
-                Comparables.compare(o1.versionNumber, o2.versionNumber);
+            if (!equal(o1.versionNumber, o2.versionNumber))
+                return Comparables.compare(o1.versionNumber, o2.versionNumber);
             return Comparables.compare(o1.changes, o2.changes);
         }
     }
