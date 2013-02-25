@@ -38,6 +38,7 @@ public class TestFileDownloadRunnable extends AbstractTestDownloadRunnable {
                 .exists();
 
         // clean
-        result.delete();
+        if (result != null)
+            result.delete();
     }
 }
