@@ -43,6 +43,7 @@ public class TestEnvironmentDataManager extends AbstractTest {
                 .isNotNull().isEqualTo(originalEnvironmentContext);
     }
 
+    @SuppressWarnings("null")
     @Test
     public void testGetEnvironmentData() throws IOException {
         // given
