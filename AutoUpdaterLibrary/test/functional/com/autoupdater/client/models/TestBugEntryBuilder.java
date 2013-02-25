@@ -4,17 +4,17 @@ import static org.fest.assertions.api.Assertions.assertThat;
 
 import org.junit.Test;
 
-public class TestBugEntry {
+public class TestBugEntryBuilder {
     @Test
-    public void testConstructor() {
+    public void testBuilder() {
         // given
-        String description = "Some byg description";
+        String description = "Some bug description";
 
         // when
         BugEntry bug = BugEntryBuilder.builder().setDescription(description).build();
 
         // then
-        assertThat(bug.getDescription()).as("Constructor should set description properly")
-                .isEqualTo(description);
+        assertThat(bug.getDescription()).as("Builder should set description properly").isEqualTo(
+                description);
     }
 }
