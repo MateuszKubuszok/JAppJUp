@@ -72,7 +72,6 @@ public class CheckUpdatesRunnable implements Runnable {
             else
                 adapter.windowOperations().setState(UNINITIALIZED);
         } finally {
-            adapter.dataStorage().setInitiated(true);
             adapter.installationUtils().markAllUpdatesAsIntendedToInstall();
 
             if (availableUpdates == null || filterUpdateSelection(availableUpdates).isEmpty())

@@ -50,13 +50,14 @@ public class DataStorage {
 
     public synchronized SortedSet<Program> getAvailableOnServer() throws IOException,
             DownloadResultException {
-        if (availableOnServer == null) {
+        if (!isInitiated()) {
             adapter.windowOperations().reportInfo("Repository checkout",
                     "Attempting to download available programs from repositories", ALL);
             availableOnServer = adapter.queryUtils().queryServerForPackages();
             adapter.windowOperations()
                     .reportInfo("Repository checkout",
                             "Fetched available programs from repositories", ALL).refreshGUI();
+            setInitiated(true);
         }
 
         return availableOnServer;

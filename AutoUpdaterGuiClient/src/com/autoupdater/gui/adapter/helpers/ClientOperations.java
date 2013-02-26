@@ -2,9 +2,12 @@ package com.autoupdater.gui.adapter.helpers;
 
 import static com.autoupdater.gui.client.window.EInfoTarget.*;
 import static com.autoupdater.gui.client.window.EWindowStatus.*;
+import static java.lang.Math.abs;
 import static java.lang.Thread.sleep;
+import static java.util.concurrent.TimeUnit.*;
 
 import java.io.IOException;
+import java.util.Date;
 
 import com.autoupdater.client.download.DownloadResultException;
 import com.autoupdater.client.environment.ProgramSettingsNotFoundException;
@@ -14,7 +17,7 @@ public class ClientOperations {
     private final Gui2ClientAdapter adapter;
 
     private final Thread informationUpdatingThread;
-    private int minutesSinceLastUpdateCheck;
+    private Date lastUpdateCheckTime;
     private final static int MINUTES_BETWEEN_EACH_UPDATE_CHECK = 10;
 
     public ClientOperations(Gui2ClientAdapter adapter) {
@@ -38,7 +41,7 @@ public class ClientOperations {
 
         adapter.windowOperations().setState(FETCHING_UPDATE_INFO);
         adapter.windowOperations().setInstallationInactive();
-        minutesSinceLastUpdateCheck = 0;
+        lastUpdateCheckTime = new Date();
 
         (new Thread() {
             @Override
@@ -63,21 +66,13 @@ public class ClientOperations {
         adapter.client().cleanTemp();
     }
 
-    public int getMinutesSinceLastUpdateCheck() {
-        return minutesSinceLastUpdateCheck;
-    }
-
-    public void setMinutesSinceLastUpdateCheck(int minutesSinceLastUpdateCheck) {
-        this.minutesSinceLastUpdateCheck = minutesSinceLastUpdateCheck;
-    }
-
     private class InformationUpdater implements Runnable {
         @Override
         public void run() {
             checkUpdates(false);
 
             while (!informationUpdatingThread.isInterrupted()) {
-                if (minutesSinceLastUpdateCheck >= MINUTES_BETWEEN_EACH_UPDATE_CHECK)
+                if (shouldCheckUpdates())
                     checkUpdates(false);
 
                 try {
@@ -88,8 +83,14 @@ public class ClientOperations {
             }
         }
 
+        private boolean shouldCheckUpdates() {
+            long lastCheck = MILLISECONDS.toMinutes(lastUpdateCheckTime.getTime());
+            long now = MILLISECONDS.toMinutes(new Date().getTime());
+            return abs(lastCheck - now) >= MINUTES_BETWEEN_EACH_UPDATE_CHECK;
+        }
+
         private void waitOneMinute() throws InterruptedException {
-            sleep(60 * 1000);
+            sleep(MINUTES.toMillis(1));
         }
     }
 }
