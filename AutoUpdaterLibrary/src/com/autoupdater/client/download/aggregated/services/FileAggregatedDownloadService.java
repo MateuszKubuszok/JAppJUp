@@ -1,5 +1,7 @@
 package com.autoupdater.client.download.aggregated.services;
 
+import static com.autoupdater.client.models.EUpdateStatus.DOWNLOADED;
+import static com.autoupdater.client.models.Models.equal;
 import static net.jsdpu.logger.Logger.getLogger;
 
 import java.io.File;
@@ -11,7 +13,6 @@ import net.jsdpu.logger.Logger;
 import com.autoupdater.client.download.DownloadResultException;
 import com.autoupdater.client.download.aggregated.notifiers.FileAggregatedNotifier;
 import com.autoupdater.client.download.services.FileDownloadService;
-import com.autoupdater.client.models.EUpdateStatus;
 import com.autoupdater.client.models.Models;
 import com.autoupdater.client.models.Update;
 
@@ -47,22 +48,29 @@ public class FileAggregatedDownloadService
     @Override
     public SortedSet<Update> getResult() throws DownloadResultException {
         logger.debug("Starts calculating results");
+        DownloadResultException exception = null;
         SortedSet<Update> updates = new TreeSet<Update>();
         for (FileDownloadService service : getServices()) {
             Update update = null;
-            if ((update = getAdditionalMessage(service)) != null) {
-                update.setFile(service.getResult());
-                update.setStatus(EUpdateStatus.DOWNLOADED);
-                if (allUpdates != null)
-                    for (Update filledUpdate : allUpdates)
-                        if (Models.equal(update, filledUpdate,
-                                Models.EComparisionType.LOCAL_TO_SERVER)) {
-                            filledUpdate.setFile(service.getResult());
-                            if (filledUpdate.getStatus().isIntendedToBeChanged())
-                                filledUpdate.setStatus(EUpdateStatus.DOWNLOADED);
-                        }
-                updates.add(update);
-            }
+            if ((update = getAdditionalMessage(service)) != null)
+                try {
+                    update.setFile(service.getResult());
+                    update.setStatus(DOWNLOADED);
+                    if (allUpdates != null)
+                        for (Update filledUpdate : allUpdates)
+                            if (equal(update, filledUpdate, Models.EComparisionType.LOCAL_TO_SERVER)) {
+                                filledUpdate.setFile(service.getResult());
+                                if (filledUpdate.getStatus().isIntendedToBeChanged())
+                                    filledUpdate.setStatus(DOWNLOADED);
+                            }
+                    updates.add(update);
+                } catch (DownloadResultException e) {
+                    exception = e;
+                }
+        }
+        if (exception != null) {
+            logger.debug("Exception occured for some file download - failing aggregated file download");
+            throw exception;
         }
         logger.debug("Finshed calculating results");
         return updates;
