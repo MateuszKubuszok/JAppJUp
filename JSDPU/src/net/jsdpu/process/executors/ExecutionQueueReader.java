@@ -26,6 +26,7 @@ import net.jsdpu.logger.Logger;
 public class ExecutionQueueReader {
     private static final Logger logger = getLogger(ExecutionQueueReader.class);
 
+    private Process currentProcess = null;
     private final ProcessQueue processQueue;
     private BufferedReader reader;
 
@@ -130,11 +131,11 @@ public class ExecutionQueueReader {
 
             try {
                 logger.trace("Obtaining next reader");
-                Process process = processQueue.getNextProcess();
+                currentProcess = processQueue.getNextProcess();
                 Vector<InputStream> vector = new Vector<InputStream>();
-                vector.add(process.getInputStream());
+                vector.add(currentProcess.getInputStream());
                 vector.add(new ByteArrayInputStream(new byte[] { '\n' }));
-                vector.add(process.getErrorStream());
+                vector.add(currentProcess.getErrorStream());
                 vector.add(new ByteArrayInputStream(new byte[] { '\n' }));
                 reader = new BufferedReader(new InputStreamReader(new SequenceInputStream(
                         vector.elements())));
@@ -143,5 +144,13 @@ public class ExecutionQueueReader {
                 throw new InvalidCommandException(e.getMessage());
             }
         }
+    }
+
+    /**
+     * Kills current process.
+     */
+    public void killCurrentProcess() {
+        if (currentProcess != null)
+            currentProcess.destroy();
     }
 }

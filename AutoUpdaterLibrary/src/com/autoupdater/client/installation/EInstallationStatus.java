@@ -29,7 +29,7 @@ public enum EInstallationStatus {
     /**
      * Installation finished installing all updates.
      */
-    INSTALLED("Updates installed successfully"),
+    SUCCEEDED("Updates installed successfully"),
 
     /**
      * Installation service failed to install updates.

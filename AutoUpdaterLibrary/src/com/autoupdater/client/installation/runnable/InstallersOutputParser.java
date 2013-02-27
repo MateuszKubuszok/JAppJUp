@@ -1,5 +1,7 @@
 package com.autoupdater.client.installation.runnable;
 
+import static com.autoupdater.client.models.EUpdateStatus.*;
+import static com.autoupdater.commons.error.codes.EErrorCode.SUCCESS;
 import static com.google.common.base.Throwables.propagate;
 import static java.util.regex.Pattern.compile;
 
@@ -36,10 +38,16 @@ class InstallersOutputParser {
 
     private final EnvironmentData environmentData;
 
+    /**
+     * Initializes output parser.
+     */
     InstallersOutputParser() {
         environmentData = null;
     }
 
+    /**
+     * Initializes output parser.
+     */
     InstallersOutputParser(EnvironmentData environmentData) {
         this.environmentData = environmentData;
     }
@@ -58,6 +66,11 @@ class InstallersOutputParser {
 
         while (true) {
             try {
+                if (isInstallationFinished(updates)) {
+                    reader.killCurrentProcess();
+                    return;
+                }
+
                 if ((result = reader.getNextOutput()) == null)
                     return;
 
@@ -100,8 +113,8 @@ class InstallersOutputParser {
                         && (updateStatus = Enums.parseField(EUpdateStatus.class,
                                 "installerMessage", installerMessage)) != null)
                     update.setStatus(updateStatus);
-                else if (Enums.parseField(EErrorCode.class, "description", message) == EErrorCode.SUCCESS)
-                    update.setStatus(EUpdateStatus.INSTALLED);
+                else if (Enums.parseField(EErrorCode.class, "description", message) == SUCCESS)
+                    update.setStatus(INSTALLED);
             } catch (NoSuchFieldException e) {
                 propagate(e);
             }
@@ -129,19 +142,33 @@ class InstallersOutputParser {
                         && (updateStatus = Enums.parseField(EUpdateStatus.class,
                                 "installerMessage", installerMessage)) != null) {
                     update.setStatus(updateStatus);
-                    if (updateStatus == EUpdateStatus.INSTALLED && environmentData != null)
+                    if (updateStatus == INSTALLED && environmentData != null)
                         try {
                             environmentData.save();
                         } catch (ClientEnvironmentException | IOException e) {
                         }
                 } else if (update.getStatus().isIntendedToBeChanged()) {
                     update.setStatusMessage(message);
-                    update.setStatus(EUpdateStatus.INSTALLATION_FAILED);
+                    update.setStatus(INSTALLATION_FAILED);
                 }
             } catch (NoSuchFieldException e) {
                 throw new RuntimeException("Wrong installer message field name");
             }
         }
+    }
+
+    /**
+     * Whether there is any unfinished update attempt.
+     * 
+     * @param updates
+     *            updates to check
+     * @return
+     */
+    private boolean isInstallationFinished(SortedSet<Update> updates) {
+        for (Update update : updates)
+            if (update.getStatus() != NOT_SELECTED && !update.getStatus().isUpdateAttemptFinished())
+                return false;
+        return true;
     }
 
     /**

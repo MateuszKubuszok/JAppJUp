@@ -154,7 +154,7 @@ public class Models {
      * 
      * @see com.autoupdater.client.models.IModel
      */
-    public enum EComparisionType {
+    public static enum EComparisionType {
         /**
          * Compares Models with same "server properties": name, server address,
          * etc.
