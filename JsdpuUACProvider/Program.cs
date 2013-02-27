@@ -12,7 +12,8 @@ using System.Text.RegularExpressions;
 /// </summary>
 /// 
 /// Returned code is a result of the last executed command.
-namespace UACPerformer {
+namespace UACPerformer
+{
     class Executor {
         /// <summary>
         /// Identifier used for communication with UACPerformer via NamedPipes. 
@@ -65,7 +66,8 @@ namespace UACPerformer {
         /// 
         /// The first string though is identifier used for communication with UACHandler.exe.
         /// </param>
-        static void Main(string[] commands) {
+        static void Main(string[] commands)
+        {
             if (commands.Length == 0)
                 return;
 
@@ -92,7 +94,8 @@ namespace UACPerformer {
         /// <param name="command">
         /// command passed from Main(string[])
         /// </param>
-        private static void parseCommand(String command) {
+        private static void parseCommand(String command)
+        {
             ArgumentsHandler argumentsHandler = new ArgumentsHandler(command);
 
             if (argumentsHandler.ParseArguments())
@@ -105,7 +108,8 @@ namespace UACPerformer {
         /// <param name="argumentsHandler">
         /// handler with a program to run
         /// </param>
-        private static void runCommand(ArgumentsHandler argumentsHandler) {
+        private static void runCommand(ArgumentsHandler argumentsHandler)
+        {
             psInfo = new ProcessStartInfo();
             psInfo.FileName = argumentsHandler.Program;
             psInfo.Arguments = argumentsHandler.Arguments;
