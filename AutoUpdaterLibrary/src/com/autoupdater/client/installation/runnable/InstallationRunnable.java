@@ -67,7 +67,7 @@ public class InstallationRunnable extends ObservableService<InstallationServiceM
     public void run() {
         state = EInstallationStatus.PREPARING_INSTALLATION;
         try {
-            killOpenUpdatedPrograms();
+            killOpenedUpdatedPrograms();
             prepareUpdateCommands();
             installUpdates();
         } catch (ProgramSettingsNotFoundException | IOException | InterruptedException
@@ -117,7 +117,7 @@ public class InstallationRunnable extends ObservableService<InstallationServiceM
      *             thrown when thread is interrupted during waiting for system
      *             dependent process to finish
      */
-    private void killOpenUpdatedPrograms() throws ProgramSettingsNotFoundException,
+    private void killOpenedUpdatedPrograms() throws ProgramSettingsNotFoundException,
             ProcessKillerException, IOException, InterruptedException {
         reportChange("Shutting down applications before update...",
                 EInstallationStatus.KILLING_UPDATED_APPLICATIONS);
