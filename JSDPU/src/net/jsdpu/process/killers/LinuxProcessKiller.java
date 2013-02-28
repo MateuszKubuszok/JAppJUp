@@ -1,8 +1,6 @@
 package net.jsdpu.process.killers;
 
-import static java.lang.Thread.sleep;
-import static java.util.regex.Pattern.compile;
-import static java.util.regex.Pattern.quote;
+import static java.util.regex.Pattern.*;
 import static net.jsdpu.logger.Logger.getLogger;
 
 import java.io.BufferedReader;
@@ -21,75 +19,24 @@ import net.jsdpu.logger.Logger;
  * 
  * @see net.jsdpu.process.killers.IProcessKiller
  */
-public class LinuxProcessKiller implements IProcessKiller {
+public class LinuxProcessKiller extends AbstractProcessKiller {
     private static final Logger logger = getLogger(LinuxProcessKiller.class);
 
     @Override
     public void killProcess(String programName) throws IOException, InterruptedException,
             ProcessKillerException {
-        logger.trace("Attempt to kill " + programName);
-        int attempts = 0;
-
-        if (!isProgramRunning(programName))
-            return;
-
-        for (attempts = 0; attempts < ProcessKillerConfiguration.HOW_MANY_ATTEMPTS_BEFORE_FAIL; attempts++) {
-            for (String pid : getPID(programName))
-                if (!askToDieGracefully(pid)) {
-                    killAllResistants(pid);
-                }
-
-            if (!isProgramRunning(programName)) {
-                logger.detailedTrace("Successfully killed all instances of " + programName);
-                return;
-            }
-
-            sleep(ProcessKillerConfiguration.HOW_MANY_SECONDS_BETWEEN_ATTEMPTS * 1000);
-        }
-
-        logger.error("Failed to kill " + programName + " (exception thrown)");
-        throw new ProcessKillerException("Couldn't kill process - "
-                + ProcessKillerConfiguration.HOW_MANY_ATTEMPTS_BEFORE_FAIL + " attempts failed");
+        for (String pid : getPID(programName))
+            super.killProcess(pid);
     }
 
-    /**
-     * Attempts to kill process "gracefully" - by sending TERM signal.
-     * 
-     * <p>
-     * Should make program pop
-     * "Do you want to save before exit?"/"Are you sure you want to quit?"
-     * dialog and then finish. Otherwise program should just die.
-     * </p>
-     * 
-     * @param pid
-     *            ID of program that should be killed
-     * @return true if succeed to kill process
-     * @throws IOException
-     *             thrown when error occurs in system dependent process
-     * @throws InterruptedException
-     *             thrown when thread is interrupted, while waiting for system
-     *             dependent process
-     */
-    private boolean askToDieGracefully(String pid) throws IOException, InterruptedException {
+    @Override
+    protected boolean askToDieGracefully(String pid) throws IOException, InterruptedException {
         logger.detailedTrace("Attempt to gracefully kill " + pid);
         return new ProcessBuilder("kill", "-TERM", pid).start().waitFor() == 0;
     }
 
-    /**
-     * Kills process forcefully, if attempt to kill it gracefully failed.
-     * 
-     * @param pid
-     *            ID of program that should be killed
-     * @throws IOException
-     *             thrown when error occurs in system dependent process
-     * @throws InterruptedException
-     *             thrown when thread is interrupted, while waiting for system
-     *             dependent process
-     * @throws ProcessKillerException
-     *             thrown when process coudln't be killed
-     */
-    private void killAllResistants(String pid) throws IOException, InterruptedException,
-            ProcessKillerException {
+    @Override
+    protected void killAllResistants(String pid) throws IOException, InterruptedException {
         logger.detailedTrace("Attempt to forcefully kill " + pid);
         Process process = new ProcessBuilder("kill", pid).start();
 
@@ -99,26 +46,12 @@ public class LinuxProcessKiller implements IProcessKiller {
 
         if (errorCode != 0) {
             String message = reader.readLine();
-            logger.error("Failed to forcefully kill " + pid + " (exception thrown)");
-            throw new ProcessKillerException(
-                    message != null && message.length() > 7 ? message.substring(7, message.length())
-                            : "Couldn't kill process \"" + pid + "\"");
+            logger.error("Failed to forcefully kill " + pid + ":" + message);
         }
     }
 
-    /**
-     * Checks whether program with given name is currently executed.
-     * 
-     * @param programName
-     *            program that should be checked
-     * @return true if program is running
-     * @throws IOException
-     *             thrown when error occurs in system dependent process
-     * @throws InterruptedException
-     *             thrown when thread is interrupted, while waiting for system
-     *             dependent process
-     */
-    private boolean isProgramRunning(String programName) throws IOException, InterruptedException {
+    @Override
+    protected boolean isProgramRunning(String programName) throws IOException, InterruptedException {
         logger.detailedTrace("Obtaining information about running instances of " + programName);
         Process process = new ProcessBuilder("ps", "-ef").start();
 
