@@ -35,6 +35,7 @@ public class ProcessHandler {
         out.println("[process name][enter]...[kill][enter] - to kill process with given name");
         out.println("reset - to reset state");
         out.println("exit - to quit tester");
+        out.println("----------------");
 
         BufferedReader reader = new BufferedReader(new InputStreamReader(in));
 
@@ -44,44 +45,59 @@ public class ProcessHandler {
 
             if (command.equals("sudo execute"))
                 try {
+                    out.println(">>>>");
                     resultReader = processExecutor
                             .executeRoot(convertMultipleConsoleCommands(commands));
                     displayResults();
                     commands.clear();
                 } catch (InvalidCommandException e) {
                     e.printStackTrace();
+                } finally {
+                    out.println("----------------");
                 }
             else if (command.equals("execute"))
                 try {
+                    out.println(">>>>");
                     resultReader = processExecutor
                             .execute(convertMultipleConsoleCommands(commands));
                     displayResults();
                     commands.clear();
                 } catch (InvalidCommandException e) {
                     e.printStackTrace();
+                } finally {
+                    out.println("----------------");
                 }
             else if (command.equals("exec"))
                 try {
+                    out.println(">>>>");
                     resultReader = processExecutor.execute(convertSingleCommand(commands));
                     displayResults();
                     commands.clear();
                 } catch (InvalidCommandException e) {
                     e.printStackTrace();
+                } finally {
+                    out.println("----------------");
                 }
             else if (command.equals("sudo exec"))
                 try {
+                    out.println(">>>>");
                     resultReader = processExecutor.executeRoot(convertSingleCommand(commands));
                     displayResults();
                     commands.clear();
                 } catch (InvalidCommandException e) {
                     e.printStackTrace();
+                } finally {
+                    out.println("----------------");
                 }
             else if (command.equals("kill")) {
+                out.println(">>>>");
                 for (String processName : commands)
                     try {
                         processKiller.killProcess(processName);
                     } catch (ProcessKillerException | InterruptedException e) {
                         e.printStackTrace();
+                    } finally {
+                        out.println("----------------");
                     }
                 out.println("----------------");
             } else if (command.equals("reset")) {
@@ -95,12 +111,8 @@ public class ProcessHandler {
     }
 
     private static void displayResults() throws InvalidCommandException {
-        try {
-            String line;
-            while ((line = resultReader.getNextOutput()) != null)
-                out.println("\t" + line);
-        } finally {
-            out.println("----------------");
-        }
+        String line;
+        while ((line = resultReader.getNextOutput()) != null)
+            out.println("\t" + line);
     }
 }
