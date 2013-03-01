@@ -19,9 +19,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.MouseListener;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowFocusListener;
-import java.awt.event.WindowListener;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -257,9 +254,6 @@ public class GuiClientWindow extends JFrame {
         setMinimumSize(WINDOW_MIN_SIZE);
         setTitle(WINDOW_TITLE);
 
-        addWindowFocusListener(new Launch4JFocusListener());
-        addWindowListener(new Launch4JWindowListener());
-
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
         setContentPane(contentPane);
         GridBagLayout gbl_contentPane = new GridBagLayout();
@@ -280,8 +274,11 @@ public class GuiClientWindow extends JFrame {
 
             @Override
             public void componentShown(ComponentEvent e) {
-                if (showHideGUI != null)
+                if (showHideGUI != null) {
                     showHideGUI.setLabel("Hide");
+                    setVisible(true);
+                    repaintForLaunch4j();
+                }
             }
 
             @Override
@@ -355,48 +352,5 @@ public class GuiClientWindow extends JFrame {
     private void repaintForLaunch4j() {
         contentPane.invalidate();
         contentPane.repaint();
-    }
-
-    private class Launch4JWindowListener implements WindowListener {
-        @Override
-        public void windowOpened(WindowEvent e) {
-            repaintForLaunch4j();
-        }
-
-        @Override
-        public void windowClosing(WindowEvent e) {
-        }
-
-        @Override
-        public void windowClosed(WindowEvent e) {
-        }
-
-        @Override
-        public void windowIconified(WindowEvent e) {
-        }
-
-        @Override
-        public void windowDeiconified(WindowEvent e) {
-            repaintForLaunch4j();
-        }
-
-        @Override
-        public void windowActivated(WindowEvent e) {
-        }
-
-        @Override
-        public void windowDeactivated(WindowEvent e) {
-        }
-    }
-
-    private class Launch4JFocusListener implements WindowFocusListener {
-        @Override
-        public void windowGainedFocus(WindowEvent e) {
-            repaintForLaunch4j();
-        }
-
-        @Override
-        public void windowLostFocus(WindowEvent e) {
-        }
     }
 }

@@ -15,7 +15,7 @@
   <icon>Icon.ico</icon>
   <singleInstance>
     <mutexName>AutoUpdaterClient-051d-0c80-05e2-b2d7.lck</mutexName>
-    <windowTitle>Manage AutoUpdater</windowTitle>
+    <windowTitle></windowTitle>
   </singleInstance>
   <jre>
     <path>jre</path>
