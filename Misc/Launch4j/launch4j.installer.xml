@@ -12,7 +12,7 @@
   <customProcName>true</customProcName>
   <stayAlive>false</stayAlive>
   <manifest></manifest>
-  <icon>D:\userdata\kubuszok\Desktop\Client Test\Icon.ico</icon>
+  <icon>Icon.ico</icon>
   <jre>
     <path>jre</path>
     <minVersion></minVersion>

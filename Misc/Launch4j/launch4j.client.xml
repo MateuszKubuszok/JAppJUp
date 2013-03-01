@@ -11,11 +11,11 @@
   <supportUrl></supportUrl>
   <customProcName>true</customProcName>
   <stayAlive>false</stayAlive>
-  <manifest></manifest>
-  <icon>D:\userdata\kubuszok\Desktop\Client Test\Icon.ico</icon>
+  <manifest>Client.exe.manifest</manifest>
+  <icon>Icon.ico</icon>
   <singleInstance>
-    <mutexName>AutoUpdaterClient.lck</mutexName>
-    <windowTitle>AutoUpdater</windowTitle>
+    <mutexName>AutoUpdaterClient-051d-0c80-05e2-b2d7.lck</mutexName>
+    <windowTitle>Manage AutoUpdater</windowTitle>
   </singleInstance>
   <jre>
     <path>jre</path>

@@ -2,8 +2,11 @@ package com.autoupdater.gui.client.window;
 
 import static com.autoupdater.gui.client.window.ETrayStrategy.resolve;
 import static com.autoupdater.gui.client.window.EWindowStatus.UNINITIALIZED;
+import static com.autoupdater.gui.config.GuiConfiguration.*;
 import static com.autoupdater.gui.mocks.MockModels.getInstalledPrograms;
+import static java.lang.Double.MIN_VALUE;
 import static javax.swing.JOptionPane.*;
+import static javax.swing.UIManager.setLookAndFeel;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -16,6 +19,9 @@ import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.MouseListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowFocusListener;
+import java.awt.event.WindowListener;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +36,6 @@ import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
-import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 
 import com.autoupdater.client.environment.EnvironmentData;
@@ -41,7 +46,6 @@ import com.autoupdater.gui.client.window.tabs.installed.ProgramTabContentContain
 import com.autoupdater.gui.client.window.tabs.settings.SettingsTabContentContainer;
 import com.autoupdater.gui.client.window.tabs.updates.UpdateInformationPanel;
 import com.autoupdater.gui.client.window.tabs.updates.UpdatesTabContentContainer;
-import com.autoupdater.gui.config.GuiConfiguration;
 import com.jgoodies.forms.factories.FormFactory;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
@@ -72,19 +76,14 @@ public class GuiClientWindow extends JFrame {
     private Map<Program, MenuItem> programsLaunchers;
 
     public GuiClientWindow() {
-        contentPane = new JPanel();
-        programsTabs = new ArrayList<ProgramTabContentContainer>();
-
-        this.programs = getInstalledPrograms();
-
-        initialize();
+        this(getInstalledPrograms());
     }
 
     public GuiClientWindow(SortedSet<Program> programs) {
-        contentPane = new JPanel();
-        programsTabs = new ArrayList<ProgramTabContentContainer>();
-
         this.programs = programs;
+
+        this.contentPane = new JPanel();
+        this.programsTabs = new ArrayList<ProgramTabContentContainer>();
 
         initialize();
     }
@@ -232,8 +231,7 @@ public class GuiClientWindow extends JFrame {
 
     private void initialize() {
         try {
-            setIconImage(ImageIO.read(Resources.class
-                    .getResourceAsStream(GuiConfiguration.appIconURL)));
+            setIconImage(ImageIO.read(Resources.class.getResourceAsStream(APP_ICON_URL)));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -251,21 +249,24 @@ public class GuiClientWindow extends JFrame {
 
     private void initializeWindow() {
         try {
-            UIManager.setLookAndFeel(GuiConfiguration.LOOK_AND_FEEL);
+            setLookAndFeel(LOOK_AND_FEEL);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        setBounds(GuiConfiguration.WINDOW_BOUNDS);
-        setMinimumSize(GuiConfiguration.WINDOW_MIN_SIZE);
-        setTitle(GuiConfiguration.WINDOW_TITLE);
+        setBounds(WINDOW_BOUNDS);
+        setMinimumSize(WINDOW_MIN_SIZE);
+        setTitle(WINDOW_TITLE);
+
+        addWindowFocusListener(new Launch4JFocusListener());
+        addWindowListener(new Launch4JWindowListener());
 
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
         setContentPane(contentPane);
         GridBagLayout gbl_contentPane = new GridBagLayout();
         gbl_contentPane.columnWidths = new int[] { 0, 0 };
         gbl_contentPane.rowHeights = new int[] { 0, 0, 0 };
-        gbl_contentPane.columnWeights = new double[] { 1.0, Double.MIN_VALUE };
-        gbl_contentPane.rowWeights = new double[] { 1.0, 0.0, Double.MIN_VALUE };
+        gbl_contentPane.columnWeights = new double[] { 1.0, MIN_VALUE };
+        gbl_contentPane.rowWeights = new double[] { 1.0, 0.0, MIN_VALUE };
         contentPane.setLayout(gbl_contentPane);
 
         addComponentListener(new ComponentListener() {
@@ -348,6 +349,54 @@ public class GuiClientWindow extends JFrame {
         SplashScreen splash = SplashScreen.getSplashScreen();
         if (splash != null) {
             splash.close();
+        }
+    }
+
+    private void repaintForLaunch4j() {
+        contentPane.invalidate();
+        contentPane.repaint();
+    }
+
+    private class Launch4JWindowListener implements WindowListener {
+        @Override
+        public void windowOpened(WindowEvent e) {
+            repaintForLaunch4j();
+        }
+
+        @Override
+        public void windowClosing(WindowEvent e) {
+        }
+
+        @Override
+        public void windowClosed(WindowEvent e) {
+        }
+
+        @Override
+        public void windowIconified(WindowEvent e) {
+        }
+
+        @Override
+        public void windowDeiconified(WindowEvent e) {
+            repaintForLaunch4j();
+        }
+
+        @Override
+        public void windowActivated(WindowEvent e) {
+        }
+
+        @Override
+        public void windowDeactivated(WindowEvent e) {
+        }
+    }
+
+    private class Launch4JFocusListener implements WindowFocusListener {
+        @Override
+        public void windowGainedFocus(WindowEvent e) {
+            repaintForLaunch4j();
+        }
+
+        @Override
+        public void windowLostFocus(WindowEvent e) {
         }
     }
 }
