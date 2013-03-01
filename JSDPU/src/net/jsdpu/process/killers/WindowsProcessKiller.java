@@ -21,13 +21,15 @@ public class WindowsProcessKiller extends AbstractProcessKiller {
     protected boolean askToDieGracefully(String programName) throws IOException,
             InterruptedException {
         logger.detailedTrace("Attempt to gracefully kill " + programName);
-        return new ProcessBuilder("taskkill", "/IM", programName).start().waitFor() == 0;
+        return new ProcessBuilder("wmic", "Path", "win32_process", "Where",
+                commandLike(programName), "Call", "Terminate").start().waitFor() == 0;
     }
 
     @Override
     protected void killAllResistants(String programName) throws IOException, InterruptedException {
         logger.detailedTrace("Attempt to forcefully kill " + programName);
-        Process process = new ProcessBuilder("taskkill", "/F", "/IM", programName).start();
+        Process process = new ProcessBuilder("wmic", "Path", "win32_process", "Where",
+                commandLike(programName), "Call", "Terminate").start();
 
         BufferedReader reader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
 
@@ -42,17 +44,33 @@ public class WindowsProcessKiller extends AbstractProcessKiller {
     @Override
     protected boolean isProgramRunning(String programName) throws IOException, InterruptedException {
         logger.detailedTrace("Obtaining information about running instances of " + programName);
-        Process process = new ProcessBuilder("tasklist", "/FO", "csv").start();
+
+        Process process = new ProcessBuilder("wmic", "Path", "win32_process", "Where",
+                commandLike(programName)).start();
 
         BufferedReader outputReader = new BufferedReader(new InputStreamReader(
                 process.getInputStream()));
 
         String outputMessage;
         while ((outputMessage = outputReader.readLine()) != null) {
-            if (outputMessage.startsWith("\"" + programName + "\""))
+            if (!outputMessage.isEmpty() && !outputMessage.startsWith("Caption")
+                    && !outputMessage.startsWith("WMIC.exe"))
                 return true;
         }
 
         return false;
+    }
+
+    /**
+     * Creates "CommandLine Like '%programName%'" argument.
+     * 
+     * @param programName
+     *            program name to wrap
+     * @return argument for WMIC
+     */
+    private String commandLike(String programName) {
+        if (programName.endsWith(".jar"))
+            return "CommandLine Like '%-jar " + programName + "%'";
+        return "CommandLine Like '%" + programName + "%'";
     }
 }
