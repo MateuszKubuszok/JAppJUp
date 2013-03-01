@@ -1,10 +1,15 @@
 package net.jsdpu.process.killers;
 
+import static java.util.regex.Pattern.*;
 import static net.jsdpu.logger.Logger.getLogger;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import net.jsdpu.logger.Logger;
 
@@ -21,8 +26,15 @@ public class WindowsProcessKiller extends AbstractProcessKiller {
     protected boolean askToDieGracefully(String programName) throws IOException,
             InterruptedException {
         logger.detailedTrace("Attempt to gracefully kill " + programName);
-        return new ProcessBuilder("wmic", "Path", "win32_process", "Where",
-                commandLike(programName), "Call", "Terminate").start().waitFor() == 0;
+
+        List<String> command = new ArrayList<String>();
+        command.add("taskkill");
+        for (String pid : getPID(programName)) {
+            command.add("/PID");
+            command.add(pid);
+        }
+
+        return new ProcessBuilder(command.toArray(new String[command.size()])).start().waitFor() == 0;
     }
 
     @Override
@@ -72,5 +84,39 @@ public class WindowsProcessKiller extends AbstractProcessKiller {
         if (programName.endsWith(".jar"))
             return "CommandLine Like '%-jar " + programName + "%'";
         return "CommandLine Like '%" + programName + "%'";
+    }
+
+    /**
+     * Obtains all ID of process that are running program with given name
+     * 
+     * @param programName
+     *            name of program's to kill
+     * @return list of process' IDs
+     * @throws IOException
+     *             thrown when thread is interrupted, while waiting for system
+     *             dependent process
+     */
+    private List<String> getPID(String programName) throws IOException {
+        logger.detailedTrace("Obtaining PIDs for " + programName);
+        Process process = new ProcessBuilder("wmic", "Path", "win32_process", "Where",
+                commandLike(programName), "Get", "Caption,", "ProcessId").start();
+
+        BufferedReader outputReader = new BufferedReader(new InputStreamReader(
+                process.getInputStream()));
+
+        List<String> pids = new ArrayList<String>();
+
+        Pattern pattern = compile("^\\S+\\s+(\\d+).+" + quote(programName));
+
+        String outputMessage;
+        while ((outputMessage = outputReader.readLine()) != null)
+            if (!outputMessage.isEmpty() && !outputMessage.startsWith("Caption")
+                    && !outputMessage.startsWith("WMIC.exe")) {
+                Matcher matcher = pattern.matcher(outputMessage);
+                if (matcher.find())
+                    pids.add(matcher.group(1));
+            }
+
+        return pids;
     }
 }

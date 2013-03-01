@@ -89,9 +89,9 @@ public class LinuxProcessKiller extends AbstractProcessKiller {
 
         Pattern pattern = compile("^\\S+\\s+(\\d+).+" + quote(programName));
 
-        String result;
-        while ((result = reader.readLine()) != null) {
-            Matcher matcher = pattern.matcher(result);
+        String outputMessage;
+        while ((outputMessage = reader.readLine()) != null) {
+            Matcher matcher = pattern.matcher(outputMessage);
             if (matcher.find())
                 pids.add(matcher.group(1));
         }
