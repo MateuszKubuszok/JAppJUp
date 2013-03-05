@@ -358,7 +358,7 @@ public class Update extends ObservableService<EUpdateStatus> implements IModel<U
      * @return last message related to status change
      */
     public String getStatusMessage() {
-        return statusMessage;
+        return statusMessage != null ? statusMessage : "";
     }
 
     /**

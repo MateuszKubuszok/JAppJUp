@@ -149,7 +149,7 @@ class InstallersOutputParser {
                         }
                 } else if (update.getStatus().isIntendedToBeChanged()) {
                     update.setStatusMessage(message);
-                    update.setStatus(INSTALLATION_FAILED);
+                    update.setStatus(FAILED);
                 }
             } catch (NoSuchFieldException e) {
                 throw new RuntimeException("Wrong installer message field name");

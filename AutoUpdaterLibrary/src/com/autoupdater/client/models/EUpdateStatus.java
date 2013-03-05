@@ -109,7 +109,7 @@ public enum EUpdateStatus {
      * updates' package installation.
      * </p>
      */
-    INSTALLATION_FAILED("Update couldn't be installed", true, true,
+    FAILED("Update couldn't be installed", true, true,
             EInstallerMessage.INSTALLATION_FAILED),
 
     /**
@@ -192,7 +192,7 @@ public enum EUpdateStatus {
      * @return true if Update installation failed
      */
     public boolean isInstallationFailed() {
-        return equals(INSTALLATION_FAILED)
+        return equals(FAILED)
                 || (isIntendedToBeChanged() && !isUpdateAttemptFinished());
     }
 

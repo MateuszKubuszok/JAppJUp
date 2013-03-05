@@ -88,7 +88,7 @@ public class UpdateInformationPanel extends JPanel {
         @Override
         public void update(ObservableService<EUpdateStatus> observable, EUpdateStatus message) {
             if (observable == update) {
-                if (message.isInstallationFailed())
+                if (message.isInstallationFailed() && !update.getStatusMessage().isEmpty())
                     label.setText(message.getMessage() + ": " + update.getStatusMessage());
                 else
                     label.setText(message.getMessage());

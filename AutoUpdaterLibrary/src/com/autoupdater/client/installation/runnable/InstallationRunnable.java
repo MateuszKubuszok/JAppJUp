@@ -1,9 +1,7 @@
 package com.autoupdater.client.installation.runnable;
 
 import static com.autoupdater.client.installation.EInstallationStatus.*;
-import static com.autoupdater.client.installation.EInstallationStatus.INSTALLING;
 import static com.autoupdater.client.models.EUpdateStatus.*;
-import static com.autoupdater.client.models.EUpdateStatus.INSTALLED;
 
 import java.io.IOException;
 import java.util.List;
@@ -65,8 +63,9 @@ public class InstallationRunnable extends ObservableService<InstallationServiceM
      */
     @Override
     public void run() {
-        state = EInstallationStatus.PREPARING_INSTALLATION;
+        state = PREPARING_INSTALLATION;
         try {
+            clearPossibleFailureMessages();
             killOpenedUpdatedPrograms();
             prepareUpdateCommands();
             installUpdates();
@@ -105,6 +104,14 @@ public class InstallationRunnable extends ObservableService<InstallationServiceM
     }
 
     /**
+     * For each Update clears failure messages if any is set.
+     */
+    private void clearPossibleFailureMessages() {
+        for (Update update : updates)
+            update.setStatusMessage(null);
+    }
+
+    /**
      * Kills open updated programs.
      * 
      * @throws ProgramSettingsNotFoundException
@@ -137,7 +144,7 @@ public class InstallationRunnable extends ObservableService<InstallationServiceM
      */
     private void prepareUpdateCommands() throws ProgramSettingsNotFoundException,
             InvalidCommandException, IOException {
-        reportChange("Preparing installation commands...", INSTALLING);
+        reportChange("Preparing installation commands...", INSTALLING_UPDATES);
         updateExecutionCommands = commandGenerationHelper.getUpdateExecutionCommands(updates);
         reader = environmentData.getSystem().getProcessExecutor()
                 .executeRoot(updateExecutionCommands);
@@ -147,7 +154,7 @@ public class InstallationRunnable extends ObservableService<InstallationServiceM
      * Installs updates.
      */
     private void installUpdates() {
-        reportChange("Installing updates...", INSTALLING);
+        reportChange("Installing updates...", INSTALLING_UPDATES);
         new InstallersOutputParser(environmentData).parseInstallersOutput(updates, reader);
     }
 
@@ -165,7 +172,7 @@ public class InstallationRunnable extends ObservableService<InstallationServiceM
                     someUpdateInstalled = true;
                 else if (update.getStatus().isInstallationFailed()) {
                     update.setStatusMessage("Uknown Installer failure");
-                    update.setStatus(INSTALLATION_FAILED);
+                    update.setStatus(FAILED);
                     errorOccured = true;
                 }
             }
@@ -173,7 +180,7 @@ public class InstallationRunnable extends ObservableService<InstallationServiceM
         if (errorOccured)
             reportError("Not all updates were successfully installed");
         else
-            reportChange("Updates installed successfully", SUCCEEDED);
+            reportChange("Updates installed successfully", INSTALLATION_SUCCEEDED);
 
         if (someUpdateInstalled)
             try {
@@ -204,7 +211,7 @@ public class InstallationRunnable extends ObservableService<InstallationServiceM
      *            message to pass
      */
     private void reportError(String message) {
-        state = FAILED;
+        state = INSTALLATION_FAILED;
         hasChanged();
         notifyObservers(new InstallationServiceMessage(message, true));
     }

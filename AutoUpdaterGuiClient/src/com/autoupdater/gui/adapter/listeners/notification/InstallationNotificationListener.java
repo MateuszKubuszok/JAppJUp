@@ -31,7 +31,7 @@ public class InstallationNotificationListener implements IObserver<InstallationS
                         "Installation: " + aggregatedService.getState(), EInfoTarget.ALL);
         }
 
-        if (aggregatedService.getState() == EInstallationStatus.INSTALLING) {
+        if (aggregatedService.getState() == EInstallationStatus.INSTALLING_UPDATES) {
             int numberOfUpdatesBeingInstalled = aggregatedService.getUpdates().size();
             int numberOfUpdatesMarkedAsDone = 0;
 

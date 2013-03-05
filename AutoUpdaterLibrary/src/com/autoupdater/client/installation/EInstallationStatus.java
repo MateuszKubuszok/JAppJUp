@@ -24,17 +24,17 @@ public enum EInstallationStatus {
     /**
      * Installation service is installing updates at the moment.
      */
-    INSTALLING("Installing updates..."),
+    INSTALLING_UPDATES("Installing updates..."),
 
     /**
      * Installation finished installing all updates.
      */
-    SUCCEEDED("Updates installed successfully"),
+    INSTALLATION_SUCCEEDED("Updates installed successfully"),
 
     /**
      * Installation service failed to install updates.
      */
-    FAILED("Installation failed");
+    INSTALLATION_FAILED("Installation failed");
 
     private String message;
 
