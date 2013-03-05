@@ -16,7 +16,7 @@ public class InstallUpdateTriggerListener implements MouseListener, ActionListen
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        adapter.installationUtils().installAllUpdates();
+        installAllUpdates();
     }
 
     @Override
@@ -37,6 +37,15 @@ public class InstallUpdateTriggerListener implements MouseListener, ActionListen
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        adapter.installationUtils().installAllUpdates();
+        installAllUpdates();
+    }
+
+    private void installAllUpdates() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                adapter.installationUtils().installAllUpdates();
+            }
+        }).start();
     }
 }
