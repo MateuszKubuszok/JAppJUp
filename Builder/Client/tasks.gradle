@@ -1,0 +1,55 @@
+//----------------------------------------------------------------------------
+//                        CLIENT'S TASKS' CONFIGURATION
+//----------------------------------------------------------------------------
+
+configure(clientProjects) {
+    apply plugin : 'java'
+    apply plugin : 'eclipse-wtp'
+
+    sourceCompatibility = 1.7
+    targetCompatibility = 1.7
+	
+	test {
+		dependsOn(compileJava, compileTestJava)
+	
+		jvmArgs '-Xms128m', '-Xmx512m', '-XX:MaxPermSize=128m'
+			
+		beforeTest { descriptor ->
+			logger.lifecycle("Running test: " + descriptor)
+		}
+		//onOutput { descriptor, event ->
+		//	logger.lifecycle("Test: " + descriptor + " produced standard out/err: " + event.message )
+		//}
+	}
+	
+	task copyToLib(type: Copy) {
+		from configurations.compile
+		into "$clientDir/libraries"
+		
+		doLast {
+			ant.delete file: "$clientDir/libraries/AutoUpdaterCommons.jar"
+			ant.delete file: "$clientDir/libraries/AutoUpdaterLibrary.jar"
+			ant.delete file: "$clientDir/libraries/JSDPU.jar"
+		}
+	}
+	
+	jar {
+		dependsOn(compileJava, copyToLib)
+		destinationDir = clientDir
+		baseName =	project.name.equals('AutoUpdaterGuiClient') ? 'Client' :
+					project.name.equals('AutoUpdaterInstaller') ? 'Installer' :
+					project.name
+		from sourceSets.main.java
+		from sourceSets.main.output
+	}
+}
+
+project(':AutoUpdaterGuiClient') {
+	jar {
+		manifest { attributes "SplashScreen-Image": "com/autoupdater/gui/gfx/AutoUpdater_Splash.png" }
+	}
+}
+
+task buildClient {
+	dependsOn(':AutoUpdaterGuiClient:build')
+}

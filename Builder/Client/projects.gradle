@@ -1,5 +1,5 @@
 //----------------------------------------------------------------------------
-//                            PROJECTS CONFIGURATION
+//                      CLIENT'S PROJECTS' CONFIGURATION
 //----------------------------------------------------------------------------
 
 project(':JSDPU') {
@@ -27,18 +27,6 @@ project(':AutoUpdaterCommons') {
 }
 
 project(':AutoUpdaterLibrary') {
-	dependsOn(':JSDPU')
-	dependsOn(':AutoUpdaterCommons')
-	
-	dependencies {
-		compile project(':JSDPU')
-		if (noEclipseTask) {
-			testCompile project(':JSDPU').sourceSets.test.output
-		}
-		
-		compile project(':AutoUpdaterCommons')
-	}
-	
 	sourceSets {
         main { java { srcDir 'src' } }
         test { java {
@@ -49,46 +37,15 @@ project(':AutoUpdaterLibrary') {
 }
 
 project(':AutoUpdaterInstaller') {
-	dependsOn(':JSDPU')
-	dependsOn(':AutoUpdaterCommons')
-
-	dependencies {
-		compile project(':JSDPU')
-		if (noEclipseTask) {
-			testCompile project(':JSDPU').sourceSets.test.output
-		}
-		
-		compile project(':AutoUpdaterCommons')
-	}
-	
-	jar { manifest { attributes "Main-Class": "com.autoupdater.installer.Main" } }
-	
 	sourceSets {
         main { java { srcDir 'src' } }
         test { java { srcDir 'test/functional' } }
     }
+	
+	jar { manifest { attributes "Main-Class": "com.autoupdater.installer.Main" } }
 }
 
 project(':AutoUpdaterGuiClient') {
-	dependsOn(':AutoUpdaterLibrary')
-	dependsOn(':AutoUpdaterInstaller')
-
-	dependencies {
-		compile project(':JSDPU')
-		if (noEclipseTask) {
-			testCompile project(':JSDPU').sourceSets.test.output
-		}
-		
-		compile project(':AutoUpdaterCommons')
-		
-		compile project(':AutoUpdaterLibrary')
-		if (noEclipseTask) {
-			testCompile project(':AutoUpdaterLibrary').sourceSets.test.output
-		}
-	}
-	
-	jar { manifest { attributes "Main-Class": "com.autoupdater.gui.main.Main" } }
-	
 	sourceSets { main {
 		java {
 			srcDir 'src'
@@ -99,4 +56,6 @@ project(':AutoUpdaterGuiClient') {
 			srcDir 'resources'
 		}
     } }
+	
+	jar { manifest { attributes "Main-Class": "com.autoupdater.gui.main.Main" } }
 }

@@ -1,0 +1,200 @@
+//----------------------------------------------------------------------------
+//                    SERVER'S DEPENDENCIES' CONFIGURATION
+//----------------------------------------------------------------------------
+
+configure(serverProjects) {
+	repositories {
+		mavenCentral()
+		maven { url 'http://repository.jboss.org/nexus/content/groups/public' }
+	}
+}
+
+// Spring Framework:
+def springVersion = '3.1.0.RELEASE'
+def springContext = "org.springframework:spring-context:${springVersion}"
+def springMVC     = "org.springframework:spring-webmvc:${springVersion}"
+def springAOP     = "org.springframework:spring-aop:${springVersion}"
+def springORM     = "org.springframework:spring-orm:${springVersion}"
+def springJDBC    = "org.springframework:spring-jdbc:${springVersion}"
+
+
+// Spring Security:
+def springSecurityVersion = '3.1.2.RELEASE'
+def springSecurityCore    = "org.springframework.security:spring-security-core:${springSecurityVersion}"
+def springSecurityLDAP    = "org.springframework.security:spring-security-ldap:${springSecurityVersion}"
+def springSecurityConfig  = "org.springframework.security:spring-security-config:${springSecurityVersion}"
+def springSecurityWeb     = "org.springframework.security:spring-security-web:${springSecurityVersion}"
+def springSecurityTaglibs = "org.springframework.security:spring-security-taglibs:${springSecurityVersion}"
+def springSecurityACL     = "org.springframework.security:spring-security-acl:${springSecurityVersion}"
+
+
+// Tiles:
+def tilesVersion = '2.1.4'
+def tilesCore    = "org.apache.tiles:tiles-core:${tilesVersion}"
+def tilesAPI     = "org.apache.tiles:tiles-api:${tilesVersion}"
+def tilesJSP     = "org.apache.tiles:tiles-jsp:${tilesVersion}"
+
+
+// AspectJ:
+def aspectJVersion = '1.6.9'
+def aspectJ        = "org.aspectj:aspectjrt:${aspectJVersion}"
+
+
+// Databases:
+def apacheDerbyVersion = '10.9.1.0'
+def apacheDerby        = "org.apache.derby:derbyclient:${apacheDerbyVersion}"
+
+def mySQLVersion = '5.1.19'
+def mySQL        = "mysql:mysql-connector-java:${mySQLVersion}"
+
+def postgreSQLVersion = '9.1-901.jdbc4'
+def postgreSQL        = "postgresql:postgresql:${postgreSQLVersion}"
+
+
+// Logging:
+def slf4jVersion = '1.5.10'
+def slf4jAPI     = "org.slf4j:slf4j-api:${slf4jVersion}"
+def slf4jJCL     = "org.slf4j:jcl-over-slf4j:${slf4jVersion}"
+def slf4jLog4J   = "org.slf4j:slf4j-log4j12:${slf4jVersion}"
+
+def log4JVersion = '1.2.15'
+def log4J        = "log4j:log4j:${log4JVersion}"
+
+// Javax:
+def javaxServletAPIVersion = '2.5'
+def javaxServletAPI        = "javax.servlet:servlet-api:${javaxServletAPIVersion}"
+
+def javaxJspApiVersion     = '2.1'
+def javaxJspApi            = "javax.servlet.jsp:jsp-api:${javaxJspApiVersion}"
+
+def javaxJSTLVersion       = '1.2'
+def javaxJSTL              = "javax.servlet:jstl:${javaxJSTLVersion}"
+
+def javaxInjectVersion     = '1'
+def javaxInject            = "javax.inject:javax.inject:${javaxInjectVersion}"
+
+def javaxValidationVersion = '1.0.0.GA'
+def javaxValidation        = "javax.validation:validation-api:${javaxValidationVersion}"
+
+
+// Hibernate:
+def hibernateCoreVersion      = '4.1.7.Final'
+def hibernateCore             = "org.hibernate:hibernate-core:${hibernateCoreVersion}"
+
+def hibernateValidatorVersion = '4.3.0.Final'
+def hibernateValidator        = "org.hibernate:hibernate-validator:${hibernateValidatorVersion}"
+
+def hibernateJPAVersion       = '1.0.1.Final'
+def hibernateJPA              = "org.hibernate.javax.persistence:hibernate-jpa-2.0-api:${hibernateJPAVersion}"
+
+
+// dom4j:
+def dom4JVersion = '1.6.1'
+def dom4J        = "dom4j:dom4j:${dom4JVersion}"
+
+
+// antlr:
+def antlrVersion = '2.7.7'
+def antlr        = "antlr:antlr:${antlrVersion}"
+
+
+// commons:
+def commonsBeanUtilsVersion   = '1.8.3'
+def commonsBeanUtils          = "commons-beanutils:commons-beanutils:${commonsBeanUtilsVersion}"
+
+def commonsCollectionsVersion = '3.2.1'
+def commonsCollections        = "commons-collections:commons-collections:${commonsCollectionsVersion}"
+
+def commonsDigesterVersion    = '2.1'
+def commonsDigester           = "commons-digester:commons-digester:${commonsDigesterVersion}"
+
+def commonsFileUploadVersion  = '1.2.2'
+def commonsFileUpload         = "commons-fileupload:commons-fileupload:${commonsFileUploadVersion}"
+
+def commonsIOVersion          = '2.3'
+def commonsIO                 = "commons-io:commons-io:${commonsIOVersion}"
+
+def commonsLangVersion        = '2.6'
+def commonsLang               = "commons-lang:commons-lang:${commonsLangVersion}"
+
+def commonsLoggingVersion     = '1.1.1'
+def commonsLogging            = "commons-logging:commons-logging:${commonsLoggingVersion}"
+
+
+// JUnit4:
+def jUnitVersion = '4.7'
+def jUnit        = "junit:junit:${jUnitVersion}"
+
+project(':AutoUpdaterServer') {
+	dependencies {
+		// Spring Framework:
+		compile(springContext) {
+			exclude group: 'commons-logging', module: 'commons-logging'
+		}
+		compile(
+			springMVC,	springAOP,	springORM, 	springJDBC
+		)
+		
+		// Spring Security:
+		compile(
+			springSecurityCore,	springSecurityLDAP,		springSecurityConfig,
+			springSecurityWeb,	springSecurityTaglibs,	springSecurityACL
+		)
+		
+		// Tiles:
+		compile(
+			tilesCore, tilesAPI, tilesJSP
+		)
+		
+		// AspectJ:
+		compile(aspectJ)
+		
+		// Databases:
+		compile(
+			apacheDerby, mySQL, postgreSQL
+		)
+		
+		// Logging:
+		compile(slf4jAPI)
+		runtime(
+			slf4jJCL, slf4jLog4J
+		)
+		runtime(log4J) {
+			exclude group: 'javax.mail',   module: 'mail'
+			exclude group: 'javax.jms',    module: 'jms'
+			exclude group: 'com.sun.jdmk', module: 'jmxtools'
+			exclude group: 'com.sun.jmx',  module: 'jmxri'
+		}
+		
+		// Javax:
+		compile(
+			javaxInject,		javaxValidation,		javaxJSTL
+		)
+		providedCompile(
+			javaxServletAPI,	javaxJspApi
+		)
+		
+		// Hibernate:
+		compile(
+			hibernateCore, hibernateValidator, hibernateJPA
+		)
+		
+		// dom4j:
+		compile(dom4J)
+		
+		// antlr:
+		compile(antlr)
+		
+		// commons:
+		compile(
+			commonsBeanUtils,	commonsCollections,	commonsDigester,
+			commonsFileUpload,	commonsIO,			commonsLang,
+			commonsLogging
+		)
+		
+		// JUnit:
+		testCompile(
+			jUnit
+		)
+	}
+}

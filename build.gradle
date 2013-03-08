@@ -1,57 +1,36 @@
 //----------------------------------------------------------------------------
-//                           GENERAL CONFIGURATION
+//                           BUILDERS CONFIGURATIONS
 //----------------------------------------------------------------------------
-//System.properties['http.proxyHost'] = '10.144.1.10'
-//System.properties['http.proxyPort'] = '8080'
+// Run:
+//     gradle build - build both Client and Server,
+//     gradle buildClient - build only Client,
+//     gradle buildServer - build only Server,
+//     gradle eclipse - prepare source code for importing into Eclipse.
+//----------------------------------------------------------------------------
 
-def installDir = file(new File('./AutoUpdater').getCanonicalPath())
+// Defines proxy address:
+System.properties['http.proxyHost'] = '10.144.1.10'
+// Defines proxy port number:
+System.properties['http.proxyPort'] = '8080'
+
+// Client Dist destination directory:
+ext.clientDir = file(new File('./AutoUpdater/Client').getCanonicalPath())
+// Server Dist destination directory:
+ext.serverDir = file(new File('./AutoUpdater/Server').getCanonicalPath())
+// External libraries source driectory:
+ext.externalLibrariesDir = "${rootProject.projectDir}/ExternalLibraries"
+
+// Whether it is an Eclipse task:
 ext.noEclipseTask = !getGradle().startParameter.getTaskNames().contains('eclipse')
 
-subprojects {
-    apply plugin : 'java'
-    apply plugin : 'eclipse-wtp'
+// Client configurations
+ext.clientProjects = subprojects.findAll {it.name != 'AutoUpdaterServer'}
+apply from: './Builder/Client/tasks.gradle'
+apply from: './Builder/Client/projects.gradle'
+apply from: './Builder/Client/dependencies.gradle'
 
-    sourceCompatibility = 1.7
-    targetCompatibility = 1.7
-	
-	test {
-		dependsOn(compileJava, compileTestJava)
-	
-		jvmArgs '-Xms128m', '-Xmx512m', '-XX:MaxPermSize=128m'
-			
-		beforeTest { descriptor ->
-			logger.lifecycle("Running test: " + descriptor)
-		}
-		onOutput { descriptor, event ->
-			logger.lifecycle("Test: " + descriptor + " produced standard out/err: " + event.message )
-		}
-	}
-	
-	task copyToLib(type: Copy) {
-		from configurations.compile
-		into "$installDir/libraries"
-		
-		doLast {
-			ant.delete file: "$installDir/libraries/AutoUpdaterCommons.jar"
-			ant.delete file: "$installDir/libraries/AutoUpdaterLibrary.jar"
-			ant.delete file: "$installDir/libraries/JSDPU.jar"
-		}
-	}
-	
-	jar {
-		dependsOn(compileJava, copyToLib)
-		destinationDir = installDir
-		baseName = project.name.equals('AutoUpdaterGuiClient') ? 'Client' : project.name.equals('AutoUpdaterInstaller') ? 'Installer' : project.name
-		from sourceSets.main.java
-		from sourceSets.main.output
-	}
-}
-
-apply from: './dependencies.gradle'
-apply from: './projects.gradle'
-
-project(':AutoUpdaterGuiClient') {
-	jar {
-		manifest { attributes "SplashScreen-Image": "com/autoupdater/gui/gfx/AutoUpdater_Splash.png" }
-	}
-}
+// Server configurations
+//ext.serverProjects = subprojects.findAll {it.name == 'AutoUpdaterServer'}
+//apply from: './Builder/Server/tasks.gradle'
+//apply from: './Builder/Server/projects.gradle'
+//apply from: './Builder/Server/dependencies.gradle'

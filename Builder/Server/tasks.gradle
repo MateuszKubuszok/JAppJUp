@@ -1,0 +1,18 @@
+//----------------------------------------------------------------------------
+//                        SERVER'S TASKS' CONFIGURATION
+//----------------------------------------------------------------------------
+
+configure(serverProjects) {
+    apply plugin : 'war'
+    apply plugin : 'eclipse-wtp'
+
+    sourceCompatibility = 1.7
+    targetCompatibility = 1.7
+}
+
+project(':AutoUpdaterServer') {
+}
+
+task buildServer {
+	dependsOn(':AutoUpdaterServer:build')
+}

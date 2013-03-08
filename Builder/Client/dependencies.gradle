@@ -1,8 +1,8 @@
 //----------------------------------------------------------------------------
-//                         DEPENDENCIES' CONFIGURATION
+//                    CLIENT'S DEPENDENCIES' CONFIGURATION
 //----------------------------------------------------------------------------
 
-subprojects {
+configure(clientProjects) {
 	repositories {
 		mavenCentral()
 	}
@@ -21,15 +21,12 @@ def mockito   = 'org.mockito:mockito-all:1.9.0@jar'
 def objenesis = 'org.objenesis:objenesis:1.2@jar'
 def seaLandF  = 'com.seaglasslookandfeel:seaglasslookandfeel:0.2@jar'
 
-def externalLibraries = "${rootProject.projectDir}/ExternalLibraries"
-def dom4j = "${externalLibraries}/dom4j/dom4j-2.0.0-ALPHA-2.jar"
-def forms = "${externalLibraries}/com.jgoodies/jgoodies-forms-1.3.0.jar"
+def dom4j = "${externalLibrariesDir}/dom4j/dom4j-2.0.0-ALPHA-2.jar"
+def forms = "${externalLibrariesDir}/com.jgoodies/jgoodies-forms-1.3.0.jar"
 
 project(':JSDPU') {
 	dependencies {
-		compile(
-			guava
-		)
+		compile(guava)
 		
 		testCompile(
 			cglib,
@@ -50,11 +47,10 @@ project(':AutoUpdaterCommons') {
 }
 
 project(':AutoUpdaterInstaller') {
-	dependsOn(':JSDPU')
-	dependsOn(':AutoUpdaterCommons')
-
 	dependencies {
 		compile(
+			project(':JSDPU'),
+			project(':AutoUpdaterCommons'),
 			guava
 		)
 				
@@ -64,27 +60,25 @@ project(':AutoUpdaterInstaller') {
 			festUtil,
 			junit4
 		)
-		
-		compile project(':JSDPU')
-		testCompile project(':JSDPU')
-		
-		compile project(':AutoUpdaterCommons')
+		if (noEclipseTask) {
+			testCompile project(':JSDPU').sourceSets.test.output
+		}
 	}
 	
 	jar { manifest { attributes "Class-Path": "./AutoUpdaterCommons.jar ./JSDPU.jar                      ./libraries/guava-13.0.1.jar ./installer.logger.properties" } }
 }
 
+
 project(':AutoUpdaterLibrary') {
-	dependsOn(':JSDPU')
-	dependsOn(':AutoUpdaterCommons')
-	
 	dependencies {
 		compile(
+			project(':JSDPU'),
+			project(':AutoUpdaterCommons'),
 			codec,
 			guava,
-			jaxen
+			jaxen,
+			files(dom4j)
 		)
-		compile files(dom4j)
 				
 		testCompile(
 			cglib,
@@ -96,32 +90,30 @@ project(':AutoUpdaterLibrary') {
 			mockito,
 			objenesis
 		)
-		
-		compile project(':JSDPU')
-		testCompile project(':JSDPU')
-		
-		compile project(':AutoUpdaterCommons')
+		if (noEclipseTask) {
+			testCompile project(':JSDPU').sourceSets.test.output
+		}
 	}
 	
 	jar { manifest { attributes "Class-Path": "./AutoUpdaterCommons.jar ./JSDPU.jar                      ./libraries/dom4j-2.0.0-ALPHA-2.jar ./libraries/guava-13.0.1.jar     ./libraries/jaxen-1.1.4.jar ./libraries/commons-codec-1.5.jar" } }
 }
 
 project(':AutoUpdaterGuiClient') {
-	dependsOn(':JSDPU')
-	dependsOn(':AutoUpdaterLibrary')
+	
 
 	dependencies {
 		compile(
+			project(':JSDPU'),
+			project(':AutoUpdaterLibrary'),
 			guava,
-			seaLandF
+			seaLandF,
+			files(forms)
 		)
-		compile files(forms)
 		
-		compile project(':JSDPU')
-		testCompile project(':JSDPU')
-		
-		compile project(':AutoUpdaterLibrary')
-		testCompile project(':AutoUpdaterLibrary')
+		if (noEclipseTask) {
+			testCompile project(':JSDPU').sourceSets.test.output
+			testCompile project(':AutoUpdaterLibrary').sourceSets.test.output
+		}
 	}
 
 	jar { manifest { attributes "Class-Path": "./AutoUpdaterLibrary.jar ./JSDPU.jar                      ./libraries/guava-13.0.1.jar ./libraries/jgoodies-forms-1.3.0.jar    ./libraries/seaglasslookandfeel-0.2.jar ./logger.properties"} }
