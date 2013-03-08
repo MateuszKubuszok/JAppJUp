@@ -5,7 +5,7 @@
 configure(serverProjects) {
 	repositories {
 		mavenCentral()
-		maven { url 'http://repository.jboss.org/nexus/content/groups/public' }
+		maven { url 'https://repository.jboss.org/nexus/content/groups/public' }
 	}
 }
 
@@ -58,7 +58,8 @@ def slf4jJCL     = "org.slf4j:jcl-over-slf4j:${slf4jVersion}"
 def slf4jLog4J   = "org.slf4j:slf4j-log4j12:${slf4jVersion}"
 
 def log4JVersion = '1.2.15'
-def log4J        = "log4j:log4j:${log4JVersion}"
+def log4J        = "log4j:log4j:${log4JVersion}@jar"
+
 
 // Javax:
 def javaxServletAPIVersion = '2.5'
@@ -125,6 +126,7 @@ def commonsLogging            = "commons-logging:commons-logging:${commonsLoggin
 def jUnitVersion = '4.7'
 def jUnit        = "junit:junit:${jUnitVersion}"
 
+
 project(':AutoUpdaterServer') {
 	dependencies {
 		// Spring Framework:
@@ -156,14 +158,15 @@ project(':AutoUpdaterServer') {
 		
 		// Logging:
 		compile(slf4jAPI)
-		runtime(
+		compile(
 			slf4jJCL, slf4jLog4J
 		)
-		runtime(log4J) {
+		compile(log4J) {
 			exclude group: 'javax.mail',   module: 'mail'
 			exclude group: 'javax.jms',    module: 'jms'
 			exclude group: 'com.sun.jdmk', module: 'jmxtools'
 			exclude group: 'com.sun.jmx',  module: 'jmxri'
+			transitive = false
 		}
 		
 		// Javax:
