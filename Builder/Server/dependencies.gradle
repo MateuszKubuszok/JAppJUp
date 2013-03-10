@@ -3,10 +3,10 @@
 //----------------------------------------------------------------------------
 
 configure(serverProjects) {
-	repositories {
-		mavenCentral()
-		maven { url 'https://repository.jboss.org/nexus/content/groups/public' }
-	}
+    repositories {
+        mavenCentral()
+        maven { url 'https://repository.jboss.org/nexus/content/groups/public' }
+    }
 }
 
 // Spring Framework:
@@ -57,7 +57,7 @@ def slf4jAPI     = "org.slf4j:slf4j-api:${slf4jVersion}"
 def slf4jJCL     = "org.slf4j:jcl-over-slf4j:${slf4jVersion}"
 def slf4jLog4J   = "org.slf4j:slf4j-log4j12:${slf4jVersion}"
 
-def log4JVersion = '1.2.15'
+def log4JVersion = '1.2.16'
 def log4J        = "log4j:log4j:${log4JVersion}@jar"
 
 
@@ -128,76 +128,76 @@ def jUnit        = "junit:junit:${jUnitVersion}"
 
 
 project(':AutoUpdaterServer') {
-	dependencies {
-		// Spring Framework:
-		compile(springContext) {
-			exclude group: 'commons-logging', module: 'commons-logging'
-		}
-		compile(
-			springMVC,	springAOP,	springORM, 	springJDBC
-		)
-		
-		// Spring Security:
-		compile(
-			springSecurityCore,	springSecurityLDAP,		springSecurityConfig,
-			springSecurityWeb,	springSecurityTaglibs,	springSecurityACL
-		)
-		
-		// Tiles:
-		compile(
-			tilesCore, tilesAPI, tilesJSP
-		)
-		
-		// AspectJ:
-		compile(aspectJ)
-		
-		// Databases:
-		compile(
-			apacheDerby, mySQL, postgreSQL
-		)
-		
-		// Logging:
-		compile(slf4jAPI)
-		compile(
-			slf4jJCL, slf4jLog4J
-		)
-		compile(log4J) {
-			exclude group: 'javax.mail',   module: 'mail'
-			exclude group: 'javax.jms',    module: 'jms'
-			exclude group: 'com.sun.jdmk', module: 'jmxtools'
-			exclude group: 'com.sun.jmx',  module: 'jmxri'
-			transitive = false
-		}
-		
-		// Javax:
-		compile(
-			javaxInject,		javaxValidation,		javaxJSTL
-		)
-		providedCompile(
-			javaxServletAPI,	javaxJspApi
-		)
-		
-		// Hibernate:
-		compile(
-			hibernateCore, hibernateValidator, hibernateJPA
-		)
-		
-		// dom4j:
-		compile(dom4J)
-		
-		// antlr:
-		compile(antlr)
-		
-		// commons:
-		compile(
-			commonsBeanUtils,	commonsCollections,	commonsDigester,
-			commonsFileUpload,	commonsIO,			commonsLang,
-			commonsLogging
-		)
-		
-		// JUnit:
-		testCompile(
-			jUnit
-		)
-	}
+    dependencies {
+        // Spring Framework:
+        compile(springContext) {
+            exclude group: 'commons-logging', module: 'commons-logging'
+        }
+        compile(
+            springMVC,    springAOP,    springORM,     springJDBC
+        )
+        
+        // Spring Security:
+        compile(
+            springSecurityCore,    springSecurityLDAP,        springSecurityConfig,
+            springSecurityWeb,    springSecurityTaglibs,    springSecurityACL
+        )
+        
+        // Tiles:
+        compile(
+            tilesCore, tilesAPI, tilesJSP
+        )
+        
+        // AspectJ:
+        compile(aspectJ)
+        
+        // Databases:
+        compile(
+            apacheDerby, mySQL, postgreSQL
+        )
+        
+        // Logging:
+        compile(slf4jAPI)
+        compile(
+            slf4jJCL, slf4jLog4J
+        )
+        compile(log4J) {
+            exclude group: 'javax.mail',   module: 'mail'
+            exclude group: 'javax.jms',    module: 'jms'
+            exclude group: 'com.sun.jdmk', module: 'jmxtools'
+            exclude group: 'com.sun.jmx',  module: 'jmxri'
+            transitive = false
+        }
+        
+        // Javax:
+        compile(
+            javaxInject,        javaxValidation,        javaxJSTL
+        )
+        providedCompile(
+            javaxServletAPI,    javaxJspApi
+        )
+        
+        // Hibernate:
+        compile(
+            hibernateCore, hibernateValidator, hibernateJPA
+        )
+        
+        // dom4j:
+        compile(dom4J)
+        
+        // antlr:
+        compile(antlr)
+        
+        // commons:
+        compile(
+            commonsBeanUtils,    commonsCollections,    commonsDigester,
+            commonsFileUpload,    commonsIO,            commonsLang,
+            commonsLogging
+        )
+        
+        // JUnit:
+        testCompile(
+            jUnit
+        )
+    }
 }

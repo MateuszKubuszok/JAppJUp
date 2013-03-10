@@ -11,8 +11,11 @@ configure(serverProjects) {
 }
 
 project(':AutoUpdaterServer') {
+	war {
+		destinationDir serverDir
+	}
 }
 
 task buildServer {
-	dependsOn(':AutoUpdaterServer:build')
+    dependsOn(':AutoUpdaterServer:build')
 }

@@ -9,9 +9,9 @@
 //----------------------------------------------------------------------------
 
 // Defines proxy address:
-System.properties['http.proxyHost'] = '10.144.1.10'
+//System.properties['http.proxyHost'] = '10.144.1.10'
 // Defines proxy port number:
-System.properties['http.proxyPort'] = '8080'
+//System.properties['http.proxyPort'] = '8080'
 
 // Client Dist destination directory:
 ext.clientDir = file(new File('./AutoUpdater/Client').getCanonicalPath())
@@ -30,7 +30,7 @@ apply from: './Builder/Client/projects.gradle'
 apply from: './Builder/Client/dependencies.gradle'
 
 // Server configurations
-//ext.serverProjects = subprojects.findAll {it.name == 'AutoUpdaterServer'}
-//apply from: './Builder/Server/tasks.gradle'
-//apply from: './Builder/Server/projects.gradle'
-//apply from: './Builder/Server/dependencies.gradle'
+ext.serverProjects = subprojects.findAll {it.name == 'AutoUpdaterServer'}
+apply from: './Builder/Server/tasks.gradle'
+apply from: './Builder/Server/projects.gradle'
+apply from: './Builder/Server/dependencies.gradle'

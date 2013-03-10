@@ -3,59 +3,59 @@
 //----------------------------------------------------------------------------
 
 project(':JSDPU') {
-	sourceSets {
+    sourceSets {
         main {
-			java {
-				srcDir 'src'
-				srcDir 'resources'
-				srcDir 'test/run'
-			}
+            java {
+                srcDir 'src'
+                srcDir 'resources'
+                srcDir 'test/run'
+            }
             resources { srcDir 'resources' }
         }
         test { java {
-			srcDir 'test/unit'
-		} }
+            srcDir 'test/unit'
+        } }
     }
-	
-	jar { manifest { attributes "Main-Class": "net.jsdpu.ProcessHandler" } }
+    
+    jar { manifest { attributes "Main-Class": "net.jsdpu.ProcessHandler" } }
 }
 
 project(':AutoUpdaterCommons') {
-	sourceSets {
+    sourceSets {
         main { java { srcDir 'src' } }
     }
 }
 
 project(':AutoUpdaterLibrary') {
-	sourceSets {
+    sourceSets {
         main { java { srcDir 'src' } }
         test { java {
-			srcDir 'test/unit'
-			srcDir 'test/functional'
-		} }
+            srcDir 'test/unit'
+            srcDir 'test/functional'
+        } }
     }
 }
 
 project(':AutoUpdaterInstaller') {
-	sourceSets {
+    sourceSets {
         main { java { srcDir 'src' } }
         test { java { srcDir 'test/functional' } }
     }
-	
-	jar { manifest { attributes "Main-Class": "com.autoupdater.installer.Main" } }
+    
+    jar { manifest { attributes "Main-Class": "com.autoupdater.installer.Main" } }
 }
 
 project(':AutoUpdaterGuiClient') {
-	sourceSets { main {
-		java {
-			srcDir 'src'
-			srcDir 'resources'
-		}
-		resources {
-			srcDir 'src'
-			srcDir 'resources'
-		}
+    sourceSets { main {
+        java {
+            srcDir 'src'
+            srcDir 'resources'
+        }
+        resources {
+            srcDir 'src'
+            srcDir 'resources'
+        }
     } }
-	
-	jar { manifest { attributes "Main-Class": "com.autoupdater.gui.main.Main" } }
+    
+    jar { manifest { attributes "Main-Class": "com.autoupdater.gui.main.Main" } }
 }
