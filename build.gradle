@@ -4,6 +4,7 @@
 // Run:
 //     gradle build - build both Client and Server,
 //     gradle buildClient - build only Client,
+//     gradle buildLibrary - build only Library,
 //     gradle buildServer - build only Server,
 //     gradle eclipse - prepare source code for importing into Eclipse.
 //----------------------------------------------------------------------------

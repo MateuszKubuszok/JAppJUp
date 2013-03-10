@@ -4,9 +4,11 @@ Repository's manual
 Building and deployment
 -----------
 
-Repository is build by a pom.xml with use of maven. It should be exported into
-WAR archive containing all dependancies and then it is possible to deploy it to
-the server.
+To build Server it is required to have JDK 1.7+ and Gradle 1.0 or later
+installed. Compilation and assembly is made by running command
+*gradle buildServer* inside the main catalog.
+
+Result is stored inside new AutoUpdater/Server folder. 
 
 Database configuration
 -----------

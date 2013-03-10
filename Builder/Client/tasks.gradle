@@ -50,3 +50,7 @@ project(':AutoUpdaterGuiClient') {
 task buildClient {
     dependsOn(':AutoUpdaterGuiClient:build')
 }
+
+task buildLibrary {
+    dependsOn(':AutoUpdaterLibrary:build')
+}

@@ -4,12 +4,12 @@ Library's manual
 Building
 -----------
 
-To build Library it is required to have JDK 1.7+ and Gradle 1.0 installed
-(later versions are not supported due to API's changes). Compilation and
-assembly is made by running command *gradle build* inside the main catalog.
+To build Client it is required to have JDK 1.7+ and Gradle 1.0 or later
+installed. Compilation and assembly is made by running command
+*gradle buildLibrary* inside the main catalog.
 	
-Result is stored inside new AutoUpdater folder. It expects presence of dom4j,
-Jaxen and Guava libraries in the /libraries subdirectory and
+Result is stored inside new AutoUpdater/Client folder. It expects presence of
+dom4j, Jaxen and Guava libraries in the /libraries subdirectory and
 AutoUpdaterCommons and JSDPU projects in the same directory.
 	
 Alternatively, it can be build by IDE. To prepare project for Eclipse run

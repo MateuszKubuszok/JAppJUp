@@ -3,4 +3,13 @@
 //----------------------------------------------------------------------------
 
 project(':AutoUpdaterServer') {
+    eclipse {    
+        project {
+            natures "com.springsource.sts.gradle.core.nature"
+        }
+
+        classpath {
+            containers "com.springsource.sts.gradle.classpathcontainer"
+        }
+    }
 }
