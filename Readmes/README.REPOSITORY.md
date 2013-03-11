@@ -6,9 +6,9 @@ Building and deployment
 
 To build Server it is required to have JDK 1.7+ and Gradle 1.0 or later
 installed. Compilation and assembly is made by running command
-*gradle buildServer* inside the main catalog.
+`gradle buildServer` inside the main catalog.
 
-Result is stored inside new AutoUpdater/Server folder. 
+Result is stored inside new `Dist/Server` folder. 
 
 Database configuration
 -----------
@@ -17,8 +17,8 @@ By default it uses MySQL5 database at *localhost:3306* with:
  * username = `mysql_admin`,
  * password = `pass`,
  * schema's name = `updater`.
-It can be changed by edition of */WEB-INF/classes/JDBC.properties*
-and */WEB-INF/classes/Hibernate.properties* files.
+It can be changed by edition of `/WEB-INF/classes/JDBC.properties`
+and `/WEB-INF/classes/Hibernate.properties` files.
 	
 Application require that schema is already present in target database. All
 neccessary tables will be created at deployment.

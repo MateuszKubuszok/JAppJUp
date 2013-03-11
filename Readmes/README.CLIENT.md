@@ -6,16 +6,16 @@ Building
 
 To build Client it is required to have JDK 1.7+ and Gradle 1.0 or later
 installed. Compilation and assembly is made by running command
-*gradle buildClient* inside the main catalog.
+`gradle buildClient` inside the main catalog.
 	
 Result is stored inside new AutoUpdater/Client folder. It can be run with
-*java -jar /path/to/Client.jar* command.
+`java -jar /path/to/Client.jar` command.
 
 Configuration
 -----------
 
 To use updater it is required to properly configure it. Configuration mode is
-obtainer by starting program with *--config* parameter.
+obtainer by starting program with `--config` parameter.
 	
 In newly opened window we can see all information that defines single
 installation:
@@ -39,7 +39,7 @@ saved by clicking the "Save" button.
 Usage
 -----------
 	
-When run without *--config* parameter program will run in normal mode. It can
+When run without `--config` parameter program will run in normal mode. It can
 then be used for actual update check and perfomance. Program will check for
 updates every 10 minutes, but it can fastened by clicking the *Check updates*
 button or tray menu position with the same name. 

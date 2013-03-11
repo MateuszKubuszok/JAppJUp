@@ -23,13 +23,13 @@ process done by Mariusz and Paweł did not go to waste.
 
 Specific manuals
 -----------
- * [Repository's manual](README.REPOSITORY.md) - contains basic information about
+ * [Repository's manual](Readmes/README.REPOSITORY.md) - contains basic information about
  building and deploying server,
- * [Library's manual](README.LIBRARY.md) - contains basic information about
+ * [Library's manual](Readmes/README.LIBRARY.md) - contains basic information about
  building and using libray, as well as about requirements,
- * [Client's manual](README.CLIENT.md) - containg basic information about
+ * [Client's manual](Readmes/README.CLIENT.md) - containg basic information about
  building, configuring and using client,
- * [Misc's manual](README.MISC.md) - containg information about various utilities
+ * [Misc's manual](Readmes/README.MISC.md) - containg information about various utilities
  usage.
 
 Development
@@ -40,7 +40,7 @@ Development
  - [x] repository just works - but it was not yet checked for performence
  or security issues,
  - [x] user is able to perform some minor configuration by GUI,
- - [x] *gradle build* runs tests.
+ - [x] `gradle build` runs tests.
 
 **Things to do**:
  - [ ] implement ability to update the client itself,
