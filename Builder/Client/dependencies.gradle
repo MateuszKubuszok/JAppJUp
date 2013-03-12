@@ -3,9 +3,9 @@
 //----------------------------------------------------------------------------
 
 configure(clientProjects) {
-	repositories {
-		mavenCentral()
-	}
+    repositories {
+        mavenCentral()
+    }
 }
 
 // cglib:
@@ -63,98 +63,88 @@ def objenesis        = "org.objenesis:objenesis:${objenesisVersion}@jar"
 def seaGlassLookAndFeelVersion = '0.2'
 def seaGlassLookAndFeel        = "com.seaglasslookandfeel:seaglasslookandfeel:${seaGlassLookAndFeelVersion}@jar"
 
+
+// Dom4j
 def dom4j = "${externalLibrariesDir}/dom4j/dom4j-2.0.0-ALPHA-2.jar"
+
+
+// jGoodies Forms
 def forms = "${externalLibrariesDir}/com.jgoodies/jgoodies-forms-1.3.0.jar"
 
-project(':JSDPU') {
-	dependencies {
-		compile(guava)
-		
-		testCompile(
-			cglib,
-			festCore,
-            festTest,
-			festUtil,
-			javasist,
-			jUnit,
-			mockito,
-			objenesis
-		)
-	}
-	
-	jar { manifest { attributes "Class-Path": "./libraries/guava-13.0.1.jar" } }
+
+project(':Libraries/net.jsdpu/JSDPU') {
+    jar { manifest { attributes "Class-Path": "./guava-13.0.1.jar" } }
 }
 
 project(':AutoUpdaterCommons') {
 }
 
 project(':AutoUpdaterInstaller') {
-	dependencies {
-		compile(
-			project(':JSDPU'),
-			project(':AutoUpdaterCommons'),
-			guava
-		)
-				
-		testCompile(
-			festCore,
+    dependencies {
+        compile(
+            project(':Libraries/net.jsdpu/JSDPU'),
+            project(':AutoUpdaterCommons'),
+            guava
+        )
+                
+        testCompile(
+            festCore,
             festTest,
-			festUtil,
-			jUnit
-		)
-		if (noEclipseTask) {
-			testCompile project(':JSDPU').sourceSets.test.output
-		}
-	}
-	
-	jar { manifest { attributes "Class-Path": "./AutoUpdaterCommons.jar ./JSDPU.jar                      ./libraries/guava-13.0.1.jar ./installer.logger.properties" } }
+            festUtil,
+            jUnit
+        )
+        if (noEclipseTask) {
+            testCompile project(':Libraries/net.jsdpu/JSDPU').sourceSets.test.output
+        }
+    }
+    
+    jar { manifest { attributes "Class-Path": "./AutoUpdaterCommons.jar ./libraries/JSDPU.jar            ./libraries/guava-13.0.1.jar ./installer.logger.properties" } }
 }
 
-
 project(':AutoUpdaterLibrary') {
-	dependencies {
-		compile(
-			project(':JSDPU'),
-			project(':AutoUpdaterCommons'),
-			commonsCodec,
-			guava,
-			jaxen,
-			files(dom4j)
-		)
-				
-		testCompile(
-			cglib,
-			festCore,
+    dependencies {
+        compile(
+            project(':Libraries/net.jsdpu/JSDPU'),
+            project(':AutoUpdaterCommons'),
+            commonsCodec,
+            guava,
+            jaxen,
+            files(dom4j)
+        )
+                
+        testCompile(
+            cglib,
+            festCore,
             festTest,
-			festUtil,
-			javasist,
-			jUnit,
-			mockito,
-			objenesis
-		)
-		if (noEclipseTask) {
-			testCompile project(':JSDPU').sourceSets.test.output
-		}
-	}
-	
-	jar { manifest { attributes "Class-Path": "./AutoUpdaterCommons.jar ./JSDPU.jar                      ./libraries/dom4j-2.0.0-ALPHA-2.jar ./libraries/guava-13.0.1.jar     ./libraries/jaxen-1.1.4.jar ./libraries/commons-codec-1.5.jar" } }
+            festUtil,
+            javasist,
+            jUnit,
+            mockito,
+            objenesis
+        )
+        if (noEclipseTask) {
+            testCompile project(':Libraries/net.jsdpu/JSDPU').sourceSets.test.output
+        }
+    }
+    
+    jar { manifest { attributes "Class-Path": "./AutoUpdaterCommons.jar ./libraries/JSDPU.jar            ./libraries/dom4j-2.0.0-ALPHA-2.jar ./libraries/guava-13.0.1.jar     ./libraries/jaxen-1.1.4.jar ./libraries/commons-codec-1.5.jar" } }
 }
 
 project(':AutoUpdaterGuiClient') {
-	dependencies {
-		compile(
-			project(':JSDPU'),
-			project(':AutoUpdaterLibrary'),
-			guava,
-			seaGlassLookAndFeel,
-			files(forms)
-		)
-		
-		if (noEclipseTask) {
-			testCompile project(':JSDPU').sourceSets.test.output
-			testCompile project(':AutoUpdaterLibrary').sourceSets.test.output
-		}
-	}
+    dependencies {
+        compile(
+            project(':Libraries/net.jsdpu/JSDPU'),
+            project(':AutoUpdaterLibrary'),
+            guava,
+            seaGlassLookAndFeel,
+            files(forms)
+        )
+        
+        if (noEclipseTask) {
+            testCompile project(':Libraries/net.jsdpu/JSDPU').sourceSets.test.output
+            testCompile project(':AutoUpdaterLibrary').sourceSets.test.output
+        }
+    }
 
-	jar { manifest { attributes "Class-Path": "./AutoUpdaterLibrary.jar ./JSDPU.jar                      ./libraries/guava-13.0.1.jar ./libraries/jgoodies-forms-1.3.0.jar    ./libraries/seaglasslookandfeel-0.2.jar ./logger.properties"} }
+    jar { manifest { attributes "Class-Path": "./AutoUpdaterLibrary.jar ./libraries/JSDPU.jar            ./libraries/guava-13.0.1.jar ./libraries/jgoodies-forms-1.3.0.jar    ./libraries/seaglasslookandfeel-0.2.jar ./logger.properties"} }
 }

@@ -1,0 +1,16 @@
+//----------------------------------------------------------------------------
+//                      CLIENT'S EVALUATIONS' CONFIGURATION
+//----------------------------------------------------------------------------
+
+project(':AutoUpdaterInstaller') {
+    evaluationDependsOn(':Libraries/net.jsdpu/JSDPU')
+}
+
+project(':AutoUpdaterLibrary') {
+    evaluationDependsOn(':Libraries/net.jsdpu/JSDPU')
+}
+
+project(':AutoUpdaterGuiClient') {
+    evaluationDependsOn(':Libraries/net.jsdpu/JSDPU')
+    evaluationDependsOn(':AutoUpdaterLibrary')
+}

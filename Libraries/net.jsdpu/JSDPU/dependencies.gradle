@@ -1,0 +1,66 @@
+//----------------------------------------------------------------------------
+//                    JSDPU'S DEPENDENCIES' CONFIGURATION
+//----------------------------------------------------------------------------
+
+repositories {
+    mavenCentral()
+}
+
+
+// cglib:
+def cglibVersion = '2.2'
+def cglib        = "cglib:cglib-nodep:${cglibVersion}@jar"
+
+
+// FEST Assertions:
+def festCoreVersion = '2.0M8'
+def festCore        = "org.easytesting:fest-assert-core:${festCoreVersion}@jar"
+
+def festTestVersion = '2.1.0'
+def festTest        = "org.easytesting:fest-test:${festTestVersion}@jar"
+
+def festUtilVersion = '1.2.3'
+def festUtil        = "org.easytesting:fest-util:${festUtilVersion}@jar"
+
+
+// Guava:
+def guavaVersion = '13.0.1'
+def guava        = "com.google.guava:guava:${guavaVersion}@jar"
+
+
+// javasist:
+def javasistVersion = '3.16.1-GA'
+def javasist        = "org.javassist:javassist:${javasistVersion}@jar"
+
+
+// JUnit
+def jUnitVersion = '4.7'
+def jUnit        = "junit:junit:${jUnitVersion}@jar"
+
+
+// Mockito:
+def mockitoVersion = '1.9.0'
+def mockito        = "org.mockito:mockito-all:${mockitoVersion}@jar"
+
+
+// Objenesis:
+def objenesisVersion = '1.2'
+def objenesis        = "org.objenesis:objenesis:${objenesisVersion}@jar"
+
+
+dependencies {
+    compile(guava)
+        
+    testCompile(
+        cglib,
+        festCore,
+        festTest,
+        festUtil,
+        javasist,
+        jUnit,
+        mockito,
+        objenesis
+    )
+}
+    
+jar { manifest { attributes "Class-Path": "./libraries/guava-13.0.1.jar" } }

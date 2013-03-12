@@ -26,14 +26,13 @@ configure(clientProjects) {
         doLast {
             ant.delete file: "$clientDir/libraries/AutoUpdaterCommons.jar"
             ant.delete file: "$clientDir/libraries/AutoUpdaterLibrary.jar"
-            ant.delete file: "$clientDir/libraries/JSDPU.jar"
         }
     }
     
     jar {
         dependsOn(compileJava, copyToLib)
         destinationDir = clientDir
-        baseName =    project.name.equals('AutoUpdaterGuiClient') ? 'Client' :
+        baseName =  project.name.equals('AutoUpdaterGuiClient') ? 'Client' :
                     project.name.equals('AutoUpdaterInstaller') ? 'Installer' :
                     project.name
         from sourceSets.main.java
@@ -48,9 +47,11 @@ project(':AutoUpdaterGuiClient') {
 }
 
 task buildClient {
+    description = 'Builds Client and stores result in an ./Dist/Client directory.'
     dependsOn(':AutoUpdaterGuiClient:build')
 }
 
 task buildLibrary {
+    description = 'Builds Library and stores result in an ./Dist/Client directory.'
     dependsOn(':AutoUpdaterLibrary:build')
 }

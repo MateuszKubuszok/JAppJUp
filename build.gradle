@@ -15,23 +15,25 @@
 //System.properties['http.proxyPort'] = '8080'
 
 // Client Dist destination directory:
-ext.clientDir = file(new File('./AutoUpdater/Client').getCanonicalPath())
+ext.clientDir = file(new File('./Dist/Client').getCanonicalPath())
 // Server Dist destination directory:
-ext.serverDir = file(new File('./AutoUpdater/Server').getCanonicalPath())
+ext.serverDir = file(new File('./Dist/Server').getCanonicalPath())
 // External libraries source driectory:
-ext.externalLibrariesDir = "${rootProject.projectDir}/ExternalLibraries"
+ext.externalLibrariesDir = "${rootProject.projectDir}/Libraries"
 
 // Whether it is an Eclipse task:
 ext.noEclipseTask = !getGradle().startParameter.getTaskNames().contains('eclipse')
 
 // Client configurations
-ext.clientProjects = subprojects.findAll {it.name != 'AutoUpdaterServer'}
+ext.clientProjects = subprojects.findAll { it.name.startsWith('AutoUpdater') && it.name != 'AutoUpdaterServer' }
+apply from: './Builder/Client/evaluation.gradle'
 apply from: './Builder/Client/tasks.gradle'
 apply from: './Builder/Client/projects.gradle'
 apply from: './Builder/Client/dependencies.gradle'
 
 // Server configurations
-ext.serverProjects = subprojects.findAll {it.name == 'AutoUpdaterServer'}
+ext.serverProjects = subprojects.findAll { it.name.startsWith('AutoUpdater') && it.name == 'AutoUpdaterServer' }
 apply from: './Builder/Server/tasks.gradle'
 apply from: './Builder/Server/projects.gradle'
 apply from: './Builder/Server/dependencies.gradle'
+

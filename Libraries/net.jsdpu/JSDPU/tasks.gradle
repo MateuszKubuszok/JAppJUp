@@ -1,0 +1,32 @@
+//----------------------------------------------------------------------------
+//                        JSDPU'S TASKS' CONFIGURATION
+//----------------------------------------------------------------------------
+
+apply plugin : 'java'
+apply plugin : 'eclipse-wtp'
+
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
+   
+test {
+    dependsOn(compileJava, compileTestJava)
+    
+    jvmArgs '-Xms128m', '-Xmx512m', '-XX:MaxPermSize=128m'
+            
+    beforeTest { descriptor ->
+        logger.lifecycle("Running test: " + descriptor)
+    }
+}
+
+task copyToLib(type: Copy) {
+    from configurations.compile
+    into "$jsdpuDir/libraries"
+}
+
+jar {
+    dependsOn(compileJava, copyToLib)
+    destinationDir = jsdpuDir
+    baseName = 'JSDPU'
+    from sourceSets.main.java
+    from sourceSets.main.output
+}

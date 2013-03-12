@@ -2,22 +2,12 @@
 //                      CLIENT'S PROJECTS' CONFIGURATION
 //----------------------------------------------------------------------------
 
-project(':JSDPU') {
-    sourceSets {
-        main {
-            java {
-                srcDir 'src'
-                srcDir 'resources'
-                srcDir 'test/run'
-            }
-            resources { srcDir 'resources' }
+project(':Libraries/net.jsdpu/JSDPU') {
+    eclipse {
+        project {
+            name = 'JSDPU'
         }
-        test { java {
-            srcDir 'test/unit'
-        } }
     }
-    
-    jar { manifest { attributes "Main-Class": "net.jsdpu.ProcessHandler" } }
 }
 
 project(':AutoUpdaterCommons') {

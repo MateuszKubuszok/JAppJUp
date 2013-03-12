@@ -17,5 +17,6 @@ project(':AutoUpdaterServer') {
 }
 
 task buildServer {
+    description = 'Builds Repository and stores result in an ./Dist/Server directory.'
     dependsOn(':AutoUpdaterServer:build')
 }

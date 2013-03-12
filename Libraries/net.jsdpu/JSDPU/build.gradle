@@ -1,0 +1,24 @@
+//----------------------------------------------------------------------------
+//                           BUILDER CONFIGURATIONS
+//----------------------------------------------------------------------------
+// Run:
+//     gradle build - build JSDPU library,
+//     gradle eclipse - prepare source code for importing into Eclipse.
+//----------------------------------------------------------------------------
+
+// Defines proxy address:
+//System.properties['http.proxyHost'] = '10.144.1.10'
+// Defines proxy port number:
+//System.properties['http.proxyPort'] = '8080'
+
+// JSDPU Dist destination directory:
+ext.jsdpuDir = file(new File('./Dist/JSDPU').getCanonicalPath())
+
+// Whether it is an Eclipse task:
+ext.noEclipseTask = !getGradle().startParameter.getTaskNames().contains('eclipse')
+
+// JSDPU configurations
+apply from: './tasks.gradle'
+apply from: './project.gradle'
+apply from: './dependencies.gradle'
+

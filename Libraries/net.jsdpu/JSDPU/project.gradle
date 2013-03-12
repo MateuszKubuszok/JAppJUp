@@ -1,0 +1,19 @@
+//----------------------------------------------------------------------------
+//                      JSDPU'S PROJECT'S CONFIGURATION
+//----------------------------------------------------------------------------
+
+sourceSets {
+    main {
+        java {
+            srcDir 'src'
+            srcDir 'resources'
+            srcDir 'test/run'
+        }
+        resources { srcDir 'resources' }
+    }
+    test { java {
+        srcDir 'test/unit'
+    } }
+}
+    
+jar { manifest { attributes "Main-Class": "net.jsdpu.ProcessHandler" } }

@@ -1,1 +1,6 @@
-include 'JSDPU', 'AutoUpdaterCommons', 'AutoUpdaterLibrary', 'AutoUpdaterInstaller', 'AutoUpdaterGuiClient', 'AutoUpdaterServer'
+include 'Libraries/net.jsdpu/JSDPU',
+        'AutoUpdaterCommons',
+        'AutoUpdaterLibrary',
+        'AutoUpdaterInstaller',
+        'AutoUpdaterGuiClient',
+        'AutoUpdaterServer'
