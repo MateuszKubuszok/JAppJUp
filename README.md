@@ -5,6 +5,28 @@ Project of an updater application/library written in Java. Concerns development
 of a library, an example client's application that make use of it and a server
 repository.
 
+Goals
+-----------
+Project is aiming mainly for creation of an updater capable of:
+ * discriminating various packages (modules) that each program is made of,
+ * downloading updates for each package,
+ * termination of updated applications,
+ * installation of updates by:
+   * extracting ZIP package into specified location,
+   * overwritting specified file with downloaded version,
+   * executing downloaded script or program,
+ * running installation processes with elevation,
+ * ability to run installed programs,
+ * displaying information about known bugs for a program and changelogs for its
+   packages,
+ * GUI allowing for easy access to all of its functionalities,
+ * updater should be albe to work on Windows and Linux systems.
+
+Updaters functionality should be also available via the library, allowing programmer
+to implement his own update applicateion the way he likes.
+
+Updates would be downloaded from servers based on repository project or compatible.
+
 History
 -----------
 
