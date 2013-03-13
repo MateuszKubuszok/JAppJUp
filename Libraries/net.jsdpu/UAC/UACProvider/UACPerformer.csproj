@@ -34,7 +34,7 @@
     <DebugSymbols>false</DebugSymbols>
     <DebugType>none</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\JSDPU\resources\net\jsdpu\resources\</OutputPath>
+    <OutputPath>..\..\JSDPU\resources\net\jsdpu\resources\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -44,7 +44,7 @@
     <PlatformTarget>x86</PlatformTarget>
     <DebugType>none</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\JSDPU\resources\net\jsdpu\resources\</OutputPath>
+    <OutputPath>..\..\JSDPU\resources\net\jsdpu\resources\</OutputPath>
     <DefineConstants>
     </DefineConstants>
     <ErrorReport>prompt</ErrorReport>
