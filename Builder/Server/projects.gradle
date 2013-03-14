@@ -5,11 +5,8 @@
 project(':AutoUpdaterServer') {
     eclipse {    
         project {
-            natures "com.springsource.sts.gradle.core.nature"
-        }
-
-        classpath {
-            containers "com.springsource.sts.gradle.classpathcontainer"
+            natures      "org.springframework.ide.eclipse.core.springnature"
+            buildCommand "org.springframework.ide.eclipse.core.springbuilder"
         }
     }
 }
