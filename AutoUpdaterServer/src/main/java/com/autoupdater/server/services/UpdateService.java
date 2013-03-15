@@ -1,3 +1,18 @@
+/**
+ * Copyright 2012-2013 Maciej Jaworski, Mariusz Kapcia, Paweł Kędzia, Mateusz Kubuszok
+ *
+ * <p>Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at</p> 
+ * 
+ * <p>http://www.apache.org/licenses/LICENSE-2.0</p>
+ *
+ * <p>Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.</p>
+ */
 package com.autoupdater.server.services;
 
 import java.io.IOException;
@@ -75,12 +90,15 @@ public interface UpdateService {
      * @return list of updates
      */
     public List<Update> findNewestByPackage(Package _package);
-    
+
     /**
-     * Whether there already is update with given version number and developmentVersion status.
+     * Whether there already is update with given version number and
+     * developmentVersion status.
      * 
-     * @param _package package to check
-     * @param update update with versions to check
+     * @param _package
+     *            package to check
+     * @param update
+     *            update with versions to check
      * @return true if version is available for a package, false otherwise
      */
     public boolean checkIfVersionAvailableForPackage(Package _package, Update update);

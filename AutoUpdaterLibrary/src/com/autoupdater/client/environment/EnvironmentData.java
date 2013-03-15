@@ -1,3 +1,18 @@
+/**
+ * Copyright 2012-2013 Maciej Jaworski, Mariusz Kapcia, Paweł Kędzia, Mateusz Kubuszok
+ *
+ * <p>Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at</p> 
+ * 
+ * <p>http://www.apache.org/licenses/LICENSE-2.0</p>
+ *
+ * <p>Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.</p>
+ */
 package com.autoupdater.client.environment;
 
 import static net.jsdpu.logger.Logger.getLogger;
@@ -153,7 +168,8 @@ public class EnvironmentData {
      * @see #complimentInstallationsDataWithNotInstalledButDefinedBySettings(SortedSet,
      *      SortedSet)
      * 
-     * @param installationsData set of Programs installed locally
+     * @param installationsData
+     *            set of Programs installed locally
      */
     void setInstallationsData(SortedSet<Program> installationsData) {
         (this.installationsData = this.installationsData == null ? new TreeSet<Program>()
@@ -346,8 +362,11 @@ public class EnvironmentData {
      * @see #complimentInstallationsDataWithInstalledProgramsWithSettings(SortedSet,
      *      SortedSet)
      * 
-     * @param programsDefinedBySettings Programs defined by ProgramSettings'
-     * @param programsDefinedByInstallationsData Programs defined by installation data (actually installed Programs)
+     * @param programsDefinedBySettings
+     *            Programs defined by ProgramSettings'
+     * @param programsDefinedByInstallationsData
+     *            Programs defined by installation data (actually installed
+     *            Programs)
      */
     private void complimentInstallationsDataWithNotInstalledButDefinedBySettings(
             SortedSet<Program> programsDefinedBySettings,

@@ -1,3 +1,18 @@
+/**
+ * Copyright 2012-2013 Maciej Jaworski, Mariusz Kapcia, Paweł Kędzia, Mateusz Kubuszok
+ *
+ * <p>Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at</p> 
+ * 
+ * <p>http://www.apache.org/licenses/LICENSE-2.0</p>
+ *
+ * <p>Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.</p>
+ */
 package com.autoupdater.gui.client.window.tabs.installed.tabs.information;
 
 import javax.swing.JLabel;
@@ -13,11 +28,11 @@ import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
 
 public class InformationPreview extends JPanel {
-    private Program   program;
+    private Program program;
 
-    private JLabel    programNameLabel;
-    private JLabel    programPathLabel;
-    private JLabel    serverAddressLabel;
+    private JLabel programNameLabel;
+    private JLabel programPathLabel;
+    private JLabel serverAddressLabel;
     private JTextArea packagesLabel;
 
     public InformationPreview() {
@@ -34,8 +49,7 @@ public class InformationPreview extends JPanel {
         serverAddressLabel.setText(program.getServerAddress());
         String packages = "";
         for (Package _package : program.getPackages()) {
-            packages += (_package.getName() + " ("
-                    + _package.getVersionNumber() + ")" + "\n");
+            packages += (_package.getName() + " (" + _package.getVersionNumber() + ")" + "\n");
         }
         packagesLabel.setText(packages);
     }
@@ -45,13 +59,12 @@ public class InformationPreview extends JPanel {
 
         setLayout(new FormLayout(new ColumnSpec[] { ColumnSpec.decode("18px"),
                 ColumnSpec.decode("143px"), FormFactory.RELATED_GAP_COLSPEC,
-                ColumnSpec.decode("left:200px:grow"),
-                ColumnSpec.decode("max(5dlu;default)"), }, new RowSpec[] {
-                FormFactory.RELATED_GAP_ROWSPEC, RowSpec.decode("14px"),
-                FormFactory.RELATED_GAP_ROWSPEC, RowSpec.decode("14px"),
-                FormFactory.RELATED_GAP_ROWSPEC, RowSpec.decode("14px"),
-                FormFactory.RELATED_GAP_ROWSPEC, RowSpec.decode("235px:grow"),
-                RowSpec.decode("max(5dlu;default)"), }));
+                ColumnSpec.decode("left:200px:grow"), ColumnSpec.decode("max(5dlu;default)"), },
+                new RowSpec[] { FormFactory.RELATED_GAP_ROWSPEC, RowSpec.decode("14px"),
+                        FormFactory.RELATED_GAP_ROWSPEC, RowSpec.decode("14px"),
+                        FormFactory.RELATED_GAP_ROWSPEC, RowSpec.decode("14px"),
+                        FormFactory.RELATED_GAP_ROWSPEC, RowSpec.decode("235px:grow"),
+                        RowSpec.decode("max(5dlu;default)"), }));
 
         add(new JLabel("Program name:"), "2, 2, right, top");
         programNameLabel = new JLabel();

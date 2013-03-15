@@ -1,3 +1,18 @@
+/**
+ * Copyright 2012-2013 Maciej Jaworski, Mariusz Kapcia, Paweł Kędzia, Mateusz Kubuszok
+ *
+ * <p>Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at</p> 
+ * 
+ * <p>http://www.apache.org/licenses/LICENSE-2.0</p>
+ *
+ * <p>Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.</p>
+ */
 package com.autoupdater.server.services;
 
 import java.io.File;
@@ -26,25 +41,25 @@ import org.springframework.web.multipart.commons.CommonsMultipartFile;
  */
 @Service
 public class FileServiceImp implements FileService {
-	/**
+    /**
      * Service's logger.
      */
     private static Logger logger = Logger.getLogger(FileServiceImp.class);
-	
-	private final static Map<String,String> prefixes;
-	static {
-		prefixes = new HashMap<String,String>();
-		prefixes.put("home:", System.getProperty("user.home") + File.separator);
-		prefixes.put("run:", System.getProperty("user.dir") + File.separator);
-	}
-	
+
+    private final static Map<String, String> prefixes;
+    static {
+        prefixes = new HashMap<String, String>();
+        prefixes.put("home:", System.getProperty("user.home") + File.separator);
+        prefixes.put("run:", System.getProperty("user.dir") + File.separator);
+    }
+
     private String storageDirectory;
 
     private final Random random = new Random();
 
     @Override
     public void saveFile(String storagePath, byte[] content) throws IOException {
-    	logger.debug("Attempting to save File: " + storagePath);
+        logger.debug("Attempting to save File: " + storagePath);
         Path path = Paths.get(storagePath);
         Files.createDirectories(path.getParent());
         Files.createFile(path);
@@ -58,7 +73,7 @@ public class FileServiceImp implements FileService {
     @Override
     public synchronized String saveMultipartFile(CommonsMultipartFile multipartFile)
             throws IOException {
-    	logger.debug("Attempting to save MultipartFile: " + multipartFile.getName());
+        logger.debug("Attempting to save MultipartFile: " + multipartFile.getName());
         String storagePath = createStoragePath();
         saveFile(getStorageDirectory() + storagePath, multipartFile.getBytes());
         logger.debug("Saved MultipartFile: " + multipartFile.getName());
@@ -67,40 +82,40 @@ public class FileServiceImp implements FileService {
 
     @Override
     public synchronized InputStream loadFile(String storagePath) throws FileNotFoundException {
-    	logger.debug("Attempting to load File: " + storagePath);
+        logger.debug("Attempting to load File: " + storagePath);
         FileInputStream fis = new FileInputStream(new File(getStorageDirectory() + storagePath));
         logger.debug("Loaded File: " + storagePath);
         return fis;
     }
-    
+
     @Override
     public void removeFile(String storagePath) {
-    	logger.debug("Attempting to remove File: " + storagePath);
-    	try {
-			Files.delete(Paths.get(getStorageDirectory() + storagePath));
-		} catch (IOException e) {
-			logger.error("Couldn't locate file: " + storagePath);
-			return;
-		}
-    	logger.debug("File removed: " + storagePath);
+        logger.debug("Attempting to remove File: " + storagePath);
+        try {
+            Files.delete(Paths.get(getStorageDirectory() + storagePath));
+        } catch (IOException e) {
+            logger.error("Couldn't locate file: " + storagePath);
+            return;
+        }
+        logger.debug("File removed: " + storagePath);
     }
-    
+
     @Value("#{repoProperties['storage.mapping']}")
     public void setStorageDirectory(String rawStorageDirectory) {
-    	logger.debug("Initializing storageDirectory");
-    	rawStorageDirectory += File.separator;
-    	
-    	for (Entry<String,String> entry : prefixes.entrySet()) {
-    		String prefix = entry.getKey();
-    		String path = entry.getValue();
-    		if (rawStorageDirectory.startsWith(prefix)) {
-    			rawStorageDirectory = path + rawStorageDirectory.substring(prefix.length());
-    			break;
-    		}
-    	}
-    	
-    	storageDirectory = rawStorageDirectory;
-    	logger.debug("storageDirectory initialized with: " + storageDirectory);
+        logger.debug("Initializing storageDirectory");
+        rawStorageDirectory += File.separator;
+
+        for (Entry<String, String> entry : prefixes.entrySet()) {
+            String prefix = entry.getKey();
+            String path = entry.getValue();
+            if (rawStorageDirectory.startsWith(prefix)) {
+                rawStorageDirectory = path + rawStorageDirectory.substring(prefix.length());
+                break;
+            }
+        }
+
+        storageDirectory = rawStorageDirectory;
+        logger.debug("storageDirectory initialized with: " + storageDirectory);
     }
 
     private String getStorageDirectory() {
@@ -108,13 +123,13 @@ public class FileServiceImp implements FileService {
     }
 
     private String createStoragePath() {
-    	logger.debug("Attempting to create storage path for file");
+        logger.debug("Attempting to create storage path for file");
         String destinationPath;
 
         do {
             destinationPath = String.valueOf(random.nextLong());
         } while (Files.exists(Paths.get(getStorageDirectory() + destinationPath)));
-        
+
         logger.debug("Storage path for file created");
         return destinationPath;
     }
