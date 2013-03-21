@@ -30,6 +30,9 @@ import net.jsdpu.process.executors.InvalidCommandException;
 import net.jsdpu.process.killers.IProcessKiller;
 import net.jsdpu.process.killers.ProcessKillerException;
 
+/**
+ * Class made for testing various library's abilities in action.
+ */
 public class ProcessHandler {
     final static EOperatingSystem operatingSystem = EOperatingSystem.current();
     final static IProcessExecutor processExecutor = operatingSystem.getProcessExecutor();

@@ -27,11 +27,6 @@ import java.io.OutputStream;
  */
 public interface EnqueuedProcess {
     /**
-     * @see java.lang.Process#destroy()
-     */
-    public void destroy();
-
-    /**
      * @see java.lang.Process#exitValue()
      */
     public int getExitValue();

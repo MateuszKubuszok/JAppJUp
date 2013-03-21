@@ -13,9 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.</p>
  */
-package net.jsdpu.process.builders;
+package net.jsdpu.process.elevated;
 
 import java.io.File;
+import java.io.IOException;
 import java.lang.ProcessBuilder.Redirect;
 import java.util.List;
 import java.util.Map;
@@ -104,7 +105,7 @@ public interface ElevatedProcessBuilder {
     /**
      * @see java.lang.ProcessBuilder#redirectInput(Redirect)
      */
-    public ElevatedProcessBuilder setRedirectInput(Redirect destination);
+    public ElevatedProcessBuilder setRedirectInput(Redirect source);
 
     /**
      * @see java.lang.ProcessBuilder#redirectOutput()
@@ -122,7 +123,16 @@ public interface ElevatedProcessBuilder {
     public ElevatedProcessBuilder setRedirectOutput(Redirect destination);
 
     /**
+     * @throws IOException thrown if an I/O error occurs
+     * @throws IOException thrown if an I/O error occurs
      * @see java.lang.ProcessBuilder#start()
      */
-    public Process start();
+    public Process start() throws IOException;
+    
+    /**
+     * Returns ProcessBuilder prepared for elevating the processes.
+     * 
+     * @return prepared ProcessBuilder
+     */
+    public ProcessBuilder getProcessBuilder();
 }

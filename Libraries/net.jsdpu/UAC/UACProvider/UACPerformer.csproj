@@ -75,7 +75,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Program.cs" />
+    <Compile Include="ArgumentHandler.cs" />
+    <Compile Include="ConnectionState.cs" />
+    <Compile Include="Executor.cs" />
+    <Compile Include="HandleIn.cs" />
+    <Compile Include="HandleOut.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

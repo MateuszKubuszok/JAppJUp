@@ -17,8 +17,10 @@ package net.jsdpu.process.executors;
 
 import static java.lang.Integer.valueOf;
 import static java.lang.System.getProperty;
+import static java.util.Arrays.asList;
 import static net.jsdpu.logger.Logger.getLogger;
 import static net.jsdpu.process.executors.Commands.*;
+import static net.jsdpu.process.executors.MultiCaller.prepareCommand;
 import static net.jsdpu.resources.Resources.*;
 
 import java.util.ArrayList;
@@ -52,8 +54,7 @@ public class WindowsProcessExecutor extends AbstractProcessExecutor {
             String uacHandlerPath = getUACHandlerPath();
             List<String> command = new ArrayList<String>();
             command.add(uacHandlerPath);
-            for (String[] subCommand : commands)
-                command.add(wrapArgument(joinArguments(secureSingleCommand(subCommand))));
+            command.addAll(asList(prepareCommand(commands)));
             logger.detailedTrace("Root command: " + command);
             return convertSingleCommand(command);
         }
@@ -70,7 +71,7 @@ public class WindowsProcessExecutor extends AbstractProcessExecutor {
     public boolean isVistaOrLater() {
         String major = getProperty("os.version").split("\\.")[0];
         try {
-            return valueOf(major) >= windowsVistaMajorVersion || true;
+            return valueOf(major) >= windowsVistaMajorVersion;
         } catch (NumberFormatException e) {
             return true;
         }

@@ -1,26 +1,16 @@
-/**
- * Copyright 2012-2013 Mateusz Kubuszok
- *
- * <p>Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at</p> 
- * 
- * <p>http://www.apache.org/licenses/LICENSE-2.0</p>
- *
- * <p>Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.</p>
- */
 package net.jsdpu.process.executors;
 
-import static java.lang.System.*;
+import static java.io.File.separator;
+import static java.lang.System.err;
+import static java.lang.System.getProperty;
+import static java.lang.System.out;
 import static java.util.regex.Pattern.compile;
 import static net.jsdpu.logger.Logger.getLogger;
-import static net.jsdpu.process.executors.Commands.*;
+import static net.jsdpu.process.executors.Commands.convertMultipleConsoleCommands;
+import static net.jsdpu.process.executors.Commands.joinArguments;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -40,6 +30,7 @@ import net.jsdpu.logger.Logger;
 public class MultiCaller {
     private static final Logger logger = getLogger(MultiCaller.class);
 
+    private static String java;
     private static String path;
     private static String classPath;
 
@@ -59,7 +50,7 @@ public class MultiCaller {
     static String[] prepareCommand(List<String[]> commands) {
         logger.trace("Preparation of MultiCaller run: " + commands);
         List<String> command = new ArrayList<String>();
-        command.add("java");
+        command.add(getJava());
         command.add("-cp");
         command.add(getClassPath());
         command.add(MultiCaller.class.getName());
@@ -104,6 +95,21 @@ public class MultiCaller {
         } catch (InvalidCommandException e) {
             e.printStackTrace();
         }
+    }
+    
+    /**
+     * Obtains path to JVN.
+     * 
+     * @return path to JVM
+     */
+    private static String getJava() {
+    	if (java == null) {
+	    	java = System.getProperty("java.home");
+	    	if (java.endsWith("/") || java.endsWith("\\"))
+	    		java = java.substring(0, java.length()-2);
+	    	java += separator + "bin" + separator + "java";
+    	}
+    	return java;
     }
 
     /**

@@ -46,8 +46,12 @@
     <ApplicationManifest>Properties\UACHandler.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="ArgumentHandler.cs" />
+    <Compile Include="ConnectionState.cs" />
+    <Compile Include="HandleOut.cs" />
+    <Compile Include="HandleIn.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Program.cs" />
+    <Compile Include="Executor.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />

@@ -13,9 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.</p>
  */
-package net.jsdpu.process.builders;
+package net.jsdpu.process.independent;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -68,5 +69,5 @@ public interface IndependentProcessBuilder {
     /**
      * @see java.lang.ProcessBuilder#start()
      */
-    public void start();
+    public void start() throws IOException;
 }
