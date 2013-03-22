@@ -25,68 +25,70 @@ import java.util.Map;
 import com.google.common.collect.ImmutableList;
 
 /**
- * Abstract class implementing common functionality for IndependentProcessBuilders.
+ * Abstract class implementing common functionality for
+ * IndependentProcessBuilders.
  * 
- * @see net.jsdpu.process.elevated.LinuxIndependentProcessBuilder
- * @see net.jsdpu.process.elevated.MacOSIndependentProcessBuilder
- * @see net.jsdpu.process.elevated.WindowsIndependentProcessBuilder
+ * @see net.jsdpu.process.independent.IndependentProcessBuilder
+ * @see net.jsdpu.process.independent.LinuxIndependentProcessBuilder
+ * @see net.jsdpu.process.independent.MacOSIndependentProcessBuilder
+ * @see net.jsdpu.process.independent.WindowsIndependentProcessBuilder
  */
 abstract class AbstractIndependentProcessBuilder implements IndependentProcessBuilder {
-	private final ProcessBuilder builder;
-	private final List<String> command;
-	
-	/**
-	 * Created builder that creates elevated process.
-	 */
-	public AbstractIndependentProcessBuilder() {
-		builder = new ProcessBuilder();
-		command = new ArrayList<String>();
-	}
+    private final ProcessBuilder builder;
+    private final List<String> command;
 
-	@Override
-	public List<String> getCommand() {
-		return ImmutableList.copyOf(command);
-	}
-	
-	@Override
-	public IndependentProcessBuilder setCommand(List<String> command) {
-		this.command.clear();
-		this.command.addAll(command);
-		return this;
-	}
+    /**
+     * Created builder that creates elevated process.
+     */
+    public AbstractIndependentProcessBuilder() {
+        builder = new ProcessBuilder();
+        command = new ArrayList<String>();
+    }
 
-	@Override
-	public IndependentProcessBuilder setCommand(String... command) {
-		this.command.clear();
-		this.command.addAll(Arrays.asList(command));
-		return this;
-	}
+    @Override
+    public List<String> getCommand() {
+        return ImmutableList.copyOf(command);
+    }
 
-	@Override
-	public File getDirectory() {
-		return builder.directory();
-	}
+    @Override
+    public IndependentProcessBuilder setCommand(List<String> command) {
+        this.command.clear();
+        this.command.addAll(command);
+        return this;
+    }
 
-	@Override
-	public IndependentProcessBuilder setDirectory(File directory) {
-		builder.directory(directory);
-		return this;
-	}
-	
-	@Override
-	public Map<String, String> getEnvironment() {
-		return builder.environment();
-	}
+    @Override
+    public IndependentProcessBuilder setCommand(String... command) {
+        this.command.clear();
+        this.command.addAll(Arrays.asList(command));
+        return this;
+    }
 
-	@Override
-	public abstract void start() throws IOException;
-	
-	/**
-	 * Returns ProcessBuilder used by this ElevatedProcessBuilder.
-	 * 
-	 * @return ProcessBuilder
-	 */
-	protected ProcessBuilder getBuilder() {
-		return builder;
-	}
+    @Override
+    public File getDirectory() {
+        return builder.directory();
+    }
+
+    @Override
+    public IndependentProcessBuilder setDirectory(File directory) {
+        builder.directory(directory);
+        return this;
+    }
+
+    @Override
+    public Map<String, String> getEnvironment() {
+        return builder.environment();
+    }
+
+    @Override
+    public abstract void start() throws IOException;
+
+    /**
+     * Returns ProcessBuilder used by this ElevatedProcessBuilder.
+     * 
+     * @return ProcessBuilder
+     */
+    protected ProcessBuilder getBuilder() {
+        return builder;
+    }
 }

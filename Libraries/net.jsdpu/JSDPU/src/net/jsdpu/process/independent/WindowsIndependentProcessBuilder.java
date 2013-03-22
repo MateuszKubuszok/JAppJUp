@@ -22,18 +22,17 @@ import java.util.List;
 /**
  * Creates process detached from JVM on Windows.
  */
-public class WindowsIndependentProcessBuilder extends
-		AbstractIndependentProcessBuilder {
-	@Override
-	public void start() throws IOException {
-		List<String> windowsDetachedCommand = new ArrayList<String>();
-		windowsDetachedCommand.add("cmd");
-		windowsDetachedCommand.add("/k");
-		windowsDetachedCommand.add("start");
-		windowsDetachedCommand.add("");
-		windowsDetachedCommand.addAll(getCommand());
-		getBuilder().command(windowsDetachedCommand);
-		getBuilder().start();
-		// TODO: figure out how to made it work
-	}
+public class WindowsIndependentProcessBuilder extends AbstractIndependentProcessBuilder {
+    @Override
+    public void start() throws IOException {
+        List<String> windowsDetachedCommand = new ArrayList<String>();
+        windowsDetachedCommand.add("cmd");
+        windowsDetachedCommand.add("/k");
+        windowsDetachedCommand.add("start");
+        windowsDetachedCommand.add("");
+        windowsDetachedCommand.addAll(getCommand());
+        getBuilder().command(windowsDetachedCommand);
+        getBuilder().start();
+        // TODO: figure out how to made it work
+    }
 }

@@ -17,8 +17,7 @@ package net.jsdpu.process.elevated;
 
 import static java.lang.Integer.valueOf;
 import static java.lang.System.getProperty;
-import static net.jsdpu.resources.Resources.getUACHandlerPath;
-import static net.jsdpu.resources.Resources.uninstallWindowsWrapper;
+import static net.jsdpu.resources.Resources.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,9 +27,8 @@ import java.util.List;
  * 
  * @see net.jsdpu.process.elevated.AbstractElevatedProcessBuilder
  */
-public class WindowsElevatedProcessBuilder extends
-		AbstractElevatedProcessBuilder {
-	/**
+public class WindowsElevatedProcessBuilder extends AbstractElevatedProcessBuilder {
+    /**
      * Lowest major version of Windows that require use of UAC handling.
      * 
      * <p>
@@ -39,20 +37,20 @@ public class WindowsElevatedProcessBuilder extends
      * </p>
      */
     private final int windowsVistaMajorVersion = 6;
-	
-	@Override
-	public ProcessBuilder getProcessBuilder() {
-		if (isVistaOrLater()) {
-			List<String> windowsElevationCommand = new ArrayList<String>();
-			windowsElevationCommand.add(getUACHandlerPath());
-			windowsElevationCommand.addAll(getCommand());
-			getBuilder().command(windowsElevationCommand);
-		} else
-			getBuilder().command(getCommand());
-		return getBuilder();
-	}
-	
-	/**
+
+    @Override
+    public ProcessBuilder getProcessBuilder() {
+        if (isVistaOrLater()) {
+            List<String> windowsElevationCommand = new ArrayList<String>();
+            windowsElevationCommand.add(getUACHandlerPath());
+            windowsElevationCommand.addAll(getCommand());
+            getBuilder().command(windowsElevationCommand);
+        } else
+            getBuilder().command(getCommand());
+        return getBuilder();
+    }
+
+    /**
      * Returns whether current system is Windows Vista or newer.
      * 
      * @return true is Vista or later, false otherwise
@@ -65,8 +63,8 @@ public class WindowsElevatedProcessBuilder extends
             return true;
         }
     }
-	
-	@Override
+
+    @Override
     protected void finalize() {
         uninstallWindowsWrapper();
     }

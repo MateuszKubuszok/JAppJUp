@@ -21,8 +21,8 @@ package net.jsdpu.process.elevated;
  * @see net.jsdpu.process.executors.AbstractProcessExecutor
  */
 public class MacOSElevatedProcessBuilder extends AbstractElevatedProcessBuilder {
-	@Override
-	public ProcessBuilder getProcessBuilder() {
-		throw new UnsupportedOperationException("Not yet implemented");
-	}
+    @Override
+    public ProcessBuilder getProcessBuilder() {
+        throw new UnsupportedOperationException("Not yet implemented");
+    }
 }

@@ -23,14 +23,13 @@ import java.util.List;
  * 
  * @see net.jsdpu.process.elevated.AbstractElevatedProcessBuilder
  */
-public class LinuxElevatedProcessBuilder extends
-		AbstractElevatedProcessBuilder {	
-	@Override
-	public ProcessBuilder getProcessBuilder() {
-		List<String> linuxElevationCommand = new ArrayList<String>();
-		linuxElevationCommand.add("pkexec");
-		linuxElevationCommand.addAll(getCommand());
-		getBuilder().command(linuxElevationCommand);
-		return getBuilder();
-	}
+public class LinuxElevatedProcessBuilder extends AbstractElevatedProcessBuilder {
+    @Override
+    public ProcessBuilder getProcessBuilder() {
+        List<String> linuxElevationCommand = new ArrayList<String>();
+        linuxElevationCommand.add("pkexec");
+        linuxElevationCommand.addAll(getCommand());
+        getBuilder().command(linuxElevationCommand);
+        return getBuilder();
+    }
 }
