@@ -51,3 +51,9 @@ application. Folder `build` can be simply removed.
 
 Application usage can be found out by running `python uploader.py --help` (or
 `uploader.exe --help`).
+
+Eclipse settings
+-----------
+
+Contains reccomended Eclipse settings. Configuration provides warnings, editor
+save actions and MoreUnit settings as used during development.
