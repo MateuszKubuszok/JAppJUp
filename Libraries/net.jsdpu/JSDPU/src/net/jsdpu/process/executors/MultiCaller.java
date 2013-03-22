@@ -1,16 +1,12 @@
 package net.jsdpu.process.executors;
 
 import static java.io.File.separator;
-import static java.lang.System.err;
-import static java.lang.System.getProperty;
-import static java.lang.System.out;
+import static java.lang.System.*;
 import static java.util.regex.Pattern.compile;
 import static net.jsdpu.logger.Logger.getLogger;
-import static net.jsdpu.process.executors.Commands.convertMultipleConsoleCommands;
-import static net.jsdpu.process.executors.Commands.joinArguments;
+import static net.jsdpu.process.executors.Commands.*;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -55,7 +51,7 @@ public class MultiCaller {
         command.add(getClassPath());
         command.add(MultiCaller.class.getName());
         for (String[] subCommand : commands)
-            command.add(joinArguments(subCommand));
+            command.add(wrapArgument(joinArguments(subCommand)));
         logger.detailedTrace("MultiCaller command: " + command);
         return command.toArray(new String[0]);
     }
@@ -96,20 +92,20 @@ public class MultiCaller {
             e.printStackTrace();
         }
     }
-    
+
     /**
      * Obtains path to JVN.
      * 
      * @return path to JVM
      */
     private static String getJava() {
-    	if (java == null) {
-	    	java = System.getProperty("java.home");
-	    	if (java.endsWith("/") || java.endsWith("\\"))
-	    		java = java.substring(0, java.length()-2);
-	    	java += separator + "bin" + separator + "java";
-    	}
-    	return java;
+        if (java == null) {
+            java = System.getProperty("java.home");
+            if (java.endsWith("/") || java.endsWith("\\"))
+                java = java.substring(0, java.length() - 2);
+            java += separator + "bin" + separator + "java";
+        }
+        return java;
     }
 
     /**
@@ -144,10 +140,12 @@ public class MultiCaller {
     private static String getClassPath() {
         if (classPath == null) {
             if (runAsJar()) {
-                Matcher matcher = compile("jar:([^!]+)!.+").matcher(getPath());
+                System.out.println("classpath: " + getPath());
+                Matcher matcher = compile("jar:(file:/)?([^!]+)!.+").matcher(getPath());
                 if (!matcher.find())
                     throw new RuntimeException("Invalid class path");
-                classPath = matcher.group(1);
+                classPath = matcher.group(2);
+                System.out.println("new classpath: " + classPath);
             } else
                 classPath = getProperty("java.class.path", null);
         }
