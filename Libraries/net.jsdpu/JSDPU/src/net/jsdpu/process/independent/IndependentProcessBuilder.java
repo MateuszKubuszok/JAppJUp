@@ -39,35 +39,42 @@ public interface IndependentProcessBuilder {
     /**
      * @see java.lang.ProcessBuilder#command()
      */
+    @SuppressWarnings("javadoc")
     public List<String> getCommand();
 
     /**
      * @see java.lang.ProcessBuilder#command(List)
      */
+    @SuppressWarnings("javadoc")
     public IndependentProcessBuilder setCommand(List<String> command);
 
     /**
      * @see java.lang.ProcessBuilder#command(String...)
      */
+    @SuppressWarnings("javadoc")
     public IndependentProcessBuilder setCommand(String... command);
 
     /**
      * @see java.lang.ProcessBuilder#directory()
      */
+    @SuppressWarnings("javadoc")
     public File getDirectory();
 
     /**
      * @see java.lang.ProcessBuilder#directory(File)
      */
+    @SuppressWarnings("javadoc")
     public IndependentProcessBuilder setDirectory(File directory);
 
     /**
      * @see java.lang.ProcessBuilder#environment()
      */
+    @SuppressWarnings("javadoc")
     public Map<String, String> getEnvironment();
 
     /**
      * @see java.lang.ProcessBuilder#start()
      */
+    @SuppressWarnings({ "javadoc" })
     public void start() throws IOException;
 }

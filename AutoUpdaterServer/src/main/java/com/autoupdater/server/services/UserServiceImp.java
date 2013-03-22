@@ -90,8 +90,7 @@ public class UserServiceImp extends AbstractHibernateService implements UserServ
     @Override
     public List<User> findAll() {
         logger.debug("Attempting to find all Users");
-        @SuppressWarnings({ "unchecked", "cast" })
-        List<User> users = (List<User>) getSession().createCriteria(User.class).list();
+        List<User> users = getSession().createCriteria(User.class).list();
         logger.debug("Found all Users: " + users.size());
         return users;
     }
@@ -99,7 +98,6 @@ public class UserServiceImp extends AbstractHibernateService implements UserServ
     @Override
     public List<String> findAllUsernames() {
         logger.debug("Attempting to find all Users' names");
-        @SuppressWarnings("unchecked")
         List<String> names = getSession().createCriteria(User.class)
                 .setProjection(Projections.projectionList().add(Projections.property("username")))
                 .list();

@@ -79,7 +79,6 @@ public class PackageServiceImp extends AbstractHibernateService implements Packa
     @Override
     public List<Package> findAll() {
         logger.debug("Attempting to find all Packages");
-        @SuppressWarnings("unchecked")
         List<Package> packages = getSession().createCriteria(Package.class).list();
         logger.debug("Found all Packages: " + packages.size());
         return packages;
@@ -88,7 +87,7 @@ public class PackageServiceImp extends AbstractHibernateService implements Packa
     @Override
     public List<String> findAllNames() {
         logger.debug("Attempting to find all Packages' names");
-        @SuppressWarnings({ "unchecked", "cast" })
+        @SuppressWarnings({ "cast" })
         List<String> names = (List<String>) getSession().createCriteria(Package.class)
                 .setProjection(Projections.projectionList().add(Projections.property("name")))
                 .list();

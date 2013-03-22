@@ -27,25 +27,30 @@ public interface EnqueuedProcess {
     /**
      * @see java.lang.Process#exitValue()
      */
+    @SuppressWarnings("javadoc")
     public int getExitValue();
 
     /**
      * @see java.lang.Process#getInputStream()
      */
+    @SuppressWarnings("javadoc")
     public InputStream getInputStream();
 
     /**
      * @see java.lang.Process#getErrorStream()
      */
+    @SuppressWarnings("javadoc")
     public InputStream getErrorStream();
 
     /**
      * @see java.lang.Process#getOutputStream()
      */
+    @SuppressWarnings("javadoc")
     public OutputStream getOutputStream();
 
     /**
      * @see java.lang.Process#waitFor()
      */
+    @SuppressWarnings("javadoc")
     public int waitFor();
 }

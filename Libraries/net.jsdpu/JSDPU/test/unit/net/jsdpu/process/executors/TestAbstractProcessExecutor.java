@@ -126,7 +126,6 @@ public class TestAbstractProcessExecutor {
         }
     }
 
-    @SuppressWarnings("unchecked")
     private List<ProcessBuilder> getProcessBuilders(ExecutionQueueReader reader)
             throws NoSuchFieldException, SecurityException, IllegalArgumentException,
             IllegalAccessException {

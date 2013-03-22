@@ -134,7 +134,6 @@ public abstract class AbstractAggregatedService<Service extends IService<Recieve
      *            AdditionalMessage
      * @return Service bound to additionalMessage
      */
-    @SuppressWarnings("unchecked")
     public Service getService(AdditionalMessage additionalMessage) {
         return (Service) getNotifier().getMessageSource(additionalMessage);
     }

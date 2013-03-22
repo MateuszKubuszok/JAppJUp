@@ -16,16 +16,13 @@
 package net.jsdpu.process.independent;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Creates process detached from JVM on Linux.
  */
-public class LinuxIndependentProcessBuilder extends
-		AbstractIndependentProcessBuilder {
-	@Override
-	public void start() throws IOException {
-		throw new UnsupportedOperationException("Not yet implemented!");
-	}
+public class LinuxIndependentProcessBuilder extends AbstractIndependentProcessBuilder {
+    @Override
+    public void start() throws IOException {
+        throw new UnsupportedOperationException("Not yet implemented!");
+    }
 }

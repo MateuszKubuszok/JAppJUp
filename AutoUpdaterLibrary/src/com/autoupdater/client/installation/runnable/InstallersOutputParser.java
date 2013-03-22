@@ -62,6 +62,10 @@ class InstallersOutputParser {
 
     /**
      * Initializes output parser.
+     * 
+     * @param environmentData
+     *            EnvironmentData that can be used for saving current state of
+     *            installed Update
      */
     InstallersOutputParser(EnvironmentData environmentData) {
         this.environmentData = environmentData;
@@ -177,7 +181,7 @@ class InstallersOutputParser {
      * 
      * @param updates
      *            updates to check
-     * @return
+     * @return whether update is finished
      */
     private boolean isInstallationFinished(SortedSet<Update> updates) {
         for (Update update : updates)

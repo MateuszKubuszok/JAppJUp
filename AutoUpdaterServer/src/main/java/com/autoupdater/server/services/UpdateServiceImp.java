@@ -96,7 +96,7 @@ public class UpdateServiceImp extends AbstractHibernateService implements Update
     @Override
     public List<Update> findAll() {
         logger.debug("Attempting to find all Updates");
-        @SuppressWarnings({ "unchecked", "cast" })
+        @SuppressWarnings({ "cast" })
         List<Update> updates = (List<Update>) getSession().createCriteria(Update.class).list();
         logger.debug("Found all Updates: " + updates.size());
         return updates;

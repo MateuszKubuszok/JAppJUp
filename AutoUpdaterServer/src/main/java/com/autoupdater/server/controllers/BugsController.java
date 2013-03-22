@@ -77,6 +77,8 @@ public final class BugsController extends AppController {
      * Let JSF run /views/bug/new.jsp on GET /server/bugs/add/{programID}
      * request.
      * 
+     * @param programID
+     *            ID of program for which bug should be created
      * @param model
      *            passed model
      * @return facelet name
@@ -159,6 +161,8 @@ public final class BugsController extends AppController {
      * 
      * @param bug
      *            bug
+     * @param result
+     *            contains binding results for bug
      * @param model
      *            passed model
      * @return facelet name

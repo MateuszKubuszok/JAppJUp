@@ -78,7 +78,7 @@ public class BugServiceImp extends AbstractHibernateService implements BugServic
     @Override
     public List<Bug> findAll() {
         logger.debug("Attempting to find all Bugs");
-        @SuppressWarnings({ "cast", "unchecked" })
+        @SuppressWarnings({ "cast" })
         List<Bug> bugs = (List<Bug>) getSession().createCriteria(Bug.class).list();
         logger.debug("Found all Bugs: " + bugs.size());
         return bugs;

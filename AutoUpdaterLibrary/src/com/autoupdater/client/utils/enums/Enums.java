@@ -35,7 +35,6 @@ public class Enums {
      */
     public static <E extends Enum<E>> E parseMessage(Class<E> klass, String message) {
         try {
-            @SuppressWarnings("unchecked")
             E[] values = (E[]) klass.getDeclaredMethod("values").invoke(null);
 
             for (E value : values)
@@ -74,7 +73,6 @@ public class Enums {
         EParsingStrategy parsingStrategy = EParsingStrategy.resolve(value);
 
         try {
-            @SuppressWarnings("unchecked")
             E[] eValues = (E[]) klass.getDeclaredMethod("values").invoke(null);
 
             for (E eValue : eValues)

@@ -88,7 +88,6 @@ public class ProgramServiceImp extends AbstractHibernateService implements Progr
     @Override
     public List<Program> findAll() {
         logger.debug("Attempting to find all Programs");
-        @SuppressWarnings("unchecked")
         List<Program> programs = getSession().createCriteria(Program.class).list();
         logger.debug("Found all Programs: " + programs.size());
         return programs;
@@ -97,7 +96,6 @@ public class ProgramServiceImp extends AbstractHibernateService implements Progr
     @Override
     public List<String> findAllNames() {
         logger.debug("Attempting to find all Programs' names");
-        @SuppressWarnings("unchecked")
         List<String> names = getSession().createCriteria(Program.class)
                 .setProjection(Projections.projectionList().add(Projections.property("name")))
                 .list();

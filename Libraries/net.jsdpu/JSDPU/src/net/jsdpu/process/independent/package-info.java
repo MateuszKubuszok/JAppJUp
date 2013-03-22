@@ -18,9 +18,9 @@
  * Contains classes related to creation of elevated processes.
  * 
  * @see net.jsdpu.process.independent.IndependentProcessBuilder
- * @see net.jsdpu.process.independent.IndependentElevatedProcessBuilder
+ * @see net.jsdpu.process.independent.AbstractIndependentProcessBuilder
  * @see net.jsdpu.process.independent.LinuxIndependentProcessBuilder
  * @see net.jsdpu.process.independent.MacOSIndependentProcessBuilder
  * @see net.jsdpu.process.independent.WindowsIndependentProcessBuilder
  */
-package net.jsdpu.process.independent; 
+package net.jsdpu.process.independent;

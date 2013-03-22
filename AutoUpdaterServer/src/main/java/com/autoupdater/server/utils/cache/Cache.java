@@ -40,7 +40,7 @@ public class Cache<I extends Comparable<I>, O> {
     /**
      * Source object.
      */
-    private CacheSource<I, O> Source;
+    private final CacheSource<I, O> Source;
 
     /**
      * Maximal number of objects kept after cleanup.
@@ -72,14 +72,14 @@ public class Cache<I extends Comparable<I>, O> {
      * 
      * @see CacheLeaf
      */
-    private Map<I, CacheLeaf> OutputData;
+    private final Map<I, CacheLeaf> OutputData;
 
     /**
      * Contains data about requests.
      * 
      * @see RequestData
      */
-    private ArrayList<RequestData> OutputRequests;
+    private final ArrayList<RequestData> OutputRequests;
 
     /**
      * Creates Cache instance using passed source.
@@ -88,7 +88,7 @@ public class Cache<I extends Comparable<I>, O> {
      *            CacheSource object
      */
     public Cache(CacheSource<I, O> source) {
-        initialize(source, true);
+        this(source, true);
     }
 
     /**
@@ -96,9 +96,22 @@ public class Cache<I extends Comparable<I>, O> {
      * 
      * @param source
      *            CacheSource object
+     * @param createCleaner
      */
     public Cache(CacheSource<I, O> source, boolean createCleaner) {
-        initialize(source, createCleaner);
+        Source = source;
+        setGCDelay(1000 * 3600);
+        setMaxKeep(100);
+        setResetCounter(24);
+        setMaxMemory(0);
+        OutputData = new TreeMap<I, CacheLeaf>();
+        OutputRequests = new ArrayList<RequestData>();
+        CleanupCounter = 0;
+
+        rt = Runtime.getRuntime();
+
+        if (createCleaner)
+            new Cleaner().start();
     }
 
     /**
@@ -227,30 +240,6 @@ public class Cache<I extends Comparable<I>, O> {
             synchronized (OutputRequests) {
                 OutputRequests.get(i).setRequests(0);
             }
-    }
-
-    /**
-     * Initializer called by constructors.
-     * 
-     * @param source
-     *            CacheSource object
-     * @param createCleaner
-     *            whether or not create Cleaner thread
-     */
-    private void initialize(CacheSource<I, O> source, boolean createCleaner) {
-        Source = source;
-        setGCDelay(1000 * 3600);
-        setMaxKeep(100);
-        setResetCounter(24);
-        setMaxMemory(0);
-        OutputData = new TreeMap<I, CacheLeaf>();
-        OutputRequests = new ArrayList<RequestData>();
-        CleanupCounter = 0;
-
-        rt = Runtime.getRuntime();
-
-        if (createCleaner)
-            new Cleaner().start();
     }
 
     /**

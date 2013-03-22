@@ -25,7 +25,7 @@ import java.io.IOException;
 import net.jsdpu.logger.Logger;
 
 /**
- * Provides common logic to all process killers. 
+ * Provides common logic to all process killers.
  */
 public abstract class AbstractProcessKiller implements IProcessKiller {
     private static final Logger logger = getLogger(AbstractProcessKiller.class);
@@ -67,8 +67,8 @@ public abstract class AbstractProcessKiller implements IProcessKiller {
      * dialog and then finish. Otherwise program should just die.
      * </p>
      * 
-     * @param programName
-     *            program that should be killed
+     * @param pid
+     *            PID of a program that should be killed
      * @return true if succeed to kill process
      * @throws IOException
      *             thrown when error occurs in system dependent process
@@ -82,8 +82,8 @@ public abstract class AbstractProcessKiller implements IProcessKiller {
     /**
      * Kills process forcefully, if attempt to kill it gracefully failed.
      * 
-     * @param programName
-     *            program that should be killed
+     * @param pid
+     *            PID of a program that should be killed
      * @throws IOException
      *             thrown when error occurs in system dependent process
      * @throws InterruptedException

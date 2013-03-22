@@ -20,7 +20,6 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.autoupdater.server.utils.authentication.CurrentUserUtil;
@@ -37,9 +36,11 @@ public final class HomeController extends AppController {
 
     /**
      * Simply selects the home view to render by returning its name.
+     * 
+     * @return facelet name
      */
     @RequestMapping(value = "/", method = GET)
-    public String home(Model model) {
+    public String home() {
         logger.debug("Received request: GET /");
 
         if (CurrentUserUtil.getUsername() != null) {

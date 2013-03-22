@@ -178,6 +178,8 @@ public final class FrontEndAPIController extends AppController {
      *            update's ID
      * @param response
      *            response to be sent
+     * @param request
+     *            received by servlet
      */
     @SuppressWarnings("resource")
     @RequestMapping(value = "/download/{updateID}", method = GET)

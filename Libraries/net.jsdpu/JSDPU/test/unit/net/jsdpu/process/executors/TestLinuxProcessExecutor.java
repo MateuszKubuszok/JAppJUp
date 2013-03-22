@@ -39,7 +39,6 @@ public class TestLinuxProcessExecutor {
             rootCommand.setAccessible(true);
 
             // when
-            @SuppressWarnings("unchecked")
             List<String[]> result = (List<String[]>) rootCommand.invoke(executor, command);
 
             // then

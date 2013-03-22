@@ -29,7 +29,7 @@ import java.util.List;
 import org.junit.Test;
 
 public class TestWindowsProcessExecutor {
-	@Test
+    @Test
     public void testRootCommand() {
         try {
             // given
@@ -40,7 +40,6 @@ public class TestWindowsProcessExecutor {
             rootCommand.setAccessible(true);
 
             // when
-            @SuppressWarnings("unchecked")
             List<String[]> result = (List<String[]>) rootCommand.invoke(executor, command);
 
             // then

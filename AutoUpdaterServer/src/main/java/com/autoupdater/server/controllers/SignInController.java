@@ -94,6 +94,8 @@ public final class SignInController extends AppController {
      *            PasswordEdit model
      * @param result
      *            response that will be sent
+     * @param user
+     *            model attribute containing user's data
      * @param model
      *            passed model
      * @return facelet name

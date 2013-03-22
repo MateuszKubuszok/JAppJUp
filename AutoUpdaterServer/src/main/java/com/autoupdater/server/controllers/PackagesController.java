@@ -163,6 +163,8 @@ public final class PackagesController extends AppController {
      * 
      * @param _package
      *            package
+     * @param result
+     *            contains binding results for Package
      * @param model
      *            passed model
      * @return facelet name
