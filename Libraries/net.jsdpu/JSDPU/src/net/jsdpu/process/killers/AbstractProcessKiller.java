@@ -24,6 +24,9 @@ import java.io.IOException;
 
 import net.jsdpu.logger.Logger;
 
+/**
+ * Provides common logic to all process killers. 
+ */
 public abstract class AbstractProcessKiller implements IProcessKiller {
     private static final Logger logger = getLogger(AbstractProcessKiller.class);
 

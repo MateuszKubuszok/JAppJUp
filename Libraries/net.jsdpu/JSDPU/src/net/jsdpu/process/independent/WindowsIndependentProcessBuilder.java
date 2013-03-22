@@ -36,10 +36,4 @@ public class WindowsIndependentProcessBuilder extends
 		getBuilder().start();
 		// TODO: figure out how to made it work
 	}
-	
-	public static void main(String[] args) throws IOException {
-		new WindowsIndependentProcessBuilder()
-		.setCommand(new String[]{"notepad"})
-		.start();
-	}
 }

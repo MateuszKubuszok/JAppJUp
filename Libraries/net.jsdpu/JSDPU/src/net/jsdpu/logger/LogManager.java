@@ -22,17 +22,35 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
+/**
+ * LogManager reponsible for settings up Logger. 
+ */
 public class LogManager {
     private final java.util.logging.LogManager logManager;
 
+    /**
+     * Returns LogManager instance.
+     * 
+     * @return LogManager instance
+     */
     public static LogManager getLogManager() {
         return new LogManager(java.util.logging.LogManager.getLogManager());
     }
 
+    /**
+     * Initiates LogManager.
+     * @param logManager java.util.logging.LogManager instance
+     */
     private LogManager(java.util.logging.LogManager logManager) {
         this.logManager = logManager;
     }
 
+    /**
+     * Reads configuration.
+     * 
+     * @param is input stream
+     * @throws IOException thrown when there are problems reading from the stream
+     */
     public void readConfiguration(InputStream is) throws IOException {
         Properties properties = new Properties();
         properties.load(is);

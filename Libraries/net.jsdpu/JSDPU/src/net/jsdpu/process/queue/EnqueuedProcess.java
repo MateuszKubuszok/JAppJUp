@@ -22,8 +22,6 @@ import java.io.OutputStream;
  * Representation of enqueued process. Since it isn't represented as an actual
  * Process in current VM, but exists in remotely run child VM, it has to be
  * controlled via wrapper.
- * 
- * @TODO rewrite it into actual class
  */
 public interface EnqueuedProcess {
     /**

@@ -18,28 +18,28 @@ package net.jsdpu.process.queue;
 import java.util.Collection;
 import java.util.Iterator;
 
+/**
+ * TODO
+ */
 public class ProcessQueue implements Collection<EnqueuedProcess> {
     @Override
     public Iterator<EnqueuedProcess> iterator() {
-        return null;
+        throw new UnsupportedOperationException("Not yet implemented!");
     }
 
     @Override
     public int size() {
-        // TODO Auto-generated method stub
-        return 0;
+    	throw new UnsupportedOperationException("Not yet implemented!");
     }
 
     @Override
     public boolean isEmpty() {
-        // TODO Auto-generated method stub
-        return false;
+    	throw new UnsupportedOperationException("Not yet implemented!");
     }
 
     @Override
     public boolean contains(Object o) {
-        // TODO Auto-generated method stub
-        return false;
+    	throw new UnsupportedOperationException("Not yet implemented!");
     }
 
     @Override
@@ -50,8 +50,7 @@ public class ProcessQueue implements Collection<EnqueuedProcess> {
 
     @Override
     public <T> T[] toArray(T[] a) {
-        // TODO Auto-generated method stub
-        return null;
+    	throw new UnsupportedOperationException("Not yet implemented!");
     }
 
     @Override
@@ -68,8 +67,7 @@ public class ProcessQueue implements Collection<EnqueuedProcess> {
 
     @Override
     public boolean containsAll(Collection<?> c) {
-        // TODO Auto-generated method stub
-        return false;
+    	throw new UnsupportedOperationException("Not yet implemented!");
     }
 
     @Override
@@ -92,5 +90,6 @@ public class ProcessQueue implements Collection<EnqueuedProcess> {
 
     @Override
     public void clear() {
+    	throw new UnsupportedOperationException("Not yet implemented!");
     }
 }

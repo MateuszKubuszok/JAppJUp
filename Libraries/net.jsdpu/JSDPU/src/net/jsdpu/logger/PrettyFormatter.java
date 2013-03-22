@@ -27,11 +27,17 @@ import java.util.Map;
 import java.util.logging.Formatter;
 import java.util.logging.LogRecord;
 
+/**
+ * Formatter used for displaying log by Logger.
+ */
 public class PrettyFormatter extends Formatter {
     private final DateFormat formatter;
     private String lastClass;
     private final Map<String, String> lastMethodForClass;
 
+    /**
+     * Initiates formatter.
+     */
     public PrettyFormatter() {
         formatter = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss.SSS z");
         lastClass = null;
@@ -60,11 +66,24 @@ public class PrettyFormatter extends Formatter {
         return builder.toString();
     }
 
+    /**
+     * Adds class to log.
+     * 
+     * @param builder StringBuilder
+     * @param className class to add
+     */
     private void appendClass(StringBuilder builder, String className) {
         if (lastClass == null || !lastClass.equals(className))
             builder.append(className).append(":\n");
     }
 
+    /**
+     * Adds method to log.
+     * 
+     * @param builder StringBuilder
+     * @param className class name
+     * @param methodName method to add
+     */
     private void appendMethod(StringBuilder builder, String className, String methodName) {
         if (lastClass == null || !lastClass.equals(className)
                 || !lastMethodForClass.containsKey(className)
@@ -73,12 +92,26 @@ public class PrettyFormatter extends Formatter {
         }
     }
 
+    /**
+     * Adds message to log.
+     * 
+     * @param builder StringBuilder
+     * @param level log level
+     * @param date current date
+     * @param message message content
+     */
     private void appendMessage(StringBuilder builder, Level level, Date date, String message) {
         builder.append("\t\t[").append(level).append("] ").append(formatter.format(date))
                 .append(":\n");
         builder.append("\t\t").append(message).append('\n');
     }
 
+    /**
+     * Adds exception to log.
+     * 
+     * @param builder StringBuilder
+     * @param throwable exception to add
+     */
     private void appendException(StringBuilder builder, Throwable throwable) {
         if (throwable != null) {
             ByteArrayOutputStream bos = new ByteArrayOutputStream();

@@ -203,6 +203,11 @@ public class Logger {
         log(DETAILED_TRACE, message);
     }
 
+    /**
+     * Returns stack trace for current entry.
+     * 
+     * @return stack trace
+     */
     private StackTraceElement getStackTraceElement() {
         StackTraceElement[] trace = Thread.currentThread().getStackTrace();
         if (trace.length >= 5)
