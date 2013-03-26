@@ -1,0 +1,3 @@
+[submodule "Libraries/net.jsdpu"]
+	path = Libraries/net.jsdpu
+	url = ../JSDPU.git
