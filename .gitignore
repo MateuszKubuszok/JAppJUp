@@ -1,6 +1,8 @@
 /.gradle/
 /.metadata/
+/settings/
 /Dist/
+/Servers/
 .settings/
 .svn/
 bin/
