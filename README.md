@@ -67,17 +67,12 @@ Development
 **Things to do**:
  - [ ] implement ability to update the client itself,
  - [ ] distinguish between client's update and anothers program's update,
- - [ ] introduce the ability to handle JARs (obtaining java's process ID by usage of
- its *run path*),
  - [ ] introduce AJAX validation into server,
  - [ ] ensure that repository will not blow server into space,
  - [ ] introduce functionality to install archival updates and *lock* updates (so
  that program won't be updated to version higher or equal to some defined),
  - [ ] add some documentation to Client's project,
  - [ ] introducing ability to install updates on Mac OS and others systems,
- - [ ] considering creating separate repository for *Java's System-Dependent
- Process Utils* (JSDPU) project (quite a big name as for something so trivial
- and unimpressive...),
  - [ ] not give up too soon.
 
 License
