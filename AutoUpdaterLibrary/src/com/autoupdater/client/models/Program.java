@@ -15,6 +15,9 @@
  */
 package com.autoupdater.client.models;
 
+import static com.autoupdater.client.environment.settings.ProgramSettingsBuilder.builder;
+import static com.autoupdater.client.models.Models.*;
+import static com.autoupdater.client.models.Models.EComparisionType.LOCAL_INSTALLATIONS;
 import static com.autoupdater.client.utils.comparables.Comparables.compare;
 import static com.google.common.base.Objects.equal;
 import static java.lang.Math.pow;
@@ -24,8 +27,6 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 import com.autoupdater.client.environment.settings.ProgramSettings;
-import com.autoupdater.client.environment.settings.ProgramSettingsBuilder;
-import com.autoupdater.client.models.Models.EComparisionType;
 import com.autoupdater.client.utils.comparables.Comparables;
 
 /**
@@ -46,12 +47,9 @@ public class Program implements IModel<Program> {
     }
 
     public ProgramSettings findProgramSettings(SortedSet<ProgramSettings> programsSettings) {
-        return Models.findEqual(
-                programsSettings,
-                ProgramSettingsBuilder.builder().setProgramName(name)
-                        .setPathToProgramDirectory(pathToProgramDirectory)
-                        .setServerAddress(serverAddress).build(),
-                EComparisionType.LOCAL_INSTALLATIONS);
+        return findEqual(programsSettings, builder().setProgramName(name)
+                .setPathToProgramDirectory(pathToProgramDirectory).setServerAddress(serverAddress)
+                .build(), LOCAL_INSTALLATIONS);
     }
 
     /**
@@ -120,7 +118,7 @@ public class Program implements IModel<Program> {
      *            whether Program is for development version
      */
     public void setDevelopmentVersion(String developmentVersion) {
-        this.developmentVersion = "true".equalsIgnoreCase(developmentVersion);
+        this.developmentVersion = Boolean.valueOf(developmentVersion);
     }
 
     /**
@@ -217,7 +215,24 @@ public class Program implements IModel<Program> {
 
     @Override
     public String toString() {
-        return name;
+        StringBuilder builder = new StringBuilder();
+
+        builder.append("[Program]").append('\n');
+        builder.append("Name on server:\t\t").append(name).append('\n');
+        builder.append("Installation dir:\t").append(pathToProgramDirectory).append('\n');
+        builder.append("Server address:\t\t").append(serverAddress).append('\n');
+        builder.append("Version type:\t\t").append(developmentVersion ? "development" : "release")
+                .append('\n');
+
+        builder.append("Known bugs:").append('\n');
+        for (BugEntry bug : bugs)
+            builder.append(addPrefixToEachLine(bug, "\t"));
+
+        builder.append("Packages:").append('\n');
+        for (Package _package : packages)
+            builder.append(addPrefixToEachLine(_package, "\t"));
+
+        return builder.toString();
     }
 
     @Override

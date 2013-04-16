@@ -15,6 +15,7 @@
  */
 package com.autoupdater.gui.adapter.helpers;
 
+import static com.autoupdater.client.environment.AvailabilityFilter.selectNewestForEachPackage;
 import static com.autoupdater.gui.client.window.EWindowStatus.*;
 
 import java.io.IOException;
@@ -54,9 +55,11 @@ public class InstallationUtils {
 
         try {
             FileAggregatedDownloadService aggregatedDownloadService = adapter.client()
-                    .createFileAggregatedDownloadService(adapter.dataStorage().getAllUpdates());
+                    .createFileAggregatedDownloadService(
+                            selectNewestForEachPackage(adapter.dataStorage().getAllUpdates()));
             AggregatedInstallationService aggregatedInstallationService = adapter.client()
-                    .createInstallationAggregatedService(adapter.dataStorage().getAllUpdates());
+                    .createInstallationAggregatedService(
+                            selectNewestForEachPackage(adapter.dataStorage().getAllUpdates()));
 
             new Thread(new InstallUpdatesRunnable(adapter, aggregatedDownloadService,
                     aggregatedInstallationService)).start();
@@ -78,9 +81,11 @@ public class InstallationUtils {
                     program);
 
             FileAggregatedDownloadService aggregatedDownloadService = adapter.client()
-                    .createFileAggregatedDownloadService(updatesForProgram);
+                    .createFileAggregatedDownloadService(
+                            selectNewestForEachPackage(updatesForProgram));
             AggregatedInstallationService aggregatedInstallationService = adapter.client()
-                    .createInstallationAggregatedService(updatesForProgram);
+                    .createInstallationAggregatedService(
+                            selectNewestForEachPackage(updatesForProgram));
 
             currentInstallationThread = new Thread(new InstallUpdatesRunnable(adapter,
                     aggregatedDownloadService, aggregatedInstallationService));

@@ -95,8 +95,7 @@ public class Main {
             public void run() {
                 try {
                     final Gui2ClientAdapter gca = new Gui2ClientAdapter(edm);
-                    gca.clientWindow(new GuiClientWindow(gca.dataStorage()
-                            .getProgramsThatShouldBeDisplayed()));
+                    gca.clientWindow(new GuiClientWindow(gca.environmentData()));
                 } catch (Exception e) {
                     showError(e);
                 }

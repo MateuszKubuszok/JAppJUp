@@ -95,7 +95,7 @@ public class CheckUpdatesRunnable implements Runnable {
                 SortedSet<Update> notDisplayedUpdates = filterUpdatesNotification(filterUpdateSelection(availableUpdates));
                 StringBuilder builder = new StringBuilder();
                 for (Update update : notDisplayedUpdates)
-                    builder.append(update.getPackage().getProgram())
+                    builder.append(update.getPackage().getProgram().getName())
                             .append('/')
                             .append(update.getPackage().getName())
                             .append(' ')

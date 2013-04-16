@@ -76,6 +76,11 @@ public class BugEntry implements IModel<BugEntry> {
     }
 
     @Override
+    public String toString() {
+        return description;
+    }
+
+    @Override
     public Comparator<BugEntry> getInstallationsServerPropertiesComparator() {
         return new GeneralComparator();
     }

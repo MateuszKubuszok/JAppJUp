@@ -15,6 +15,7 @@
  */
 package com.autoupdater.client.environment;
 
+import static com.autoupdater.client.models.Models.addPrefixToEachLine;
 import static net.jsdpu.logger.Logger.getLogger;
 
 import java.io.IOException;
@@ -312,6 +313,33 @@ public class EnvironmentData {
                         .setDevelopmentVersion(programSettings.isDevelopmentVersion()).build());
 
         return programsDefinedBySettings;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+
+        builder.append("[EnvironmentData]").append('\n');
+
+        builder.append("[OparatingSystem]").append('\n');
+        builder.append(addPrefixToEachLine(system, "\t"));
+        builder.append('\n');
+
+        builder.append("[ClientSettings]").append('\n');
+        builder.append(addPrefixToEachLine(clientSettings, "\t"));
+        builder.append('\n');
+
+        builder.append("[ProgramsSettings]").append('\n');
+        for (ProgramSettings programSettings : programsSettings)
+            builder.append(addPrefixToEachLine(programSettings, "\t"));
+        builder.append('\n');
+
+        builder.append("[InstallationData]").append('\n');
+        for (Program program : installationsData)
+            builder.append(addPrefixToEachLine(program, "\t"));
+        builder.append('\n');
+
+        return builder.toString();
     }
 
     /**

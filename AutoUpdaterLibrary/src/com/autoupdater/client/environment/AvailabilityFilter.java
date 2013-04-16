@@ -17,7 +17,9 @@ package com.autoupdater.client.environment;
 
 import static com.google.common.collect.Sets.filter;
 
+import java.util.Map;
 import java.util.SortedSet;
+import java.util.TreeMap;
 import java.util.TreeSet;
 
 import com.autoupdater.client.environment.settings.ProgramSettings;
@@ -188,6 +190,33 @@ public class AvailabilityFilter {
                                 .equals(update.getVersionNumber()));
             }
         });
+    }
+
+    /**
+     * Returns newest Update for each package.
+     * 
+     * @param updates
+     *            updates to filter
+     * @return newest Updates set
+     */
+    public static SortedSet<Update> selectNewestForEachPackage(SortedSet<Update> updates) {
+        Map<Program, Map<Package, SortedSet<Update>>> ppu = new TreeMap<Program, Map<Package, SortedSet<Update>>>();
+        for (Update update : updates) {
+            Package _package = update.getPackage();
+            Program program = _package.getProgram();
+            if (!ppu.containsKey(program))
+                ppu.put(program, new TreeMap<Package, SortedSet<Update>>());
+            if (!ppu.get(program).containsKey(_package))
+                ppu.get(program).put(_package, new TreeSet<Update>());
+            ppu.get(program).get(_package).add(update);
+        }
+
+        SortedSet<Update> newest = new TreeSet<Update>();
+        for (Map<Package, SortedSet<Update>> pu : ppu.values())
+            for (SortedSet<Update> u : pu.values())
+                newest.add(u.last());
+
+        return updates;
     }
 
     /**

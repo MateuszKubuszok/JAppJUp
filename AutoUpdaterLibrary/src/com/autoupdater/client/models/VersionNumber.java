@@ -159,6 +159,8 @@ public class VersionNumber implements IModel<VersionNumber> {
 
     @Override
     public String toString() {
+        if (equals(UNVERSIONED))
+            return "Not installed";
         return String.valueOf(major) + "." + String.valueOf(minor) + "." + String.valueOf(release)
                 + "." + String.valueOf(nightly);
     }

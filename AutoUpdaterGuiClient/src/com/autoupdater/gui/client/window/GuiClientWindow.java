@@ -18,7 +18,6 @@ package com.autoupdater.gui.client.window;
 import static com.autoupdater.gui.client.window.ETrayStrategy.resolve;
 import static com.autoupdater.gui.client.window.EWindowStatus.UNINITIALIZED;
 import static com.autoupdater.gui.config.GuiConfiguration.*;
-import static com.autoupdater.gui.mocks.MockModels.getInstalledPrograms;
 import static java.lang.Double.MIN_VALUE;
 import static javax.swing.JOptionPane.*;
 import static javax.swing.UIManager.setLookAndFeel;
@@ -38,7 +37,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.SortedSet;
 
 import javax.imageio.ImageIO;
 import javax.swing.JButton;
@@ -58,6 +56,7 @@ import com.autoupdater.gui.client.window.tabs.installed.ProgramTabContentContain
 import com.autoupdater.gui.client.window.tabs.settings.SettingsTabContentContainer;
 import com.autoupdater.gui.client.window.tabs.updates.UpdateInformationPanel;
 import com.autoupdater.gui.client.window.tabs.updates.UpdatesTabContentContainer;
+import com.autoupdater.gui.mocks.MockModels;
 import com.jgoodies.forms.factories.FormFactory;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
@@ -66,7 +65,7 @@ import com.jgoodies.forms.layout.RowSpec;
 public class GuiClientWindow extends JFrame {
     private EWindowStatus state;
 
-    private final SortedSet<Program> programs;
+    private final EnvironmentData environmantData;
 
     private final JPanel contentPane;
 
@@ -88,11 +87,11 @@ public class GuiClientWindow extends JFrame {
     private Map<Program, MenuItem> programsLaunchers;
 
     public GuiClientWindow() {
-        this(getInstalledPrograms());
+        this(MockModels.getEnvironmentData());
     }
 
-    public GuiClientWindow(SortedSet<Program> programs) {
-        this.programs = programs;
+    public GuiClientWindow(EnvironmentData environmentData) {
+        this.environmantData = environmentData;
 
         this.contentPane = new JPanel();
         this.programsTabs = new ArrayList<ProgramTabContentContainer>();
@@ -198,7 +197,7 @@ public class GuiClientWindow extends JFrame {
     }
 
     public void setSystemTray(SystemTray tray) {
-        PopupHelper helper = new PopupHelper(this, tray, programs);
+        PopupHelper helper = new PopupHelper(this, tray, environmantData.getInstallationsData());
         trayIcon = helper.getTrayIcon();
         showHideGUI = helper.getShowHideGUI();
         checkUpdates = helper.getCheckUpdates();
@@ -313,13 +312,13 @@ public class GuiClientWindow extends JFrame {
         gbc_tabbedPane.gridy = 0;
         contentPane.add(tabbedPane, gbc_tabbedPane);
 
-        updatesTab = new UpdatesTabContentContainer(programs);
+        updatesTab = new UpdatesTabContentContainer(environmantData.getInstallationsData());
         tabbedPane.addTab("Updates", new JScrollPane(updatesTab));
 
-        settingsTab = new SettingsTabContentContainer();
+        settingsTab = new SettingsTabContentContainer(environmantData);
         tabbedPane.add("Settings", settingsTab);
 
-        for (Program program : programs) {
+        for (Program program : environmantData.getInstallationsData()) {
             ProgramTabContentContainer programTab = new ProgramTabContentContainer(program);
             tabbedPane.add(program.getName(), programTab);
             programsTabs.add(programTab);

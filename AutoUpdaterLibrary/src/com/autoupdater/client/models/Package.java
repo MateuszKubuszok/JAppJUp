@@ -15,7 +15,7 @@
  */
 package com.autoupdater.client.models;
 
-import static com.autoupdater.client.models.VersionNumber.UNVERSIONED;
+import static com.autoupdater.client.models.Models.addPrefixToEachLine;
 import static com.autoupdater.client.utils.comparables.Comparables.compare;
 import static com.google.common.base.Objects.equal;
 
@@ -212,9 +212,20 @@ public class Package implements IModel<Package> {
 
     @Override
     public String toString() {
-        return name
-                + (versionNumber != null && !versionNumber.equals(UNVERSIONED) ? " "
-                        + versionNumber : "");
+        StringBuilder builder = new StringBuilder();
+
+        builder.append("[Package]").append('\n');
+        builder.append("Package name:\t").append(name).append('\n');
+        builder.append("Version number:\t").append(versionNumber).append('\n');
+
+        builder.append("Update:").append('\n');
+        builder.append(addPrefixToEachLine(update, "\t"));
+
+        builder.append("Changelog:").append('\n');
+        for (ChangelogEntry change : changelog)
+            builder.append(addPrefixToEachLine(change, "\t"));
+
+        return builder.toString();
     }
 
     @Override

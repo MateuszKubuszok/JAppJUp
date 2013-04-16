@@ -270,6 +270,22 @@ public class ProgramSettings implements IModel<ProgramSettings> {
         return new GeneralComparator();
     }
 
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+
+        builder.append("[ProgramSettings]").append('\n');
+        builder.append("Name on server:\t\t").append(programName).append('\n');
+        builder.append("Installation dir:\t").append(pathToProgramDirectory).append('\n');
+        builder.append("Startup command:\t").append(pathToProgram).append('\n');
+        builder.append("Name for killer:\t").append(programExecutableName).append('\n');
+        builder.append("Server address:\t\t").append(serverAddress).append('\n');
+        builder.append("Version type:\t\t").append(developmentVersion ? "development" : "release")
+                .append('\n');
+
+        return builder.toString();
+    }
+
     private class GeneralComparator implements Comparator<ProgramSettings> {
         @Override
         public int compare(ProgramSettings o1, ProgramSettings o2) {

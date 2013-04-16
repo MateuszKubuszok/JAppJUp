@@ -15,7 +15,8 @@
  */
 package com.autoupdater.client.models;
 
-import java.io.File;
+import static java.io.File.separator;
+
 import java.util.Collection;
 import java.util.Comparator;
 
@@ -154,14 +155,45 @@ public class Models {
      * @return standardized relative path
      */
     public static String secureRelativePath(String relativePath) {
-        String toRemove = File.separator.equals("/") ? "\\" : "/";
+        String toRemove = separator.equals("/") ? "\\" : "/";
         while (relativePath.contains(toRemove))
-            relativePath = relativePath.replace(toRemove, File.separator);
-        if (relativePath.startsWith(File.separator))
+            relativePath = relativePath.replace(toRemove, separator);
+        if (relativePath.startsWith(separator))
             relativePath = relativePath.substring(1);
-        if (relativePath.endsWith(File.separator))
+        if (relativePath.endsWith(separator))
             relativePath = relativePath.substring(0, relativePath.length() - 1);
         return relativePath;
+    }
+
+    /**
+     * Adds prefix to each line of toString() of an object.
+     * 
+     * @param object
+     *            Object which toString() should be enriched with prefixes
+     * @param prefix
+     *            prefix to add to each line
+     * @return result
+     */
+    public static String addPrefixToEachLine(Object object, String prefix) {
+        return addPrefixToEachLine(object.toString(), prefix);
+    }
+
+    /**
+     * Adds prefix to each line of given String.
+     * 
+     * @param lines
+     *            String that should be enriched with prefixes
+     * @param prefix
+     *            prefix to add to each line
+     * @return result
+     */
+    public static String addPrefixToEachLine(String lines, String prefix) {
+        StringBuilder builder = new StringBuilder();
+
+        for (String line : lines.split("\n"))
+            builder.append(prefix).append(line).append('\n');
+
+        return builder.toString();
     }
 
     /**

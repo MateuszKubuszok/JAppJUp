@@ -15,6 +15,8 @@
  */
 package com.autoupdater.client.environment.settings;
 
+import java.io.File;
+
 import com.autoupdater.client.environment.EnvironmentDefaultConfiguration;
 
 /**
@@ -153,11 +155,25 @@ public class ClientSettings {
     /**
      * Sets path to installer.
      * 
-     * @param pathToinstaller
+     * @param pathToInstaller
      *            path to installer
      */
-    public void setPathToInstaller(String pathToinstaller) {
-        this.pathToInstaller = pathToinstaller != null ? pathToinstaller : "";
+    public void setPathToInstaller(String pathToInstaller) {
+        this.pathToInstaller = pathToInstaller != null ? pathToInstaller : "";
+
+        if (this.pathToInstaller.startsWith(".")) {
+            pathToInstaller = this.pathToInstaller.substring(1);
+
+            for (File userDir = new File(System.getProperty("user.dir")); userDir != null; userDir = userDir
+                    .getParentFile()) {
+                File file = new File(userDir + pathToInstaller);
+
+                if (file.exists()) {
+                    this.pathToInstaller = file.getAbsolutePath();
+                    return;
+                }
+            }
+        }
     }
 
     /**
@@ -215,5 +231,22 @@ public class ClientSettings {
         } catch (NumberFormatException e) {
             this.proxyPort = EnvironmentDefaultConfiguration.DEFAULT_PROXY_PORT;
         }
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+
+        builder.append("[ClientSettings]").append('\n');
+        builder.append("Name on server:\t\t").append(clientName).append('\n');
+        builder.append("Installation dir:\t").append(pathToClientDirectory).append('\n');
+        builder.append("Startup command:\t").append(pathToClient).append('\n');
+        builder.append("Name for killer:\t").append(clientExecutableName).append('\n');
+        builder.append("Installer exec.:\t").append(pathToInstaller).append('\n');
+        builder.append("Proxy:\t\t\t\t")
+                .append(proxyAddress != null ? (proxyAddress + ':' + proxyPort) : "none")
+                .append('\n');
+
+        return builder.toString();
     }
 }

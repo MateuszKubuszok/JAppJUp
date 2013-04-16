@@ -16,7 +16,7 @@
 package com.autoupdater.client.models;
 
 import static com.autoupdater.client.models.EUpdateStatus.NOT_SELECTED;
-import static com.autoupdater.client.models.Models.equal;
+import static com.autoupdater.client.models.Models.secureRelativePath;
 import static com.autoupdater.client.utils.comparables.Comparables.compare;
 import static com.google.common.base.Objects.equal;
 import static java.lang.Math.pow;
@@ -275,17 +275,7 @@ public class Update extends ObservableService<EUpdateStatus> implements IModel<U
      *            relative path for strategy
      */
     void setRelativePath(String relativePath) {
-        relativePath = relativePath != null ? relativePath : "";
-        if (relativePath.startsWith("/"))
-            relativePath = relativePath.substring(1);
-        else if (relativePath.startsWith("\\"))
-            relativePath = relativePath.substring(2);
-        if (relativePath.endsWith("/"))
-            relativePath = relativePath.substring(0, relativePath.length() - 1);
-        else if (relativePath.endsWith("\\"))
-            relativePath = relativePath.substring(0, relativePath.length() - 2);
-        this.relativePath = relativePath.replace(File.separator, File.separator.equals("/") ? "\\"
-                : "/");
+        this.relativePath = secureRelativePath(relativePath);
     }
 
     /**
@@ -415,8 +405,27 @@ public class Update extends ObservableService<EUpdateStatus> implements IModel<U
 
     @Override
     public String toString() {
-        return packageName + " " + versionNumber + ", "
-                + (developmentVersion ? "development" : "release");
+        StringBuilder builder = new StringBuilder();
+
+        builder.append("[Update]").append('\n');
+        builder.append("ID:\t\t\t").append(id).append('\n');
+        builder.append("Package:\t").append(packageName).append(" (").append(packageID).append(')')
+                .append('\n');
+        builder.append("Version:\t").append(versionNumber).append(' ')
+                .append(developmentVersion ? "development" : "release").append('\n');
+        builder.append("Changes:\t").append(changes).append('\n');
+        builder.append("Strategy:\t").append(updateStrategy).append('\n');
+        builder.append("Filename:\t")
+                .append(file != null ? file.getAbsolutePath() : "not downloaded").append('\n');
+        builder.append("Originally:\t").append(originalName).append('\n');
+        builder.append("Target:\t\t").append(relativePath.isEmpty() ? "default" : relativePath)
+                .append('\n');
+        builder.append("Command:\t").append(command).append('\n');
+        builder.append("Status:\t\t").append(status).append('\n');
+        builder.append("Message:\t").append(statusMessage != null ? statusMessage : "none")
+                .append('\n');
+
+        return builder.toString();
     }
 
     public String getUniqueIdentifer() {
@@ -459,7 +468,7 @@ public class Update extends ObservableService<EUpdateStatus> implements IModel<U
                 return Comparables.compare(o1.packageName, o2.packageName);
             if (!equal(o1.developmentVersion, o2.developmentVersion))
                 return o1.developmentVersion ? 1 : -1;
-            if (!equal(o1._package, o2._package, Models.EComparisionType.LOCAL_TO_SERVER))
+            if (!Models.equal(o1._package, o2._package, Models.EComparisionType.LOCAL_TO_SERVER))
                 return Models.compare(o1._package, o2._package,
                         Models.EComparisionType.LOCAL_TO_SERVER);
             return Models.compare(o1._package.getProgram(), o2._package.getProgram(),
