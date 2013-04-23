@@ -65,6 +65,11 @@ Copyright 2012-2013 Maciej Jaworski, Mariusz Kapcia, Paweł Kędzia, Mateusz Kub
 
         http://www.jgoodies.com/
         http://www.jgoodies.com/freeware/libraries/forms/
+		
+		
+    This software uses JXTrayIcon developed by Alexander Potochkin, Stephen Chin and Keith Combs.
+
+        https://code.google.com/p/widgetfx/
 
 
 2. Server dependencies.

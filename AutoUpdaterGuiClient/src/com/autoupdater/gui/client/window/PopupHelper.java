@@ -31,6 +31,8 @@ import java.util.SortedSet;
 
 import javax.imageio.ImageIO;
 
+import org.widgetfx.ui.JXTrayIcon;
+
 import com.autoupdater.client.models.Program;
 import com.autoupdater.gui.Resources;
 import com.autoupdater.gui.config.GuiConfiguration;
@@ -140,9 +142,9 @@ public class PopupHelper {
 
     private void createTray(SystemTray tray, PopupMenu popup) {
         try {
-            trayIcon = new TrayIcon(ImageIO.read(Resources.class
-                    .getResourceAsStream(GuiConfiguration.trayIconURL)),
-                    GuiConfiguration.WINDOW_TITLE);
+            trayIcon = new JXTrayIcon(ImageIO.read(Resources.class
+                    .getResourceAsStream(GuiConfiguration.trayIconURL)));
+            trayIcon.setToolTip(GuiConfiguration.WINDOW_TITLE);
             trayIcon.setPopupMenu(popup);
             trayIcon.setImageAutoSize(true);
             trayIcon.addMouseListener(new MouseListener() {
