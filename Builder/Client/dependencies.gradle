@@ -34,9 +34,9 @@ def guavaVersion = '13.0.1'
 def guava        = "com.google.guava:guava:${guavaVersion}@jar"
 
 
-// javasist:
-def javasistVersion = '3.16.1-GA'
-def javasist        = "org.javassist:javassist:${javasistVersion}@jar"
+// javassist:
+def javassistVersion = '3.16.1-GA'
+def javassist        = "org.javassist:javassist:${javassistVersion}@jar"
 
 
 // Jaxen:
@@ -117,7 +117,7 @@ project(':AutoUpdaterLibrary') {
             festCore,
             festTest,
             festUtil,
-            javasist,
+            javassist,
             jUnit,
             mockito,
             objenesis
