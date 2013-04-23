@@ -18,8 +18,10 @@ package com.autoupdater.gui.client.window.tabs.installed.tabs.changelogs;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.util.TreeSet;
 
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
 import com.autoupdater.client.models.ChangelogEntry;
@@ -39,15 +41,15 @@ public class ChangelogPreview extends JPanel {
     }
 
     public void refresh() {
-        String content = "";
+        StringBuilder content = new StringBuilder();
         if (_package.getChangelog() != null)
-            for (ChangelogEntry entry : _package.getChangelog())
+            for (ChangelogEntry entry : new TreeSet<ChangelogEntry>(_package.getChangelog())
+                    .descendingSet())
                 if (entry != null) {
-                    content += entry.getVersionNumber() + "\n";
-                    content += entry.getChanges() + "\n";
-                    content += "\n";
+                    content.append(entry.getVersionNumber()).append('\n')
+                            .append(entry.getChanges()).append('\n').append('\n');
                 }
-        changelogsTextArea.setText(content);
+        changelogsTextArea.setText(content.toString());
     }
 
     private void initialize(Package _package) {
@@ -66,7 +68,9 @@ public class ChangelogPreview extends JPanel {
         gbc_changelogsTextPane.fill = GridBagConstraints.BOTH;
         gbc_changelogsTextPane.gridx = 1;
         gbc_changelogsTextPane.gridy = 1;
-        add(changelogsTextArea, gbc_changelogsTextPane);
+
+        JScrollPane scrollPane = new JScrollPane(changelogsTextArea);
+        add(scrollPane, gbc_changelogsTextPane);
 
         refresh();
     }

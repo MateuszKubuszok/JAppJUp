@@ -143,7 +143,7 @@ public class PopupHelper {
     private void createTray(SystemTray tray, PopupMenu popup) {
         try {
             trayIcon = new JXTrayIcon(ImageIO.read(Resources.class
-                    .getResourceAsStream(GuiConfiguration.trayIconURL)));
+                    .getResourceAsStream(GuiConfiguration.TRAY_ICON_URL)));
             trayIcon.setToolTip(GuiConfiguration.WINDOW_TITLE);
             trayIcon.setPopupMenu(popup);
             trayIcon.setImageAutoSize(true);

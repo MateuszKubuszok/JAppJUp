@@ -17,6 +17,7 @@ package com.autoupdater.gui.client.window.tabs.installed.tabs.information;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
 import com.autoupdater.client.models.Package;
@@ -84,7 +85,9 @@ public class InformationPreview extends JPanel {
         packagesLabel.setWrapStyleWord(true);
         packagesLabel.setLineWrap(true);
         packagesLabel.setEditable(false);
-        add(packagesLabel, "4, 8, fill, fill");
+
+        JScrollPane scrollPane = new JScrollPane(packagesLabel);
+        add(scrollPane, "4, 8, fill, fill");
 
         refresh();
     }

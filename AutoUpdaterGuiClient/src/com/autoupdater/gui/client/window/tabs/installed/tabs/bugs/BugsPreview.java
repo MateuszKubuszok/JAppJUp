@@ -20,6 +20,7 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
 import com.autoupdater.client.models.BugEntry;
@@ -65,7 +66,9 @@ public class BugsPreview extends JPanel {
         gbc_changelogsTextPane.fill = GridBagConstraints.BOTH;
         gbc_changelogsTextPane.gridx = 1;
         gbc_changelogsTextPane.gridy = 1;
-        add(bugsTextArea, gbc_changelogsTextPane);
+
+        JScrollPane scrollPane = new JScrollPane(bugsTextArea);
+        add(scrollPane, gbc_changelogsTextPane);
 
         refresh();
     }

@@ -180,6 +180,18 @@ public class Package implements IModel<Package> {
         return update != null && Objects.equal(id, update.getPackageID());
     }
 
+    /**
+     * Whether there aren't newer updates to be installed.
+     * 
+     * @return true if there are no newer updates or Update has the same version
+     *         number as Package
+     */
+    public boolean isNotOutdated() {
+        if (update == null)
+            return true;
+        return versionNumber.compareTo(update.getVersionNumber()) >= 0;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (obj == null || !(obj instanceof Package))

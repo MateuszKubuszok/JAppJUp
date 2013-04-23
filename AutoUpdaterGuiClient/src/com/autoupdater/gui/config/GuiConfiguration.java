@@ -27,5 +27,9 @@ public class GuiConfiguration {
     public static String LOOK_AND_FEEL = "com.seaglasslookandfeel.SeaGlassLookAndFeel";
 
     public static String APP_ICON_URL = "gfx/AutoUpdater_AppIcon.png";
-    public static String trayIconURL = "gfx/AutoUpdater_TrayIcon.png";
+    public static String TRAY_ICON_URL = "gfx/AutoUpdater_TrayIcon.png";
+
+    public static int ICON_SIZE = 15;
+    public static String OUT_OF_DATE_ICON_URL = "gfx/AutoUpdater_OutOfDate.png";
+    public static String UP_TO_DATE_ICON_URL = "gfx/AutoUpdater_UpToDate.png";
 }

@@ -15,13 +15,17 @@
  */
 package com.autoupdater.gui.client.window.tabs.updates;
 
+import static com.autoupdater.gui.client.window.tabs.updates.UpdateInformationPanel.*;
+
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Image;
 import java.awt.Insets;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.SortedSet;
 
+import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -167,8 +171,13 @@ public class UpdatesTabContentContainer extends JPanel {
         if (update != null) {
             statusLabel = new UpdateInformationPanel(update, this);
             updateInformationPanels.put(update, (UpdateInformationPanel) statusLabel);
-        } else
-            statusLabel = new JLabel("");
+        } else {
+            Image image = _package.isNotOutdated() ? UP_TO_DATE_IMAGE : OUT_OF_DATE_IMAGE;
+            if (image != null)
+                statusLabel = new JLabel(new ImageIcon(image));
+            else
+                statusLabel = new JLabel("");
+        }
         GridBagConstraints gbcStatusLabel = new GridBagConstraints();
         gbcStatusLabel.insets = packageRowInsets;
         gbcStatusLabel.anchor = GridBagConstraints.NORTHWEST;

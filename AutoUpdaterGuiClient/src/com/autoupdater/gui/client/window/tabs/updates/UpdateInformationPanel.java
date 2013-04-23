@@ -15,9 +15,16 @@
  */
 package com.autoupdater.gui.client.window.tabs.updates;
 
+import static com.autoupdater.gui.config.GuiConfiguration.*;
+import static java.awt.Image.SCALE_SMOOTH;
+import static javax.imageio.ImageIO.read;
+
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Image;
+import java.io.IOException;
 
+import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -30,8 +37,28 @@ import com.autoupdater.client.models.EUpdateStatus;
 import com.autoupdater.client.models.Update;
 import com.autoupdater.client.utils.services.IObserver;
 import com.autoupdater.client.utils.services.ObservableService;
+import com.autoupdater.gui.Resources;
 
 public class UpdateInformationPanel extends JPanel {
+    public static final Image OUT_OF_DATE_IMAGE;
+    public static final Image UP_TO_DATE_IMAGE;
+    static {
+        Image outOfDate = null;
+        try {
+            outOfDate = read(Resources.class.getResourceAsStream(OUT_OF_DATE_ICON_URL))
+                    .getScaledInstance(ICON_SIZE, ICON_SIZE, SCALE_SMOOTH);
+        } catch (IOException e) {
+        }
+        Image upToDate = null;
+        try {
+            upToDate = read(Resources.class.getResourceAsStream(UP_TO_DATE_ICON_URL))
+                    .getScaledInstance(ICON_SIZE, ICON_SIZE, SCALE_SMOOTH);
+        } catch (IOException e) {
+        }
+        OUT_OF_DATE_IMAGE = outOfDate;
+        UP_TO_DATE_IMAGE = upToDate;
+    }
+
     private final JComponent parent;
     private final JProgressBar progressBar;
     private final JLabel label;
@@ -52,6 +79,7 @@ public class UpdateInformationPanel extends JPanel {
 
         this.update = update;
         label = new JLabel();
+        setLabelIcon();
 
         GridBagConstraints gbc_label = new GridBagConstraints();
         gbc_label.anchor = GridBagConstraints.NORTHWEST;
@@ -85,6 +113,7 @@ public class UpdateInformationPanel extends JPanel {
                         parent.repaint();
                     }
                 } else {
+                    setLabelIcon();
                     label.setText(message.getMessage());
                     if (progressBarUsed) {
                         removeAll();
@@ -116,5 +145,11 @@ public class UpdateInformationPanel extends JPanel {
                 repaint();
             }
         }
+    }
+
+    private void setLabelIcon() {
+        Image image = update.getPackage().isNotOutdated() ? UP_TO_DATE_IMAGE : OUT_OF_DATE_IMAGE;
+        if (image != null)
+            label.setIcon(new ImageIcon(image.getScaledInstance(ICON_SIZE, ICON_SIZE, SCALE_SMOOTH)));
     }
 }
