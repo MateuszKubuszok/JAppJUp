@@ -199,7 +199,7 @@ public class AvailabilityFilter {
      *            updates to filter
      * @return newest Updates set
      */
-    public static SortedSet<Update> selectNewestForEachPackage(SortedSet<Update> updates) {
+    public static SortedSet<Update> filterNewestForEachPackage(SortedSet<Update> updates) {
         Map<Program, Map<Package, SortedSet<Update>>> ppu = new TreeMap<Program, Map<Package, SortedSet<Update>>>();
         for (Update update : updates) {
             Package _package = update.getPackage();
@@ -213,10 +213,13 @@ public class AvailabilityFilter {
 
         SortedSet<Update> newest = new TreeSet<Update>();
         for (Map<Package, SortedSet<Update>> pu : ppu.values())
-            for (SortedSet<Update> u : pu.values())
-                newest.add(u.last());
+            for (Package _package : pu.keySet()) {
+                Update update = pu.get(_package).last();
+                if (_package.getVersionNumber().compareTo(update.getVersionNumber()) < 0)
+                    newest.add(update);
+            }
 
-        return updates;
+        return newest;
     }
 
     /**

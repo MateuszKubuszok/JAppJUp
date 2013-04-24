@@ -15,7 +15,7 @@
  */
 package com.autoupdater.gui.adapter.runnables;
 
-import static com.autoupdater.client.environment.AvailabilityFilter.filterUpdateNotInstalled;
+import static com.autoupdater.client.environment.AvailabilityFilter.*;
 import static com.autoupdater.gui.client.window.EInfoTarget.*;
 import static com.autoupdater.gui.client.window.EWindowStatus.*;
 
@@ -94,6 +94,7 @@ public class InstallUpdatesRunnable implements Runnable {
     }
 
     private boolean hasAllUpdatesInstalledSuccessfully() {
-        return filterUpdateNotInstalled(adapter.dataStorage().getAvailableUpdates()).isEmpty();
+        return filterUpdateNotInstalled(
+                filterNewestForEachPackage(adapter.dataStorage().getAvailableUpdates())).isEmpty();
     }
 }

@@ -15,7 +15,7 @@
  */
 package com.autoupdater.gui.adapter.helpers;
 
-import static com.autoupdater.client.environment.AvailabilityFilter.selectNewestForEachPackage;
+import static com.autoupdater.client.environment.AvailabilityFilter.filterNewestForEachPackage;
 import static com.autoupdater.gui.client.window.EWindowStatus.*;
 
 import java.io.IOException;
@@ -56,10 +56,10 @@ public class InstallationUtils {
         try {
             FileAggregatedDownloadService aggregatedDownloadService = adapter.client()
                     .createFileAggregatedDownloadService(
-                            selectNewestForEachPackage(adapter.dataStorage().getAllUpdates()));
+                            filterNewestForEachPackage(adapter.dataStorage().getAllUpdates()));
             AggregatedInstallationService aggregatedInstallationService = adapter.client()
                     .createInstallationAggregatedService(
-                            selectNewestForEachPackage(adapter.dataStorage().getAllUpdates()));
+                            filterNewestForEachPackage(adapter.dataStorage().getAllUpdates()));
 
             new Thread(new InstallUpdatesRunnable(adapter, aggregatedDownloadService,
                     aggregatedInstallationService)).start();
@@ -82,10 +82,10 @@ public class InstallationUtils {
 
             FileAggregatedDownloadService aggregatedDownloadService = adapter.client()
                     .createFileAggregatedDownloadService(
-                            selectNewestForEachPackage(updatesForProgram));
+                            filterNewestForEachPackage(updatesForProgram));
             AggregatedInstallationService aggregatedInstallationService = adapter.client()
                     .createInstallationAggregatedService(
-                            selectNewestForEachPackage(updatesForProgram));
+                            filterNewestForEachPackage(updatesForProgram));
 
             currentInstallationThread = new Thread(new InstallUpdatesRunnable(adapter,
                     aggregatedDownloadService, aggregatedInstallationService));
