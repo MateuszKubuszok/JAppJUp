@@ -46,6 +46,14 @@ public class Program implements IModel<Program> {
         bugs = new TreeSet<BugEntry>();
     }
 
+    /**
+     * Search through set of ProgramSettings and returns matching one if
+     * possible.
+     * 
+     * @param programsSettings
+     *            set of ProgramSettings
+     * @return matching ProgramSettings if found, null otherwise
+     */
     public ProgramSettings findProgramSettings(SortedSet<ProgramSettings> programsSettings) {
         return findEqual(programsSettings, builder().setProgramName(name)
                 .setPathToProgramDirectory(pathToProgramDirectory).setServerAddress(serverAddress)
@@ -71,18 +79,40 @@ public class Program implements IModel<Program> {
         this.name = name != null ? name : "";
     }
 
+    /**
+     * Returns path to installation's directory.
+     * 
+     * @return installation's directory
+     */
     public String getPathToProgramDirectory() {
         return pathToProgramDirectory;
     }
 
+    /**
+     * Sets path to installation's directory.
+     * 
+     * @param pathToProgramDirectory
+     *            installation's directory
+     */
     void setPathToProgramDirectory(String pathToProgramDirectory) {
         this.pathToProgramDirectory = pathToProgramDirectory != null ? pathToProgramDirectory : "";
     }
 
+    /**
+     * Returns this Program's server's URL.
+     * 
+     * @return server URL
+     */
     public String getServerAddress() {
         return serverAddress;
     }
 
+    /**
+     * Sets this Program's server's URL.
+     * 
+     * @param serverAddress
+     *            server's URL
+     */
     public void setServerAddress(String serverAddress) {
         this.serverAddress = serverAddress != null ? serverAddress : "";
 
@@ -174,6 +204,18 @@ public class Program implements IModel<Program> {
      */
     public boolean hasMember(Package _package) {
         return packages != null && packages.contains(_package);
+    }
+
+    /**
+     * Whether there aren't newer Updates to be installed.
+     * 
+     * @return true if there are no new Updates to install
+     */
+    public boolean isNotOutdated() {
+        for (Package _package : packages)
+            if (!_package.isNotOutdated())
+                return false;
+        return true;
     }
 
     @Override

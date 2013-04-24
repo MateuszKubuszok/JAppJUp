@@ -13,13 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.</p>
  */
-package com.autoupdater.gui.client.window;
+package com.autoupdater.gui.client.tray;
 
 import java.awt.SystemTray;
 
 import javax.swing.JFrame;
 
 import com.autoupdater.client.utils.enums.Enums;
+import com.autoupdater.gui.client.window.EWindowStatus;
+import com.autoupdater.gui.client.window.GuiClientWindow;
 
 public enum ETrayStrategy {
     TRAY_DISABLED(false), //

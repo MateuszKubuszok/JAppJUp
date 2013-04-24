@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.</p>
  */
-package com.autoupdater.gui.client.window;
+package com.autoupdater.gui.client.tray;
+
+import static com.autoupdater.gui.client.window.tabs.updates.UpdateInformationPanel.*;
 
 import java.awt.AWTException;
-import java.awt.MenuItem;
-import java.awt.PopupMenu;
 import java.awt.SystemTray;
 import java.awt.TrayIcon;
 import java.awt.event.ActionEvent;
@@ -30,31 +30,36 @@ import java.util.Map;
 import java.util.SortedSet;
 
 import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
+import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
 
 import org.widgetfx.ui.JXTrayIcon;
 
 import com.autoupdater.client.models.Program;
 import com.autoupdater.gui.Resources;
+import com.autoupdater.gui.client.window.EWindowStatus;
+import com.autoupdater.gui.client.window.GuiClientWindow;
 import com.autoupdater.gui.config.GuiConfiguration;
 
-public class PopupHelper {
+public class TrayHelper {
     private final SortedSet<Program> programs;
 
     private final GuiClientWindow clientWindow;
 
-    private TrayIcon trayIcon;
-    private MenuItem showHideGUI;
-    private MenuItem checkUpdates;
-    private MenuItem installUpdates;
-    private MenuItem cancelDownload;
-    private MenuItem exitClient;
-    private Map<Program, MenuItem> programsLaunchers;
+    private JXTrayIcon trayIcon;
+    private JMenuItem showHideGUI;
+    private JMenuItem checkUpdates;
+    private JMenuItem installUpdates;
+    private JMenuItem cancelDownload;
+    private JMenuItem exitClient;
+    private Map<Program, JMenuItem> programsLaunchers;
 
-    PopupHelper(GuiClientWindow clientWindow, SystemTray tray, SortedSet<Program> programs) {
+    public TrayHelper(GuiClientWindow clientWindow, SystemTray tray, SortedSet<Program> programs) {
         this.clientWindow = clientWindow;
         this.programs = programs;
 
-        PopupMenu popup = new PopupMenu();
+        JPopupMenu popup = new JPopupMenu();
         addShowHideToPopup(popup);
         addProgramsToPopup(popup);
         addControlsToPopup(popup);
@@ -66,32 +71,37 @@ public class PopupHelper {
         return trayIcon;
     }
 
-    public MenuItem getShowHideGUI() {
+    public JMenuItem getShowHideGUI() {
         return showHideGUI;
     }
 
-    public MenuItem getCheckUpdates() {
+    public JMenuItem getCheckUpdates() {
         return checkUpdates;
     }
 
-    public MenuItem getInstallUpdates() {
+    public JMenuItem getInstallUpdates() {
         return installUpdates;
     }
 
-    public MenuItem getCancelDownload() {
+    public JMenuItem getCancelDownload() {
         return cancelDownload;
     }
 
-    public MenuItem getExitClient() {
+    public JMenuItem getExitClient() {
         return exitClient;
     }
 
-    public Map<Program, MenuItem> getProgramsLaunchers() {
+    public Map<Program, JMenuItem> getProgramsLaunchers() {
         return programsLaunchers;
     }
 
-    private void addShowHideToPopup(PopupMenu popup) {
-        showHideGUI = new MenuItem(clientWindow.isVisible() ? "Hide" : "Show");
+    public void refreshIcons() {
+        for (Program program : programsLaunchers.keySet())
+            setProgramIcon(program, programsLaunchers.get(program));
+    }
+
+    private void addShowHideToPopup(JPopupMenu popup) {
+        showHideGUI = new JMenuItem(clientWindow.isVisible() ? "Hide" : "Show");
         showHideGUI.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -101,18 +111,18 @@ public class PopupHelper {
         popup.add(showHideGUI);
     }
 
-    private void addControlsToPopup(PopupMenu popup) {
+    private void addControlsToPopup(JPopupMenu popup) {
         popup.addSeparator();
-        checkUpdates = new MenuItem("Check updates");
+        checkUpdates = new JMenuItem("Check updates");
         popup.add(checkUpdates);
-        installUpdates = new MenuItem("Install all updates");
+        installUpdates = new JMenuItem("Install all updates");
         popup.add(installUpdates);
-        cancelDownload = new MenuItem("Cancel downloads");
+        cancelDownload = new JMenuItem("Cancel downloads");
         popup.add(cancelDownload);
     }
 
-    private void addProgramsToPopup(PopupMenu popup) {
-        programsLaunchers = new HashMap<Program, MenuItem>();
+    private void addProgramsToPopup(JPopupMenu popup) {
+        programsLaunchers = new HashMap<Program, JMenuItem>();
 
         if (programs == null || programs.isEmpty())
             return;
@@ -120,16 +130,17 @@ public class PopupHelper {
         popup.addSeparator();
 
         for (final Program program : programs) {
-            MenuItem programLauncher = new MenuItem("Run " + program.getName());
+            JMenuItem programLauncher = new JMenuItem("Run " + program.getName());
+            setProgramIcon(program, programLauncher);
             popup.add(programLauncher);
             programsLaunchers.put(program, programLauncher);
         }
     }
 
-    private void addExitToPopup(PopupMenu popup) {
+    private void addExitToPopup(JPopupMenu popup) {
         popup.addSeparator();
 
-        exitClient = new MenuItem("Exit");
+        exitClient = new JMenuItem("Exit");
         exitClient.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -140,12 +151,19 @@ public class PopupHelper {
         popup.add(exitClient);
     }
 
-    private void createTray(SystemTray tray, PopupMenu popup) {
+    private void setProgramIcon(Program program, JMenuItem menuItem) {
+        if (program.isNotOutdated())
+            menuItem.setIcon(new ImageIcon(UP_TO_DATE_IMAGE));
+        else
+            menuItem.setIcon(new ImageIcon(OUT_OF_DATE_IMAGE));
+    }
+
+    private void createTray(SystemTray tray, JPopupMenu popup) {
         try {
             trayIcon = new JXTrayIcon(ImageIO.read(Resources.class
                     .getResourceAsStream(GuiConfiguration.TRAY_ICON_URL)));
             trayIcon.setToolTip(GuiConfiguration.WINDOW_TITLE);
-            trayIcon.setPopupMenu(popup);
+            trayIcon.setJPopupMenu(popup);
             trayIcon.setImageAutoSize(true);
             trayIcon.addMouseListener(new MouseListener() {
                 @Override

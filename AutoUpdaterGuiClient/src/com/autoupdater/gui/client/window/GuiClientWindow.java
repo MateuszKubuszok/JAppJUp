@@ -15,7 +15,7 @@
  */
 package com.autoupdater.gui.client.window;
 
-import static com.autoupdater.gui.client.window.ETrayStrategy.resolve;
+import static com.autoupdater.gui.client.tray.ETrayStrategy.resolve;
 import static com.autoupdater.gui.client.window.EWindowStatus.UNINITIALIZED;
 import static com.autoupdater.gui.config.GuiConfiguration.*;
 import static java.lang.Double.MIN_VALUE;
@@ -52,6 +52,7 @@ import com.autoupdater.client.environment.EnvironmentData;
 import com.autoupdater.client.models.Program;
 import com.autoupdater.client.models.Update;
 import com.autoupdater.gui.Resources;
+import com.autoupdater.gui.client.tray.TrayHelper;
 import com.autoupdater.gui.client.window.tabs.installed.ProgramTabContentContainer;
 import com.autoupdater.gui.client.window.tabs.settings.SettingsTabContentContainer;
 import com.autoupdater.gui.client.window.tabs.updates.UpdateInformationPanel;
@@ -78,12 +79,7 @@ public class GuiClientWindow extends JFrame {
     private JLabel statusLabel;
     private JProgressBar progressBar;
 
-    private TrayIcon trayIcon;
-    private MenuItem showHideGUI;
-    private MenuItem checkUpdates;
-    private MenuItem installUpdates;
-    private MenuItem cancelDownload;
-    private MenuItem exitClient;
+    private TrayHelper trayHelper;
     private Map<Program, MenuItem> programsLaunchers;
 
     public GuiClientWindow() {
@@ -111,8 +107,8 @@ public class GuiClientWindow extends JFrame {
         if (target.shouldUpdateStatusBar())
             setStatusMessage(message);
         if (target.shouldUpdateToolTip()) {
-            if (trayIcon != null)
-                trayIcon.displayMessage(title, message, TrayIcon.MessageType.INFO);
+            if (trayHelper != null && trayHelper.getTrayIcon() != null)
+                trayHelper.getTrayIcon().displayMessage(title, message, TrayIcon.MessageType.INFO);
             else
                 showMessageDialog(this, message, title, INFORMATION_MESSAGE);
         }
@@ -122,8 +118,9 @@ public class GuiClientWindow extends JFrame {
         if (target.shouldUpdateStatusBar())
             setStatusMessage(message);
         if (target.shouldUpdateToolTip()) {
-            if (trayIcon != null)
-                trayIcon.displayMessage(title, message, TrayIcon.MessageType.WARNING);
+            if (trayHelper != null && trayHelper.getTrayIcon() != null)
+                trayHelper.getTrayIcon().displayMessage(title, message,
+                        TrayIcon.MessageType.WARNING);
             else
                 showMessageDialog(this, message, title, WARNING_MESSAGE);
         }
@@ -133,8 +130,8 @@ public class GuiClientWindow extends JFrame {
         if (target.shouldUpdateStatusBar())
             setStatusMessage(message);
         if (target.shouldUpdateToolTip()) {
-            if (trayIcon != null)
-                trayIcon.displayMessage(title, message, TrayIcon.MessageType.ERROR);
+            if (trayHelper != null && trayHelper.getTrayIcon() != null)
+                trayHelper.getTrayIcon().displayMessage(title, message, TrayIcon.MessageType.ERROR);
             else
                 showMessageDialog(this, message, "Error occured", ERROR_MESSAGE);
         }
@@ -142,6 +139,8 @@ public class GuiClientWindow extends JFrame {
 
     public void refresh() {
         updatesTab.refresh();
+        if (trayHelper != null)
+            trayHelper.refreshIcons();
         for (ProgramTabContentContainer programTab : programsTabs)
             programTab.refresh();
     }
@@ -151,8 +150,8 @@ public class GuiClientWindow extends JFrame {
     }
 
     public void setExitEnabled(boolean exitEnabled) {
-        if (exitClient != null)
-            exitClient.setEnabled(exitEnabled);
+        if (trayHelper != null && trayHelper.getExitClient() != null)
+            trayHelper.getExitClient().setEnabled(exitEnabled);
     }
 
     public void setProgressBarInactive() {
@@ -185,58 +184,53 @@ public class GuiClientWindow extends JFrame {
     public void setStatus(EWindowStatus state) {
         this.state = state;
         checkUpdatesButton.setEnabled(state.isCheckUpdatesButtonEnabled());
-        if (checkUpdates != null)
-            checkUpdates.setEnabled(state.isCheckUpdatesButtonEnabled());
         installUpdatesButton.setEnabled(state.isInstallUpdatesButtonEnabled());
-        if (installUpdates != null)
-            installUpdates.setEnabled(state.isInstallUpdatesButtonEnabled());
         cancelDownloadButton.setEnabled(state.isCancelDownloadButtonEnabled());
-        if (cancelDownload != null)
-            cancelDownload.setEnabled(state.isCancelDownloadButtonEnabled());
+        if (trayHelper != null) {
+            if (trayHelper.getCheckUpdates() != null)
+                trayHelper.getCheckUpdates().setEnabled(state.isCheckUpdatesButtonEnabled());
+            if (trayHelper.getInstallUpdates() != null)
+                trayHelper.getInstallUpdates().setEnabled(state.isInstallUpdatesButtonEnabled());
+            if (trayHelper.getCancelDownload() != null)
+                trayHelper.getCancelDownload().setEnabled(state.isCancelDownloadButtonEnabled());
+        }
         resolve().configureWindowBehaviour(this, state);
     }
 
     public void setSystemTray(SystemTray tray) {
-        PopupHelper helper = new PopupHelper(this, tray, environmantData.getInstallationsData());
-        trayIcon = helper.getTrayIcon();
-        showHideGUI = helper.getShowHideGUI();
-        checkUpdates = helper.getCheckUpdates();
-        installUpdates = helper.getInstallUpdates();
-        cancelDownload = helper.getCancelDownload();
-        exitClient = helper.getExitClient();
-        programsLaunchers = helper.getProgramsLaunchers();
+        trayHelper = new TrayHelper(this, tray, environmantData.getInstallationsData());
     }
 
     public void showMessage(String title, String message, TrayIcon.MessageType type) {
-        if (trayIcon != null)
-            trayIcon.displayMessage(title, message, type);
+        if (trayHelper != null && trayHelper.getTrayIcon() != null)
+            trayHelper.getTrayIcon().displayMessage(title, message, type);
     }
 
     public void bindCheckUpdatesButton(MouseListener mouseListener, ActionListener actionListener) {
         checkUpdatesButton.addMouseListener(mouseListener);
-        if (checkUpdates != null)
-            checkUpdates.addActionListener(actionListener);
+        if (trayHelper != null && trayHelper.getCheckUpdates() != null)
+            trayHelper.getCheckUpdates().addActionListener(actionListener);
     }
 
     public void bindInstallUpdatesButton(MouseListener mouseListener, ActionListener actionListener) {
         installUpdatesButton.addMouseListener(mouseListener);
-        if (installUpdates != null)
-            installUpdates.addActionListener(actionListener);
+        if (trayHelper != null && trayHelper.getInstallUpdates() != null)
+            trayHelper.getInstallUpdates().addActionListener(actionListener);
     }
 
     public void bindCancelDownloadButton(MouseListener mouseListener, ActionListener actionListener) {
         cancelDownloadButton.addMouseListener(mouseListener);
-        if (cancelDownload != null)
-            cancelDownload.addActionListener(actionListener);
+        if (trayHelper != null && trayHelper.getCancelDownload() != null)
+            trayHelper.getCancelDownload().addActionListener(actionListener);
     }
 
     public void bindProgramLauncher(Program program, ActionListener listener) {
-        if (programsLaunchers != null && programsLaunchers.containsKey(program))
-            programsLaunchers.get(program).addActionListener(listener);
+        if (trayHelper != null && trayHelper.getProgramsLaunchers().containsKey(program))
+            trayHelper.getProgramsLaunchers().get(program).addActionListener(listener);
     }
 
     public void setProgramLauncherEnabled(Program program, boolean enabled) {
-        if (programsLaunchers != null && programsLaunchers.containsKey(program))
+        if (trayHelper != null && trayHelper.getProgramsLaunchers().containsKey(program))
             programsLaunchers.get(program).setEnabled(enabled);
     }
 
@@ -288,17 +282,16 @@ public class GuiClientWindow extends JFrame {
 
             @Override
             public void componentShown(ComponentEvent e) {
-                if (showHideGUI != null) {
-                    showHideGUI.setLabel("Hide");
+                if (trayHelper != null && trayHelper.getShowHideGUI() != null) {
+                    trayHelper.getShowHideGUI().setText("Hide");
                     setVisible(true);
-                    repaintForLaunch4j();
                 }
             }
 
             @Override
             public void componentHidden(ComponentEvent e) {
-                if (showHideGUI != null)
-                    showHideGUI.setLabel("Show");
+                if (trayHelper != null && trayHelper.getShowHideGUI() != null)
+                    trayHelper.getShowHideGUI().setText("Show");
             }
         });
     }
@@ -358,13 +351,7 @@ public class GuiClientWindow extends JFrame {
 
     private void hideSplashScreen() {
         SplashScreen splash = SplashScreen.getSplashScreen();
-        if (splash != null) {
+        if (splash != null)
             splash.close();
-        }
-    }
-
-    private void repaintForLaunch4j() {
-        contentPane.invalidate();
-        contentPane.repaint();
     }
 }
