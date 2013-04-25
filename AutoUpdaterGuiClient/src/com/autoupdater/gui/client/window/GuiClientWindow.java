@@ -25,7 +25,6 @@ import static javax.swing.UIManager.setLookAndFeel;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.MenuItem;
 import java.awt.SplashScreen;
 import java.awt.SystemTray;
 import java.awt.TrayIcon;
@@ -34,9 +33,9 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.MouseListener;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import javax.imageio.ImageIO;
 import javax.swing.JButton;
@@ -46,6 +45,7 @@ import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
+import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 
 import com.autoupdater.client.environment.EnvironmentData;
@@ -80,7 +80,6 @@ public class GuiClientWindow extends JFrame {
     private JProgressBar progressBar;
 
     private TrayHelper trayHelper;
-    private Map<Program, MenuItem> programsLaunchers;
 
     public GuiClientWindow() {
         this(MockModels.getEnvironmentData());
@@ -229,9 +228,18 @@ public class GuiClientWindow extends JFrame {
             trayHelper.getProgramsLaunchers().get(program).addActionListener(listener);
     }
 
-    public void setProgramLauncherEnabled(Program program, boolean enabled) {
+    public void setProgramLauncherEnabled(final Program program, final boolean enabled) {
         if (trayHelper != null && trayHelper.getProgramsLaunchers().containsKey(program))
-            programsLaunchers.get(program).setEnabled(enabled);
+            try {
+                SwingUtilities.invokeAndWait(new Runnable() {
+                    @Override
+                    public void run() {
+                        trayHelper.getProgramsLaunchers().get(program).setEnabled(enabled);
+                    }
+                });
+            } catch (InvocationTargetException | InterruptedException e) {
+                e.printStackTrace();
+            }
     }
 
     private void initialize() {
