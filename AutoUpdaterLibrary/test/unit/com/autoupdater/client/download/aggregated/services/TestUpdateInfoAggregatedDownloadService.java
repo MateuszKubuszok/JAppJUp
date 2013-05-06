@@ -81,14 +81,14 @@ public class TestUpdateInfoAggregatedDownloadService {
             // then
             assertThat(result).as("getResult() should aggregate results from all services")
                     .isNotNull().hasSize(2);
-            assertThat(program.getPackages().first().getUpdate()).as(
+            assertThat(program.getPackages().first().getUpdates()).as(
                     "getResult() properly inserts Update into Package").isNotNull();
-            assertThat(program.getPackages().first().getUpdate().getVersionNumber())
+            assertThat(program.getPackages().first().getUpdates().last().getVersionNumber())
                     .as("getResult() properly inserts Update into Package").isNotNull()
                     .isEqualTo(VersionNumber.version(12, 34, 56, 78));
-            assertThat(program.getPackages().last().getUpdate()).as(
+            assertThat(program.getPackages().last().getUpdates()).as(
                     "getResult() properly inserts Update into Package").isNotNull();
-            assertThat(program.getPackages().last().getUpdate().getVersionNumber())
+            assertThat(program.getPackages().last().getUpdates().last().getVersionNumber())
                     .as("getResult() properly inserts Update into Package").isNotNull()
                     .isEqualTo(VersionNumber.version(98, 76, 54, 32));
         } catch (DownloadResultException e) {
@@ -120,14 +120,14 @@ public class TestUpdateInfoAggregatedDownloadService {
             aggregatedService2.getResult();
 
             // then
-            assertThat(program.getPackages().first().getUpdate()).as(
+            assertThat(program.getPackages().first().getUpdates()).as(
                     "getResult() properly inserts Update into Package").isNotNull();
-            assertThat(program.getPackages().first().getUpdate().getVersionNumber())
+            assertThat(program.getPackages().first().getUpdates().last().getVersionNumber())
                     .as("getResult() properly inserts Update into Package").isNotNull()
                     .isEqualTo(VersionNumber.version(12, 34, 56, 89));
-            assertThat(program.getPackages().last().getUpdate()).as(
+            assertThat(program.getPackages().last().getUpdates()).as(
                     "getResult() properly inserts Update into Package").isNotNull();
-            assertThat(program.getPackages().last().getUpdate().getVersionNumber())
+            assertThat(program.getPackages().last().getUpdates().last().getVersionNumber())
                     .as("getResult() properly inserts Update into Package").isNotNull()
                     .isEqualTo(VersionNumber.version(98, 76, 54, 43));
         } catch (DownloadResultException e) {

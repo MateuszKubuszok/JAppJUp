@@ -15,6 +15,9 @@
  */
 package com.autoupdater.client.models;
 
+import java.util.SortedSet;
+import java.util.TreeSet;
+
 import com.autoupdater.client.Values;
 
 public class Mocks {
@@ -28,9 +31,15 @@ public class Mocks {
                 .setCommand(Values.Update.updaterCommand).build();
     }
 
+    public static SortedSet<Update> updates() {
+        SortedSet<Update> updates = new TreeSet<Update>();
+        updates.add(update());
+        return updates;
+    }
+
     public static Package _package() {
         return PackageBuilder.builder().setName(Values.Package.name)
                 .setVersionNumber(Values.Package.version).setID(Values.Package.ID)
-                .setUpdate(update()).build();
+                .setUpdates(updates()).build();
     }
 }

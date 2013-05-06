@@ -137,7 +137,7 @@ public class UpdatesTabContentContainer extends JPanel {
     }
 
     private int initializePackageRow(Package _package, int lastAddedRow) {
-        Update update = _package.getUpdate();
+        Update update = _package.hasUpdates() ? _package.getUpdates().last() : null;
 
         Insets packageRowInsets = new Insets(0, 0, 0, 0);
 

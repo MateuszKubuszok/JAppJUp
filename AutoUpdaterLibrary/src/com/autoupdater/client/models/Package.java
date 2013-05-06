@@ -33,14 +33,16 @@ public class Package implements IModel<Package> {
     private String name;
     private String id;
     private Program program;
-    private Update update;
-    private SortedSet<ChangelogEntry> changelog;
+    private final SortedSet<Update> updates;
+    private final SortedSet<ChangelogEntry> changelog;
     private VersionNumber versionNumber;
 
     Package() {
         name = "";
         id = "";
         versionNumber = VersionNumber.UNVERSIONED;
+        updates = new TreeSet<Update>();
+        changelog = new TreeSet<ChangelogEntry>();
     }
 
     /**
@@ -78,7 +80,9 @@ public class Package implements IModel<Package> {
      *            changelog
      */
     public void setChangelog(SortedSet<ChangelogEntry> changelog) {
-        this.changelog = changelog != null ? changelog : new TreeSet<ChangelogEntry>();
+        this.changelog.clear();
+        if (changelog != null)
+            this.changelog.addAll(changelog);
     }
 
     /**
@@ -149,24 +153,44 @@ public class Package implements IModel<Package> {
     }
 
     /**
-     * Returns Package's Update.
+     * Adds Update to the set.
      * 
-     * @return Package's Update
+     * @param update
+     *            Update that should belong to Package
      */
-    public Update getUpdate() {
-        return update;
+    public void addUpdate(Update update) {
+        updates.add(update);
+        update.setPackage(this);
     }
 
     /**
-     * Sets Package's Update.
+     * Whether Package has any Updates.
      * 
-     * @param update
-     *            Package's Update
+     * @return true if Package has any Update
      */
-    public void setUpdate(Update update) {
-        this.update = update;
-        if (update != null)
-            update.setPackage(this);
+    public boolean hasUpdates() {
+        return !updates.isEmpty();
+    }
+
+    /**
+     * Returns Package's Updates.
+     * 
+     * @return Package's Updates
+     */
+    public SortedSet<Update> getUpdates() {
+        return updates;
+    }
+
+    /**
+     * Sets Package's Updates.
+     * 
+     * @param updates
+     *            new Package's Update
+     */
+    public void setUpdates(SortedSet<Update> updates) {
+        this.updates.clear();
+        if (updates != null)
+            this.updates.addAll(updates);
     }
 
     /**
@@ -187,9 +211,7 @@ public class Package implements IModel<Package> {
      *         number as Package
      */
     public boolean isNotOutdated() {
-        if (update == null)
-            return true;
-        return versionNumber.compareTo(update.getVersionNumber()) >= 0;
+        return updates.isEmpty() || versionNumber.compareTo(updates.last().getVersionNumber()) >= 0;
     }
 
     @Override
@@ -231,7 +253,7 @@ public class Package implements IModel<Package> {
         builder.append("Version number:\t").append(versionNumber).append('\n');
 
         builder.append("Update:").append('\n');
-        builder.append(addPrefixToEachLine(update, "\t"));
+        builder.append(addPrefixToEachLine(updates, "\t"));
 
         builder.append("Changelog:").append('\n');
         for (ChangelogEntry change : changelog)

@@ -55,9 +55,9 @@ public class UpdateInfoAggregatedDownloadService
                     for (Update update : packageUpdates)
                         if (_package.getProgram().isDevelopmentVersion() == update
                                 .isDevelopmentVersion()
-                                && (_package.getUpdate() == null || _package.getUpdate()
+                                && (!_package.hasUpdates() || _package.getUpdates().last()
                                         .getVersionNumber().compareTo(update.getVersionNumber()) < 0)) {
-                            _package.setUpdate(update);
+                            _package.addUpdate(update);
                             updates.add(update);
                         }
             }

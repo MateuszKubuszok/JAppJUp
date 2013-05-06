@@ -31,7 +31,6 @@ public class TestPackageFunctional {
         Package _package = new Package();
         String id = "id";
         String name = "some name";
-        Update update = new Update();
         String versionNumber = "12.34.56.78";
         SortedSet<ChangelogEntry> changelog = new TreeSet<ChangelogEntry>(
                 asList(new ChangelogEntry()));
@@ -40,7 +39,6 @@ public class TestPackageFunctional {
         _package.setChangelog(changelog);
         _package.setID(id);
         _package.setName(name);
-        _package.setUpdate(update);
         _package.setVersionNumber(versionNumber);
 
         // then
@@ -50,8 +48,6 @@ public class TestPackageFunctional {
                 .isEqualTo(id);
         assertThat(_package.getName()).as("Getter and setter should work for name").isNotNull()
                 .isEqualTo(name);
-        assertThat(_package.getUpdate()).as("Getter and setter should work for update").isNotNull()
-                .isEqualTo(update);
         assertThat(_package.getVersionNumber())
                 .as("Getter and setter should work for version number").isNotNull()
                 .isEqualTo(version(versionNumber));

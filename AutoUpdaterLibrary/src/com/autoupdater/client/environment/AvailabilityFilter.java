@@ -15,11 +15,10 @@
  */
 package com.autoupdater.client.environment;
 
+import static com.autoupdater.client.models.EUpdateStatus.INSTALLED;
 import static com.google.common.collect.Sets.filter;
 
-import java.util.Map;
 import java.util.SortedSet;
-import java.util.TreeMap;
 import java.util.TreeSet;
 
 import com.autoupdater.client.environment.settings.ProgramSettings;
@@ -185,9 +184,9 @@ public class AvailabilityFilter {
         return filter(updates, new Predicate<Update>() {
             @Override
             public boolean apply(Update update) {
-                return update.getStatus() != EUpdateStatus.INSTALLED
-                        && (update.getPackage() == null || !update.getPackage().getVersionNumber()
-                                .equals(update.getVersionNumber()));
+                return update.getStatus() != INSTALLED
+                        && (update.getPackage().getVersionNumber()
+                                .compareTo(update.getVersionNumber()) < 0);
             }
         });
     }
@@ -200,26 +199,14 @@ public class AvailabilityFilter {
      * @return newest Updates set
      */
     public static SortedSet<Update> filterNewestForEachPackage(SortedSet<Update> updates) {
-        Map<Program, Map<Package, SortedSet<Update>>> ppu = new TreeMap<Program, Map<Package, SortedSet<Update>>>();
-        for (Update update : updates) {
-            Package _package = update.getPackage();
-            Program program = _package.getProgram();
-            if (!ppu.containsKey(program))
-                ppu.put(program, new TreeMap<Package, SortedSet<Update>>());
-            if (!ppu.get(program).containsKey(_package))
-                ppu.get(program).put(_package, new TreeSet<Update>());
-            ppu.get(program).get(_package).add(update);
-        }
-
-        SortedSet<Update> newest = new TreeSet<Update>();
-        for (Map<Package, SortedSet<Update>> pu : ppu.values())
-            for (Package _package : pu.keySet()) {
-                Update update = pu.get(_package).last();
-                if (_package.getVersionNumber().compareTo(update.getVersionNumber()) < 0)
-                    newest.add(update);
+        return filter(updates, new Predicate<Update>() {
+            @Override
+            public boolean apply(Update update) {
+                Package _package = update.getPackage();
+                return !_package.isNotOutdated()
+                        && update.getPackage().getUpdates().last().equals(update);
             }
-
-        return newest;
+        });
     }
 
     /**

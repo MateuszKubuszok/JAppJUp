@@ -31,13 +31,15 @@ public class TestPackageBuilder {
         String id = "id";
         String name = "some name";
         Update update = new Update();
+        SortedSet<Update> updates = new TreeSet<Update>();
+        updates.add(update);
         String versionNumber = "12.34.56.78";
         SortedSet<ChangelogEntry> changelog = new TreeSet<ChangelogEntry>(
                 Arrays.asList(new ChangelogEntry()));
 
         // when
         Package _package = PackageBuilder.builder().setChangelog(changelog).setID(id).setName(name)
-                .setUpdate(update).setVersionNumber(versionNumber).build();
+                .setUpdates(updates).setVersionNumber(versionNumber).build();
 
         // then
         assertThat(_package.getChangelog()).as("Builder should set name properly").isNotNull()
@@ -45,8 +47,8 @@ public class TestPackageBuilder {
         assertThat(_package.getID()).as("Builder should set ID properly").isNotNull().isEqualTo(id);
         assertThat(_package.getName()).as("Builder should set name properly").isNotNull()
                 .isEqualTo(name);
-        assertThat(_package.getUpdate()).as("Builder should set update properly").isNotNull()
-                .isEqualTo(update);
+        assertThat(_package.getUpdates()).as("Builder should set update properly").isNotNull()
+                .isEqualTo(updates);
         assertThat(_package.getVersionNumber()).as("Builder should set version number properly")
                 .isNotNull().isEqualTo(version(versionNumber));
     }

@@ -43,7 +43,7 @@ public class PackageBuilder {
         this._package.setChangelog(_package.getChangelog());
         this._package.setName(_package.getName());
         this._package.setProgram(_package.getProgram());
-        this._package.setUpdate(_package.getUpdate());
+        this._package.setUpdates(_package.getUpdates());
         this._package.setVersionNumber(_package.getVersionNumber());
         return this;
     }
@@ -63,8 +63,8 @@ public class PackageBuilder {
         return this;
     }
 
-    public PackageBuilder setUpdate(Update update) {
-        _package.setUpdate(update);
+    public PackageBuilder setUpdates(SortedSet<Update> update) {
+        _package.setUpdates(update);
         return this;
     }
 

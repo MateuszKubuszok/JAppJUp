@@ -16,6 +16,7 @@
 package com.autoupdater.gui.adapter.helpers;
 
 import static com.autoupdater.client.environment.AvailabilityFilter.filterNewestForEachPackage;
+import static com.autoupdater.client.models.EUpdateStatus.SELECTED;
 import static com.autoupdater.gui.client.window.EWindowStatus.*;
 
 import java.io.IOException;
@@ -24,7 +25,6 @@ import java.util.SortedSet;
 import com.autoupdater.client.download.aggregated.services.FileAggregatedDownloadService;
 import com.autoupdater.client.environment.ProgramSettingsNotFoundException;
 import com.autoupdater.client.installation.aggregated.services.AggregatedInstallationService;
-import com.autoupdater.client.models.EUpdateStatus;
 import com.autoupdater.client.models.Program;
 import com.autoupdater.client.models.Update;
 import com.autoupdater.gui.adapter.Gui2ClientAdapter;
@@ -103,7 +103,7 @@ public class InstallationUtils {
         if (adapter.dataStorage().isInitiated())
             for (Update update : adapter.dataStorage().getAvailableUpdates())
                 if (update.getPackage().getVersionNumber().compareTo(update.getVersionNumber()) < 0)
-                    update.setStatus(EUpdateStatus.SELECTED);
+                    update.setStatus(SELECTED);
     }
 
     public void cancelDownloads() {
