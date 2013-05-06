@@ -270,10 +270,6 @@ public class Program implements IModel<Program> {
         for (BugEntry bug : bugs)
             builder.append(addPrefixToEachLine(bug, "\t"));
 
-        builder.append("Packages:").append('\n');
-        for (Package _package : packages)
-            builder.append(addPrefixToEachLine(_package, "\t"));
-
         return builder.toString();
     }
 

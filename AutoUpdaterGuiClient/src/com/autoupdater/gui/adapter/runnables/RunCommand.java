@@ -53,13 +53,13 @@ public class RunCommand implements Runnable {
     }
 
     private void setProgramLauncherEnabled(boolean enabled) {
-        logger.detailedTrace("Sets program launcher for " + program + " "
-                + (enabled ? "enabled" : "disabled"));
+        logger.detailedTrace("Sets " + (enabled ? "enabled" : "disabled")
+                + " program launcher for:\n" + program);
         adapter.windowOperations().setProgramLauncherEnabled(program, enabled);
     }
 
     private void installIfPossibleAndRun() {
-        logger.info("Starting up program: " + program);
+        logger.info("Starting up program:\n" + program);
 
         if (!isUpdateDataChecked()) {
             if (askWhetherCancelRun(

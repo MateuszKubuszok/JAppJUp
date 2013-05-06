@@ -55,6 +55,8 @@ public class TrayHelper {
     private JMenuItem exitClient;
     private Map<Program, JMenuItem> programsLaunchers;
 
+    private boolean initiatedCorrectly;
+
     public TrayHelper(GuiClientWindow clientWindow, SystemTray tray, SortedSet<Program> programs) {
         this.clientWindow = clientWindow;
         this.programs = programs;
@@ -65,6 +67,10 @@ public class TrayHelper {
         addControlsToPopup(popup);
         addExitToPopup(popup);
         createTray(tray, popup);
+    }
+
+    public boolean isInitiatedCorrectly() {
+        return initiatedCorrectly;
     }
 
     public TrayIcon getTrayIcon() {
@@ -189,8 +195,10 @@ public class TrayHelper {
                 }
             });
             tray.add(trayIcon);
+            initiatedCorrectly = true;
         } catch (IOException | AWTException e1) {
             e1.printStackTrace();
+            initiatedCorrectly = false;
         }
     }
 }
