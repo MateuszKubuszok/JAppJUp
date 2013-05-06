@@ -40,24 +40,8 @@ import com.autoupdater.client.utils.services.ObservableService;
 import com.autoupdater.gui.Resources;
 
 public class UpdateInformationPanel extends JPanel {
-    public static final Image OUT_OF_DATE_IMAGE;
-    public static final Image UP_TO_DATE_IMAGE;
-    static {
-        Image outOfDate = null;
-        try {
-            outOfDate = read(Resources.class.getResourceAsStream(OUT_OF_DATE_ICON_URL))
-                    .getScaledInstance(ICON_SIZE, ICON_SIZE, SCALE_SMOOTH);
-        } catch (IOException e) {
-        }
-        Image upToDate = null;
-        try {
-            upToDate = read(Resources.class.getResourceAsStream(UP_TO_DATE_ICON_URL))
-                    .getScaledInstance(ICON_SIZE, ICON_SIZE, SCALE_SMOOTH);
-        } catch (IOException e) {
-        }
-        OUT_OF_DATE_IMAGE = outOfDate;
-        UP_TO_DATE_IMAGE = upToDate;
-    }
+    public static final Image OUT_OF_DATE_IMAGE = loadIcon(OUT_OF_DATE_ICON_URL);
+    public static final Image UP_TO_DATE_IMAGE = loadIcon(UP_TO_DATE_ICON_URL);
 
     private final JComponent parent;
     private final JProgressBar progressBar;
@@ -151,5 +135,14 @@ public class UpdateInformationPanel extends JPanel {
         Image image = update.getPackage().isNotOutdated() ? UP_TO_DATE_IMAGE : OUT_OF_DATE_IMAGE;
         if (image != null)
             label.setIcon(new ImageIcon(image.getScaledInstance(ICON_SIZE, ICON_SIZE, SCALE_SMOOTH)));
+    }
+
+    private static Image loadIcon(String pathToIcon) {
+        try {
+            return read(Resources.class.getResourceAsStream(pathToIcon)).getScaledInstance(
+                    ICON_SIZE, ICON_SIZE, SCALE_SMOOTH);
+        } catch (IOException e) {
+            return null;
+        }
     }
 }
