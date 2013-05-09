@@ -15,8 +15,9 @@
  */
 package com.autoupdater.client.models;
 
-import static com.autoupdater.client.models.EUpdateStatus.NOT_SELECTED;
+import static com.autoupdater.client.models.EUpdateStatus.*;
 import static com.autoupdater.client.models.Models.secureRelativePath;
+import static com.autoupdater.client.models.VersionNumber.UNVERSIONED;
 import static com.autoupdater.client.utils.comparables.Comparables.compare;
 import static com.google.common.base.Objects.equal;
 import static java.lang.Math.pow;
@@ -33,7 +34,8 @@ import com.autoupdater.client.utils.services.ObservableService;
 /**
  * Class representing Update available for installation.
  */
-public class Update extends ObservableService<EUpdateStatus> implements IModel<Update> {
+public class Update extends ObservableService<EUpdateStatus> implements IModel<Update>,
+        IModelWithVersionNumber {
     private Package _package;
     private String packageName;
     private String packageID;
@@ -181,11 +183,7 @@ public class Update extends ObservableService<EUpdateStatus> implements IModel<U
         this.changes = changes != null ? changes : "";
     }
 
-    /**
-     * Returns Update's version number.
-     * 
-     * @return Update's version number
-     */
+    @Override
     public VersionNumber getVersionNumber() {
         return versionNumber;
     }
@@ -207,7 +205,25 @@ public class Update extends ObservableService<EUpdateStatus> implements IModel<U
      *            Update's version number
      */
     void setVersionNumber(VersionNumber versionNumber) {
-        this.versionNumber = versionNumber != null ? versionNumber : VersionNumber.UNVERSIONED;
+        this.versionNumber = versionNumber != null ? versionNumber : UNVERSIONED;
+    }
+
+    /**
+     * Whether this Update was installed.
+     * 
+     * @return true if Update was installed, false otherwise
+     */
+    public boolean isInstalled() {
+        return status == INSTALLED && _package != null && _package.compareVersions(this) >= 0;
+    }
+
+    /**
+     * Whether or not is this Update newer that its Package.
+     * 
+     * @return true it Update is newer that its Package
+     */
+    public boolean isNewerThatPackage() {
+        return _package != null && _package.compareVersions(this) < 0;
     }
 
     /**
@@ -351,7 +367,7 @@ public class Update extends ObservableService<EUpdateStatus> implements IModel<U
      */
     public void setStatus(EUpdateStatus status) {
         this.status = status;
-        if (status == EUpdateStatus.INSTALLED && _package != null)
+        if (status == INSTALLED && _package != null && _package.compareVersions(this) < 0)
             _package.setVersionNumber(versionNumber);
         hasChanged();
         notifyObservers(status);
@@ -388,6 +404,11 @@ public class Update extends ObservableService<EUpdateStatus> implements IModel<U
     }
 
     @Override
+    public boolean equalVersions(IModelWithVersionNumber model) {
+        return versionNumber.equals(model.getVersionNumber());
+    }
+
+    @Override
     public int hashCode() {
         return (int) pow(packageName.hashCode(), 10) + versionNumber.hashCode();
     }
@@ -401,6 +422,11 @@ public class Update extends ObservableService<EUpdateStatus> implements IModel<U
         else if (!equal(packageName, o.packageName))
             return compare(packageName, o.packageName);
         return compare(versionNumber, o.versionNumber);
+    }
+
+    @Override
+    public int compareVersions(IModelWithVersionNumber model) {
+        return versionNumber.compareTo(model.getVersionNumber());
     }
 
     @Override
@@ -428,6 +454,12 @@ public class Update extends ObservableService<EUpdateStatus> implements IModel<U
         return builder.toString();
     }
 
+    /**
+     * Returns Unique identifier used to identify update process during
+     * installation.
+     * 
+     * @return identifier
+     */
     public String getUniqueIdentifer() {
         return uniqueIdentifier != null ? uniqueIdentifier
                 : (uniqueIdentifier = valueOf(new Random().nextLong()));

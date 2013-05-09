@@ -27,7 +27,6 @@ import com.autoupdater.client.installation.InstallationServiceMessage;
 import com.autoupdater.client.installation.notifiers.InstallationNotifier;
 import com.autoupdater.client.installation.notifiers.UpdateNotifier;
 import com.autoupdater.client.installation.services.InstallationService;
-import com.autoupdater.client.models.EUpdateStatus;
 import com.autoupdater.client.models.Update;
 import com.autoupdater.client.utils.aggregated.services.AbstractAggregatedService;
 import com.autoupdater.client.utils.executions.ExecutionWithErrors;
@@ -131,10 +130,6 @@ public class AggregatedInstallationService
      * @return set of Updates.
      */
     public SortedSet<Update> getResult() {
-        for (Update update : updates)
-            if (update != null && update.getStatus() == EUpdateStatus.INSTALLED
-                    && update.getPackage() != null)
-                update.getPackage().setVersionNumber(update.getVersionNumber());
         return updates;
     }
 

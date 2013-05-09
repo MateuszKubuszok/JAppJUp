@@ -15,14 +15,12 @@
  */
 package com.autoupdater.client.environment;
 
-import static com.autoupdater.client.models.EUpdateStatus.INSTALLED;
 import static com.google.common.collect.Sets.filter;
 
 import java.util.SortedSet;
 import java.util.TreeSet;
 
 import com.autoupdater.client.environment.settings.ProgramSettings;
-import com.autoupdater.client.models.EUpdateStatus;
 import com.autoupdater.client.models.Models;
 import com.autoupdater.client.models.Package;
 import com.autoupdater.client.models.Program;
@@ -166,9 +164,7 @@ public class AvailabilityFilter {
         return filter(updates, new Predicate<Update>() {
             @Override
             public boolean apply(Update update) {
-                return update.getStatus() == EUpdateStatus.INSTALLED
-                        || (update.getPackage() != null && update.getPackage().getVersionNumber()
-                                .equals(update.getVersionNumber()));
+                return update.isInstalled();
             }
         });
     }
@@ -184,9 +180,7 @@ public class AvailabilityFilter {
         return filter(updates, new Predicate<Update>() {
             @Override
             public boolean apply(Update update) {
-                return update.getStatus() != INSTALLED
-                        && (update.getPackage().getVersionNumber()
-                                .compareTo(update.getVersionNumber()) < 0);
+                return !update.isInstalled() && update.isNewerThatPackage();
             }
         });
     }

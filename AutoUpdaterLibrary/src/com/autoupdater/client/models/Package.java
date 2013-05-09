@@ -28,7 +28,7 @@ import com.google.common.base.Objects;
 /**
  * Class representing Program - either on server or installed one.
  */
-public class Package implements IModel<Package> {
+public class Package implements IModel<Package>, IModelWithVersionNumber {
     private String name;
     private String id;
     private Program program;
@@ -122,11 +122,7 @@ public class Package implements IModel<Package> {
         this.id = id != null ? id : "";
     }
 
-    /**
-     * Returns Package's version number.
-     * 
-     * @return Package's version number
-     */
+    @Override
     public VersionNumber getVersionNumber() {
         return versionNumber;
     }
@@ -226,6 +222,11 @@ public class Package implements IModel<Package> {
     }
 
     @Override
+    public boolean equalVersions(IModelWithVersionNumber model) {
+        return versionNumber.equals(model.getVersionNumber());
+    }
+
+    @Override
     public int hashCode() {
         return (name + id).hashCode();
     }
@@ -241,6 +242,11 @@ public class Package implements IModel<Package> {
         else if (!equal(versionNumber, o.versionNumber))
             return compare(versionNumber, o.versionNumber);
         return compare(program, o.program);
+    }
+
+    @Override
+    public int compareVersions(IModelWithVersionNumber model) {
+        return versionNumber.compareTo(model.getVersionNumber());
     }
 
     @Override

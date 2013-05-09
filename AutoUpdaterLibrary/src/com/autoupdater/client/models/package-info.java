@@ -18,6 +18,7 @@
  * Contains Models-related classes.
  * 
  * @see com.autoupdater.client.models.IModel
+ * @see com.autoupdater.client.models.IModelWithVersionNumber
  * @see com.autoupdater.client.models.BugEntry
  * @see com.autoupdater.client.models.ChangelogEntry
  * @see com.autoupdater.client.models.Package
