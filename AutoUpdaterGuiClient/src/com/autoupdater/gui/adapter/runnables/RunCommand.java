@@ -98,8 +98,13 @@ public class RunCommand implements Runnable {
             runProgram();
         } catch (IOException | InvalidCommandException e) {
             logger.error("Start up failed", e);
-            adapter.windowOperations().reportWarning(e.toString(),
-                    programSettings.getProgramName(), ALL);
+            adapter.windowOperations()
+                    .reportWarning(
+                            e.getMessage(),
+                            "Program \""
+                                    + programSettings.getProgramName()
+                                    + "\" couldtn't have been started - initialization command failed",
+                            ALL);
         }
     }
 

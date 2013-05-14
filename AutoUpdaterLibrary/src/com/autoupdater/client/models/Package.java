@@ -15,6 +15,7 @@
  */
 package com.autoupdater.client.models;
 
+import static com.autoupdater.client.models.VersionNumber.UNVERSIONED;
 import static com.autoupdater.client.utils.comparables.Comparables.compare;
 import static com.google.common.base.Objects.equal;
 
@@ -200,13 +201,15 @@ public class Package implements IModel<Package>, IModelWithVersionNumber {
     }
 
     /**
-     * Whether there aren't newer updates to be installed.
+     * Whether package is installed and there aren't newer updates to be
+     * installed.
      * 
      * @return true if there are no newer updates or Update has the same version
      *         number as Package
      */
     public boolean isNotOutdated() {
-        return updates.isEmpty() || versionNumber.compareTo(updates.last().getVersionNumber()) >= 0;
+        return !versionNumber.equals(UNVERSIONED)
+                && (updates.isEmpty() || versionNumber.compareTo(updates.last().getVersionNumber()) >= 0);
     }
 
     @Override
