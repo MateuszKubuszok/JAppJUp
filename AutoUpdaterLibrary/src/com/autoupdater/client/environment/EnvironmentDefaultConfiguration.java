@@ -17,6 +17,7 @@ package com.autoupdater.client.environment;
 
 import static java.io.File.separator;
 import static java.lang.System.getProperty;
+import static net.jsdpu.JavaSystemUtils.getJavaExecutablePath;
 import net.jsdpu.EOperatingSystem;
 
 /**
@@ -72,7 +73,7 @@ public class EnvironmentDefaultConfiguration {
     /**
      * Defines default path to client.
      */
-    public static final String DEFAULT_CLIENT_EXECUTABLE_PATH = "java -jar "
+    public static final String DEFAULT_CLIENT_EXECUTABLE_PATH = getJavaExecutablePath() + " -jar "
             + DEFAULT_CLIENT_DIRECTORY_PATH + separator + "Client.jar";
 
     /**

@@ -283,7 +283,7 @@ public abstract class AbstractDownloadService<Result> extends
             break;
         case IN_PROCESS:
             for (IDownloadListener listener : listeners)
-                listener.downloadStarted(event);
+                listener.downloadInProgress(event);
             break;
         case COMPLETED:
             for (IDownloadListener listener : listeners)
