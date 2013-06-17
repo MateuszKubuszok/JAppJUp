@@ -107,9 +107,7 @@ public class DataStorage {
         return new Predicate<Update>() {
             @Override
             public boolean apply(Update update) {
-                return update != null && update.getPackage() != null
-                        && update.getPackage().getProgram() != null
-                        && update.getPackage().getProgram().equals(program)
+                return update != null && program.hasMember(update.getPackage())
                         && update.isDevelopmentVersion() == program.isDevelopmentVersion();
             }
         };
