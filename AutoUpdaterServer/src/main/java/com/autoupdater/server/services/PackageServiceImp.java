@@ -20,10 +20,12 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.autoupdater.server.models.Package;
+import com.autoupdater.server.models.Update;
 
 /**
  * Implementation of PackageService.
@@ -37,6 +39,12 @@ public class PackageServiceImp extends AbstractHibernateService implements Packa
      * Service's logger.
      */
     private static Logger logger = Logger.getLogger(PackageServiceImp.class);
+
+    /**
+     * Instance of UpdateService.
+     */
+    @Autowired
+    private UpdateService updateService;
 
     @Override
     public void persist(Package _package) {
@@ -56,6 +64,8 @@ public class PackageServiceImp extends AbstractHibernateService implements Packa
     @Override
     public void remove(Package _package) {
         logger.debug("Attempting to delete Package: " + _package);
+        for (Update update : _package.getUpdates())
+            updateService.remove(update);
         getSession().delete(_package);
         logger.debug("Deleted Package: " + _package);
     }

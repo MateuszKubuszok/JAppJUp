@@ -20,9 +20,12 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.autoupdater.server.models.Bug;
+import com.autoupdater.server.models.Package;
 import com.autoupdater.server.models.Program;
 
 /**
@@ -37,6 +40,18 @@ public class ProgramServiceImp extends AbstractHibernateService implements Progr
      * Service's logger.
      */
     private static Logger logger = Logger.getLogger(ProgramServiceImp.class);
+
+    /**
+     * Instance of PackageService.
+     */
+    @Autowired
+    private PackageService packageService;
+
+    /**
+     * Instance of BugService.
+     */
+    @Autowired
+    private BugService bugService;
 
     @Override
     public void persist(Program program) {
@@ -56,6 +71,10 @@ public class ProgramServiceImp extends AbstractHibernateService implements Progr
     @Override
     public void remove(Program program) {
         logger.debug("Attempting to delete Program: " + program);
+        for (Package _package : program.getPackages())
+            packageService.remove(_package);
+        for (Bug bug : program.getBugs())
+            bugService.remove(bug);
         getSession().delete(program);
         logger.debug("Deleted Program: " + program);
     }
