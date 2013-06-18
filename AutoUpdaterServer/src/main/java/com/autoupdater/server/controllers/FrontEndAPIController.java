@@ -184,7 +184,7 @@ public final class FrontEndAPIController extends AppController {
     @SuppressWarnings("resource")
     @RequestMapping(value = "/download/{updateID}", method = GET)
     public @ResponseBody
-    void getFile(@PathVariable int updateID, HttpServletResponse response,
+    void getFile(@PathVariable("updateID") int updateID, HttpServletResponse response,
             HttpServletRequest request) {
         InputStream is = null;
         try {
