@@ -31,15 +31,15 @@ import com.autoupdater.client.models.Program;
 import com.autoupdater.client.models.Update;
 import com.autoupdater.gui.adapter.Gui2ClientAdapter;
 
-public class RunCommand implements Runnable {
-    private static final Logger logger = getLogger(RunCommand.class);
+public class RunCommandRunnable implements Runnable {
+    private static final Logger logger = getLogger(RunCommandRunnable.class);
 
     private final Gui2ClientAdapter adapter;
 
     private final ProgramSettings programSettings;
     private final Program program;
 
-    public RunCommand(Gui2ClientAdapter adapter, ProgramSettings programSettings, Program program) {
+    public RunCommandRunnable(Gui2ClientAdapter adapter, ProgramSettings programSettings, Program program) {
         this.adapter = adapter;
         this.programSettings = programSettings;
         this.program = program;

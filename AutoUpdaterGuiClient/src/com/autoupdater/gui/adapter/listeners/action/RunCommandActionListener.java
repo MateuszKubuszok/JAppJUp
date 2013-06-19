@@ -25,7 +25,7 @@ import com.autoupdater.client.environment.settings.ProgramSettings;
 import com.autoupdater.client.models.Program;
 import com.autoupdater.client.models.ProgramBuilder;
 import com.autoupdater.gui.adapter.Gui2ClientAdapter;
-import com.autoupdater.gui.adapter.runnables.RunCommand;
+import com.autoupdater.gui.adapter.runnables.RunCommandRunnable;
 
 public class RunCommandActionListener implements ActionListener {
     private final Gui2ClientAdapter adapter;
@@ -44,6 +44,6 @@ public class RunCommandActionListener implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         ExecutorService executorService = newSingleThreadExecutor();
-        executorService.submit(new RunCommand(adapter, programSettings, program));
+        executorService.submit(new RunCommandRunnable(adapter, programSettings, program));
     }
 }
