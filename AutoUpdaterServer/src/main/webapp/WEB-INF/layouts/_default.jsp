@@ -9,6 +9,8 @@
 <head>
 	<title><spring:message code="repository.name" /> - <tiles:insertAttribute name="title" /></title>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<link rel="shortcut icon" href="<c:url value="/resources/favicon/repoicon.ico" />" type="image/x-icon" />
+	<link rel="icon" href="<c:url value="/resources/favicon/repoicon.png" />" type="image/png" />
 	<link rel="stylesheet" href="<c:url value="/resources/css/default.css" />" type="text/css" />
 	<script type="text/javascript" src="<c:url value="/resources/js/jquery-1.9.1.js" />"></script>
 	<script type="text/javascript" src="<c:url value="/resources/js/jquery-tablesorter.js" />"></script>
