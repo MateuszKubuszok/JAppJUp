@@ -106,6 +106,15 @@ public class TrayHelper {
             setProgramIcon(program, programsLaunchers.get(program));
     }
 
+    public void setStatus(EWindowStatus status) {
+        for (JMenuItem launcher : programsLaunchers.values())
+            launcher.setEnabled(status.isRunCommandButtonsEnabled());
+        checkUpdates.setEnabled(status.isCheckUpdatesButtonEnabled());
+        installUpdates.setEnabled(status.isInstallUpdatesButtonEnabled());
+        cancelDownload.setEnabled(status.isCancelDownloadButtonEnabled());
+        exitClient.setEnabled(status.isProgramAbleToFinish());
+    }
+
     private void addShowHideToPopup(JPopupMenu popup) {
         showHideGUI = new JMenuItem(clientWindow.isVisible() ? "Hide" : "Show");
         showHideGUI.addActionListener(new ActionListener() {

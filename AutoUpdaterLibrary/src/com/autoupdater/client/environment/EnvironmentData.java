@@ -16,6 +16,8 @@
 package com.autoupdater.client.environment;
 
 import static com.autoupdater.client.models.Models.addPrefixToEachLine;
+import static com.google.common.base.Predicates.equalTo;
+import static com.google.common.collect.Iterables.find;
 import static net.jsdpu.logger.Logger.getLogger;
 
 import java.io.IOException;
@@ -32,8 +34,6 @@ import com.autoupdater.client.models.Program;
 import com.autoupdater.client.models.ProgramBuilder;
 import com.autoupdater.client.models.Update;
 import com.google.common.base.Objects;
-import com.google.common.base.Predicates;
-import com.google.common.collect.Iterables;
 
 /**
  * Class containing all information used by Client. It is used as a source of
@@ -58,6 +58,7 @@ public class EnvironmentData {
     private final ClientSettings clientSettings;
     private final SortedSet<ProgramSettings> programsSettings;
     private SortedSet<Program> installationsData;
+    private SortedSet<Program> legacyInstallationData;
 
     /**
      * Creates EnvironmentData instance.
@@ -164,6 +165,12 @@ public class EnvironmentData {
      * Also all programs that do not have ProgramSettings will be removed.
      * </p>
      * 
+     * <p>
+     * Exact copy of installationsData will be stored in
+     * legacyInstallationsData, so that during save information about previously
+     * installed programs that no longer have settings won't be lost.
+     * </p>
+     * 
      * @see #complimentInstallationsDataWithInstalledProgramsWithSettings(SortedSet,
      *      SortedSet)
      * @see #complimentInstallationsDataWithNotInstalledButDefinedBySettings(SortedSet,
@@ -175,14 +182,25 @@ public class EnvironmentData {
     void setInstallationsData(SortedSet<Program> installationsData) {
         (this.installationsData = this.installationsData == null ? new TreeSet<Program>()
                 : this.installationsData).clear();
-        installationsData = installationsData == null ? new TreeSet<Program>() : installationsData;
+        legacyInstallationData = (installationsData == null) ? new TreeSet<Program>()
+                : new TreeSet<Program>(installationsData);
 
         SortedSet<Program> programsDefinedBySettings = getMockProgramsDefinedBySettings();
 
         complimentInstallationsDataWithInstalledProgramsWithSettings(programsDefinedBySettings,
-                installationsData);
+                legacyInstallationData);
         complimentInstallationsDataWithNotInstalledButDefinedBySettings(programsDefinedBySettings,
-                installationsData);
+                legacyInstallationData);
+    }
+
+    /**
+     * Returns information about all Programs that installed earlier. If some
+     * Program has its settings removed it can still be found here.
+     * 
+     * @return previously installed programs
+     */
+    SortedSet<Program> getLegacyInstallationData() {
+        return legacyInstallationData;
     }
 
     /**
@@ -370,8 +388,8 @@ public class EnvironmentData {
             SortedSet<Program> programsDefinedByInstallationsData) {
         for (Program installedProgram : programsDefinedByInstallationsData)
             if (programsDefinedBySettings.contains(installedProgram)) {
-                installedProgram.setDevelopmentVersion(Iterables.find(programsDefinedBySettings,
-                        Predicates.equalTo(installedProgram)).isDevelopmentVersion());
+                installedProgram.setDevelopmentVersion(find(programsDefinedBySettings,
+                        equalTo(installedProgram)).isDevelopmentVersion());
                 this.installationsData.add(installedProgram);
             }
     }

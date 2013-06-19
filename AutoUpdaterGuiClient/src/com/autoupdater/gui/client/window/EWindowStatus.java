@@ -16,23 +16,30 @@
 package com.autoupdater.gui.client.window;
 
 public enum EWindowStatus {
-    UNINITIALIZED(true, false, false, true), //
-    IDLE(true, true, false, true), //
-    FETCHING_UPDATE_INFO(false, false, false, true), //
-    FETCHING_UPDATES(false, false, true, true), //
-    INSTALLING_UPDATES(false, false, false, false);
+    UNINITIALIZED(true, true, false, false, true), //
+    IDLE(true, true, true, false, true), //
+    FETCHING_UPDATE_INFO(true, false, false, false, true), //
+    FETCHING_UPDATES(false, false, false, true, true), //
+    INSTALLING_UPDATES(false, false, false, false, false);
 
+    private final boolean runCommandButtonsEnabled;
     private final boolean checkUpdatesButtonEnabled;
     private final boolean installUpdatesButtonEnabled;
     private final boolean cancelDownloadButtonEnabled;
     private final boolean programAbleToFinish;
 
-    private EWindowStatus(boolean checkUpdatesButtonEnabled, boolean installUpdatesButtonEnabled,
-            boolean cancelDownloadButtonEnabled, boolean programAbleToFinish) {
+    private EWindowStatus(boolean runCommandsButtonEnabled, boolean checkUpdatesButtonEnabled,
+            boolean installUpdatesButtonEnabled, boolean cancelDownloadButtonEnabled,
+            boolean programAbleToFinish) {
+        this.runCommandButtonsEnabled = runCommandsButtonEnabled;
         this.checkUpdatesButtonEnabled = checkUpdatesButtonEnabled;
         this.installUpdatesButtonEnabled = installUpdatesButtonEnabled;
         this.cancelDownloadButtonEnabled = cancelDownloadButtonEnabled;
         this.programAbleToFinish = programAbleToFinish;
+    }
+
+    public boolean isRunCommandButtonsEnabled() {
+        return runCommandButtonsEnabled;
     }
 
     public boolean isCheckUpdatesButtonEnabled() {

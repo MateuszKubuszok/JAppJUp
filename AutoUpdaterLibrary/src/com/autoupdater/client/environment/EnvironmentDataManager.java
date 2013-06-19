@@ -19,12 +19,14 @@ import static net.jsdpu.logger.Logger.getLogger;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.SortedSet;
 import java.util.TreeSet;
 
 import net.jsdpu.logger.Logger;
 
 import com.autoupdater.client.environment.settings.ClientSettingsBuilder;
 import com.autoupdater.client.environment.settings.ProgramSettings;
+import com.autoupdater.client.models.Program;
 import com.autoupdater.client.xml.creators.ConfigurationXMLCreator;
 import com.autoupdater.client.xml.creators.InstallationDataXMLCreator;
 import com.autoupdater.client.xml.parsers.ConfigurationParser;
@@ -128,9 +130,12 @@ public class EnvironmentDataManager {
         new ConfigurationXMLCreator().createXML(new File(environmentContext.getSettingsXMLPath()),
                 environmentData.getClientSettings(), environmentData.getProgramsSettings());
 
+        SortedSet<Program> currentAndLegacyInstallations = new TreeSet<Program>(
+                environmentData.getInstallationsData());
+        currentAndLegacyInstallations.addAll(environmentData.getLegacyInstallationData());
         new InstallationDataXMLCreator().createXML(
                 new File(environmentContext.getInstallationDataXMLPath()),
-                environmentData.getInstallationsData());
+                currentAndLegacyInstallations);
     }
 
     /**

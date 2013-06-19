@@ -15,11 +15,12 @@
  */
 package com.autoupdater.gui.client.window;
 
-import static com.autoupdater.gui.client.tray.ETrayStrategy.resolve;
+import static com.autoupdater.gui.client.tray.ETrayAndExitStrategy.resolve;
 import static com.autoupdater.gui.client.window.EWindowStatus.UNINITIALIZED;
 import static com.autoupdater.gui.config.GuiConfiguration.*;
 import static java.lang.Double.MIN_VALUE;
 import static javax.swing.JOptionPane.*;
+import static javax.swing.SwingUtilities.invokeAndWait;
 import static javax.swing.UIManager.setLookAndFeel;
 
 import java.awt.GridBagConstraints;
@@ -45,7 +46,6 @@ import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
-import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 
 import com.autoupdater.client.environment.EnvironmentData;
@@ -153,11 +153,6 @@ public class GuiClientWindow extends JFrame {
         return updatesTab.getUpdateInformationPanel(update);
     }
 
-    public void setExitEnabled(boolean exitEnabled) {
-        if (optionalTrayHelper.isPresent())
-            optionalTrayHelper.get().getExitClient().setEnabled(exitEnabled);
-    }
-
     public void setProgressBarInactive() {
         progressBar.setIndeterminate(false);
         progressBar.setEnabled(false);
@@ -190,14 +185,8 @@ public class GuiClientWindow extends JFrame {
         checkUpdatesButton.setEnabled(state.isCheckUpdatesButtonEnabled());
         installUpdatesButton.setEnabled(state.isInstallUpdatesButtonEnabled());
         cancelDownloadButton.setEnabled(state.isCancelDownloadButtonEnabled());
-        if (optionalTrayHelper.isPresent()) {
-            optionalTrayHelper.get().getCheckUpdates()
-                    .setEnabled(state.isCheckUpdatesButtonEnabled());
-            optionalTrayHelper.get().getInstallUpdates()
-                    .setEnabled(state.isInstallUpdatesButtonEnabled());
-            optionalTrayHelper.get().getCancelDownload()
-                    .setEnabled(state.isCancelDownloadButtonEnabled());
-        }
+        if (optionalTrayHelper.isPresent())
+            optionalTrayHelper.get().setStatus(state);
         resolve().configureWindowBehaviour(this, state);
     }
 
@@ -240,7 +229,7 @@ public class GuiClientWindow extends JFrame {
         if (optionalTrayHelper.isPresent()
                 && optionalTrayHelper.get().getProgramsLaunchers().containsKey(program))
             try {
-                SwingUtilities.invokeAndWait(new Runnable() {
+                invokeAndWait(new Runnable() {
                     @Override
                     public void run() {
                         if (optionalTrayHelper.isPresent())

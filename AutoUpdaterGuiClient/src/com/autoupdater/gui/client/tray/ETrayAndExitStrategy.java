@@ -15,23 +15,22 @@
  */
 package com.autoupdater.gui.client.tray;
 
-import java.awt.SystemTray;
+import static java.awt.SystemTray.*;
+import static javax.swing.JFrame.EXIT_ON_CLOSE;
+import static javax.swing.WindowConstants.*;
 
-import javax.swing.JFrame;
-
-import com.autoupdater.client.utils.enums.Enums;
 import com.autoupdater.gui.client.window.EWindowStatus;
 import com.autoupdater.gui.client.window.GuiClientWindow;
 
-public enum ETrayStrategy {
+public enum ETrayAndExitStrategy {
     TRAY_DISABLED(false), //
     TRAY_ENABLED(true);
 
-    private static ETrayStrategy currentTrayStrategy;
+    private static ETrayAndExitStrategy currentTrayStrategy;
 
     private final boolean trayEnabled;
 
-    private ETrayStrategy(boolean trayEnabled) {
+    private ETrayAndExitStrategy(boolean trayEnabled) {
         this.trayEnabled = trayEnabled;
     }
 
@@ -40,31 +39,20 @@ public enum ETrayStrategy {
     }
 
     public void initializeTrayIfPossible(GuiClientWindow clientWindow) {
-        if (isTrayEnabled()) {
-            clientWindow.setSystemTray(SystemTray.getSystemTray());
-        }
+        if (isTrayEnabled())
+            clientWindow.setSystemTray(getSystemTray());
     }
 
     public void configureWindowBehaviour(GuiClientWindow clientWindow, EWindowStatus status) {
-        if (isTrayEnabled()) {
-            clientWindow.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-            clientWindow.setExitEnabled(status.isProgramAbleToFinish());
-        } else {
-            if (status.isProgramAbleToFinish()) {
-                clientWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            } else {
-                clientWindow.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-            }
-        }
+        if (isTrayEnabled())
+            clientWindow.setDefaultCloseOperation(HIDE_ON_CLOSE);
+        else
+            clientWindow.setDefaultCloseOperation(status.isProgramAbleToFinish() ? EXIT_ON_CLOSE
+                    : DO_NOTHING_ON_CLOSE);
     }
 
-    public static ETrayStrategy resolve() {
-        try {
-            return (currentTrayStrategy != null) ? currentTrayStrategy
-                    : (currentTrayStrategy = Enums.parseField(ETrayStrategy.class, "trayEnabled",
-                            SystemTray.isSupported()));
-        } catch (NoSuchFieldException e) {
-            throw new RuntimeException(e);
-        }
+    public static ETrayAndExitStrategy resolve() {
+        return (currentTrayStrategy != null) ? currentTrayStrategy
+                : (currentTrayStrategy = isSupported() ? TRAY_ENABLED : TRAY_DISABLED);
     }
 }
