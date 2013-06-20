@@ -19,6 +19,7 @@ import static com.autoupdater.gui.client.tray.ETrayAndExitStrategy.resolve;
 import static com.autoupdater.gui.client.window.EWindowStatus.UNINITIALIZED;
 import static com.autoupdater.gui.config.GuiConfiguration.*;
 import static java.lang.Double.MIN_VALUE;
+import static javax.imageio.ImageIO.read;
 import static javax.swing.JOptionPane.*;
 import static javax.swing.SwingUtilities.invokeAndWait;
 import static javax.swing.UIManager.setLookAndFeel;
@@ -269,6 +270,11 @@ public class GuiClientWindow extends JFrame {
         setBounds(WINDOW_BOUNDS);
         setMinimumSize(WINDOW_MIN_SIZE);
         setTitle(WINDOW_TITLE);
+        try {
+            setIconImage(read(Resources.class.getResourceAsStream(TRAY_ICON_URL)));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
         setContentPane(contentPane);

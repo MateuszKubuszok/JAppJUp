@@ -16,6 +16,8 @@
 package com.autoupdater.gui.client.tray;
 
 import static com.autoupdater.gui.client.window.tabs.updates.UpdateInformationPanel.*;
+import static com.autoupdater.gui.config.GuiConfiguration.*;
+import static javax.imageio.ImageIO.read;
 
 import java.awt.AWTException;
 import java.awt.SystemTray;
@@ -29,7 +31,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.SortedSet;
 
-import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
@@ -40,7 +41,6 @@ import com.autoupdater.client.models.Program;
 import com.autoupdater.gui.Resources;
 import com.autoupdater.gui.client.window.EWindowStatus;
 import com.autoupdater.gui.client.window.GuiClientWindow;
-import com.autoupdater.gui.config.GuiConfiguration;
 
 public class TrayHelper {
     private final SortedSet<Program> programs;
@@ -175,9 +175,8 @@ public class TrayHelper {
 
     private void createTray(SystemTray tray, JPopupMenu popup) {
         try {
-            trayIcon = new JXTrayIcon(ImageIO.read(Resources.class
-                    .getResourceAsStream(GuiConfiguration.TRAY_ICON_URL)));
-            trayIcon.setToolTip(GuiConfiguration.WINDOW_TITLE);
+            trayIcon = new JXTrayIcon(read(Resources.class.getResourceAsStream(TRAY_ICON_URL)));
+            trayIcon.setToolTip(WINDOW_TITLE);
             trayIcon.setJPopupMenu(popup);
             trayIcon.setImageAutoSize(true);
             trayIcon.addMouseListener(new MouseListener() {

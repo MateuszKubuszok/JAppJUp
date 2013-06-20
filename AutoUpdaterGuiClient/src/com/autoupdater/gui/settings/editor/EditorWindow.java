@@ -15,8 +15,10 @@
  */
 package com.autoupdater.gui.settings.editor;
 
+import static com.autoupdater.gui.config.GuiConfiguration.TRAY_ICON_URL;
 import static com.autoupdater.gui.mocks.MockModels.getProgramsSettings;
 import static java.awt.BorderLayout.*;
+import static javax.imageio.ImageIO.read;
 import static javax.swing.JFileChooser.DIRECTORIES_ONLY;
 import static javax.swing.JOptionPane.showMessageDialog;
 import static javax.swing.UIManager.setLookAndFeel;
@@ -45,6 +47,7 @@ import com.autoupdater.client.environment.ClientEnvironmentException;
 import com.autoupdater.client.environment.EnvironmentData;
 import com.autoupdater.client.environment.settings.ProgramSettings;
 import com.autoupdater.client.environment.settings.ProgramSettingsBuilder;
+import com.autoupdater.gui.Resources;
 import com.autoupdater.gui.config.GuiConfiguration;
 import com.google.common.base.Joiner;
 import com.jgoodies.forms.builder.DefaultFormBuilder;
@@ -79,8 +82,12 @@ public class EditorWindow extends JFrame {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         setTitle("Edit installed programs' settings");
+        try {
+            setIconImage(read(Resources.class.getResourceAsStream(TRAY_ICON_URL)));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         contentPane = new JPanel();
         contentPane.setLayout(new BorderLayout());
