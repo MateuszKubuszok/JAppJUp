@@ -45,6 +45,8 @@ process done by Mariusz and Paweł did not go to waste.
 
 Specific manuals
 -----------
+ * [Wiki](https://github.com/MateuszKubuszok/JAppJUp/wiki) - project's Wiki page with
+ a lot of informations about how to use Client and Server,
  * [Repository's manual](Readmes/README.REPOSITORY.md) - contains basic information about
  building and deploying server,
  * [Library's manual](Readmes/README.LIBRARY.md) - contains basic information about
