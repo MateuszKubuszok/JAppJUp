@@ -20,7 +20,7 @@ By default it uses MySQL5 database at *localhost:3306* with:
 It can be changed by edition of `/WEB-INF/classes/JDBC.properties`
 and `/WEB-INF/classes/Hibernate.properties` files.
 	
-Application require that schema is already present in target database. All
+Application requires schema to be already present in target database. All
 neccessary tables will be created at deployment.
 
 Initial configuration

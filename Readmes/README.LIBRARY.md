@@ -19,7 +19,7 @@ into Eclipse as well as download all required dependancies.
 Documentation and examples of usage
 -----------
 	
-Documentation can be generated with tools such as Javadow or Doxygen. Also IDE
+Documentation can be generated with tools such as Javadoc or Doxygen. Also IDE
 such as Eclipse or Netbeans will provide code completion and documentation
 making usage of library easier.
 
