@@ -18,6 +18,7 @@ package com.autoupdater.client.models;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import com.autoupdater.client.Paths;
 import com.autoupdater.client.Values;
 
 public class Mocks {
@@ -41,5 +42,18 @@ public class Mocks {
         return PackageBuilder.builder().setName(Values.Package.name)
                 .setVersionNumber(Values.Package.version).setID(Values.Package.ID)
                 .setUpdates(updates()).build();
+    }
+
+    public static SortedSet<Package> packages() {
+        SortedSet<Package> packages = new TreeSet<Package>();
+        packages.add(_package());
+        return packages;
+    }
+
+    public static Program program() {
+        return ProgramBuilder.builder().setName(Values.Program.name)
+                .setServerAddress(Values.Program.serverAddress)
+                .setPathToProgramDirectory(Paths.Installations.Program.programDir)
+                .setPackages(packages()).build();
     }
 }

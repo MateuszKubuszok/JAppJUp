@@ -42,6 +42,9 @@ public class Program implements IModel<Program> {
     private boolean developmentVersion;
 
     Program() {
+        name = "";
+        pathToProgramDirectory = "";
+        serverAddress = "";
         packages = new TreeSet<Package>();
         bugs = new TreeSet<BugEntry>();
     }

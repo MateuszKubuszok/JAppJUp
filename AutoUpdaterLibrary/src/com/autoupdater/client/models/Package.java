@@ -40,7 +40,7 @@ public class Package implements IModel<Package>, IModelWithVersionNumber {
     Package() {
         name = "";
         id = "";
-        versionNumber = VersionNumber.UNVERSIONED;
+        versionNumber = UNVERSIONED;
         updates = new TreeSet<Update>();
         changelog = new TreeSet<ChangelogEntry>();
     }
