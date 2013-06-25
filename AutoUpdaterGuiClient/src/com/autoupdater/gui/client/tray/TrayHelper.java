@@ -145,7 +145,7 @@ public class TrayHelper {
         popup.addSeparator();
 
         for (final Program program : programs) {
-            JMenuItem programLauncher = new JMenuItem("Run " + program.getName());
+            JMenuItem programLauncher = new JMenuItem("Run " + program.getName() + " (" + (program.isDevelopmentVersion() ? "test" : "release") + ")");
             setProgramIcon(program, programLauncher);
             popup.add(programLauncher);
             programsLaunchers.put(program, programLauncher);

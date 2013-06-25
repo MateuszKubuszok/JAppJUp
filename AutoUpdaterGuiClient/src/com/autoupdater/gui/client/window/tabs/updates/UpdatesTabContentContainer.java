@@ -121,7 +121,7 @@ public class UpdatesTabContentContainer extends JPanel {
     private int initializeProgramRowAndPackagesRows(Program program, int lastAddedRow) {
         Insets programRowInsets = new Insets(5, 0, 0, 0);
 
-        JLabel programLabel = new JLabel(program.getName());
+        JLabel programLabel = new JLabel(program.getName()  + " (" + (program.isDevelopmentVersion() ? "test" : "release") + ")");
         GridBagConstraints gbcProgramLabel = new GridBagConstraints();
         gbcProgramLabel.anchor = GridBagConstraints.NORTHWEST;
         gbcProgramLabel.gridwidth = 2;

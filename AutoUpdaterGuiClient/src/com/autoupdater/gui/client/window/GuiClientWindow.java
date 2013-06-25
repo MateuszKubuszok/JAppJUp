@@ -327,7 +327,7 @@ public class GuiClientWindow extends JFrame {
 
         for (Program program : environmantData.getInstallationsData()) {
             ProgramTabContentContainer programTab = new ProgramTabContentContainer(program);
-            tabbedPane.add(program.getName(), programTab);
+            tabbedPane.add(program.getName() + " (" + (program.isDevelopmentVersion() ? "test" : "release") + ")", programTab);
             programsTabs.add(programTab);
         }
     }
