@@ -23,6 +23,7 @@ import java.util.TreeSet;
 import com.autoupdater.client.environment.settings.ProgramSettings;
 import com.autoupdater.client.models.Models;
 import com.autoupdater.client.models.Package;
+import com.autoupdater.client.models.PackageBuilder;
 import com.autoupdater.client.models.Program;
 import com.autoupdater.client.models.ProgramBuilder;
 import com.autoupdater.client.models.Update;
@@ -239,8 +240,9 @@ public class AvailabilityFilter {
 
         for (Package testedPackage : packagesAvailableOnServer)
             if (!Models.contains(installedPackages, testedPackage,
-                    Models.EComparisionType.LOCAL_TO_SERVER))
-                notInstalledButAvailable.add(testedPackage);
+                    Models.EComparisionType.LOCAL_TO_SERVER)) {
+                notInstalledButAvailable.add(PackageBuilder.builder().copy(testedPackage).build());
+            }
 
         return notInstalledButAvailable;
     }
