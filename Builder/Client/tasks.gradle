@@ -49,6 +49,7 @@ project(':AutoUpdaterGuiClient') {
 task buildClient {
     description = 'Builds Client and stores result in an ./Dist/Client directory.'
     dependsOn(':AutoUpdaterGuiClient:build')
+	dependsOn(':AutoUpdaterInstaller:build')
 }
 
 task buildLibrary {
