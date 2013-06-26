@@ -17,6 +17,7 @@ package com.autoupdater.client.installation.runnable;
 
 import static com.autoupdater.client.models.EUpdateStatus.SELECTED;
 import static java.io.File.separator;
+import static net.jsdpu.JavaSystemUtils.getJavaExecutablePath;
 import static org.fest.assertions.api.Assertions.assertThat;
 
 import java.io.File;
@@ -57,8 +58,8 @@ public class TestCommandGenerationHelper extends AbstractTest {
                 .as("getSingleUpdateExecutionCommand() should return a correct single installation command")
                 .isNotNull()
                 .isEqualTo(
-                        new String[] { "java", "-jar", Paths.Library.installerPath,
-                                update.getUniqueIdentifer(), "unzip",
+                        new String[] { getJavaExecutablePath(), "-jar",
+                                Paths.Library.installerPath, update.getUniqueIdentifer(), "unzip",
                                 update.getFile().getAbsolutePath(),
                                 Paths.Installations.Program.programDir });
     }
@@ -96,8 +97,8 @@ public class TestCommandGenerationHelper extends AbstractTest {
                 .as("getUpdateExecutionCommands should create commands properly")
                 .isNotNull()
                 .isEqualTo(
-                        new String[] { "java", "-jar", Paths.Library.installerPath,
-                                update0.getUniqueIdentifer(), "unzip",
+                        new String[] { getJavaExecutablePath(), "-jar",
+                                Paths.Library.installerPath, update0.getUniqueIdentifer(), "unzip",
                                 Paths.Library.testDir + separator + "update.txt",
                                 Paths.Installations.Program.programDir });
         assertThat(updateCommand.get(1))
@@ -105,7 +106,7 @@ public class TestCommandGenerationHelper extends AbstractTest {
                 .isNotNull()
                 .isEqualTo(
                         new String[] {
-                                "java",
+                                getJavaExecutablePath(),
                                 "-jar",
                                 Paths.Library.installerPath,
                                 update1.getUniqueIdentifer(),

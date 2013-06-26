@@ -16,6 +16,7 @@
 package com.autoupdater.client.installation.command.generation;
 
 import static java.io.File.separator;
+import static net.jsdpu.JavaSystemUtils.getJavaExecutablePath;
 import net.jsdpu.process.executors.InvalidCommandException;
 
 import com.autoupdater.client.environment.settings.ProgramSettings;
@@ -29,9 +30,9 @@ public class UnzipCommandGenerator implements ICommandGenerator {
     public String[] generateCommand(Update update, String pathToInstaller,
             ProgramSettings programSettings) throws InvalidCommandException {
         if (pathToInstaller.toLowerCase().endsWith(".jar"))
-            return new String[] { "java", "-jar", pathToInstaller, update.getUniqueIdentifer(),
-                    update.getUpdateStrategy().toString(), update.getFile().getAbsolutePath(),
-                    calculateTarget(programSettings, update) };
+            return new String[] { getJavaExecutablePath(), "-jar", pathToInstaller,
+                    update.getUniqueIdentifer(), update.getUpdateStrategy().toString(),
+                    update.getFile().getAbsolutePath(), calculateTarget(programSettings, update) };
         return new String[] { pathToInstaller, update.getUniqueIdentifer(),
                 update.getUpdateStrategy().toString(), update.getFile().getAbsolutePath(),
                 calculateTarget(programSettings, update) };

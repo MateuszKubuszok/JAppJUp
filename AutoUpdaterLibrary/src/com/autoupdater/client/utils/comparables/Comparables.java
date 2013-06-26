@@ -20,6 +20,12 @@ package com.autoupdater.client.utils.comparables;
  */
 public final class Comparables {
     /**
+     * Static class.
+     */
+    private Comparables() {
+    }
+
+    /**
      * Null-safe comparison of one Comparable object against another.
      * <p>
      * Asserts that null is "the smallest" possible value, and as such during

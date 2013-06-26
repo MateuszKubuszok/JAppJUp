@@ -17,7 +17,7 @@ package com.autoupdater.client.environment;
 
 import static org.mockito.Mockito.*;
 
-import java.util.TreeSet;
+import java.util.SortedSet;
 
 import net.jsdpu.IOperatingSystem;
 import net.jsdpu.process.executors.IProcessExecutor;
@@ -25,6 +25,7 @@ import net.jsdpu.process.killers.IProcessKiller;
 
 import org.mockito.Matchers;
 
+import com.autoupdater.client.models.Package;
 import com.autoupdater.client.models.Program;
 import com.autoupdater.client.models.Update;
 
@@ -50,16 +51,24 @@ public class Mocks {
 
     public static EnvironmentData environmentData() throws ProgramSettingsNotFoundException {
         IOperatingSystem system = operatingSystem();
+        SortedSet<Program> programs = com.autoupdater.client.models.Mocks.programs();
         EnvironmentData environmentData = mock(EnvironmentData.class);
         when(environmentData.getClientSettings()).thenReturn(
                 com.autoupdater.client.environment.settings.Mocks.clientSettings());
         when(environmentData.getProgramsSettings()).thenReturn(
                 com.autoupdater.client.environment.settings.Mocks.programsSettings());
+        when(environmentData.getInstallationsData()).thenReturn(programs);
         when(environmentData.getSystem()).thenReturn(system);
+        when(environmentData.getProgramsSettingsForEachServer()).thenReturn(
+                com.autoupdater.client.environment.settings.Mocks.programsSettings());
+        when(environmentData.findProgramSettingsForProgram(Matchers.<Program> any())).thenReturn(
+                com.autoupdater.client.environment.settings.Mocks.programSettings());
+        when(environmentData.findProgramSettingsForPackage(Matchers.<Package> any())).thenReturn(
+                com.autoupdater.client.environment.settings.Mocks.programSettings());
         when(environmentData.findProgramSettingsForUpdate(Matchers.<Update> any())).thenReturn(
                 com.autoupdater.client.environment.settings.Mocks.programSettings());
         when(environmentData.getAvailabilityFilter()).thenReturn(
-                new AvailabilityFilter(new TreeSet<Program>(), new TreeSet<Program>()));
+                new AvailabilityFilter(programs, programs));
         return environmentData;
     }
 }

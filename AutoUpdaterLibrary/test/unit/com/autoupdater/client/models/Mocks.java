@@ -15,6 +15,7 @@
  */
 package com.autoupdater.client.models;
 
+import java.util.Arrays;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -55,5 +56,9 @@ public class Mocks {
                 .setServerAddress(Values.Program.serverAddress)
                 .setPathToProgramDirectory(Paths.Installations.Program.programDir)
                 .setPackages(packages()).build();
+    }
+
+    public static SortedSet<Program> programs() {
+        return new TreeSet<Program>(Arrays.asList(program()));
     }
 }

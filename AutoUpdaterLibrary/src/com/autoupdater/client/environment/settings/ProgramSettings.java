@@ -286,7 +286,7 @@ public class ProgramSettings implements IModel<ProgramSettings> {
         return builder.toString();
     }
 
-    private class GeneralComparator implements Comparator<ProgramSettings> {
+    static class GeneralComparator implements Comparator<ProgramSettings> {
         @Override
         public int compare(ProgramSettings o1, ProgramSettings o2) {
             if (o1 == null)

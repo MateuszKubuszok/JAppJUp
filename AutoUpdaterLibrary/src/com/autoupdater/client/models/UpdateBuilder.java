@@ -38,6 +38,24 @@ public class UpdateBuilder {
         return new UpdateBuilder();
     }
 
+    public UpdateBuilder copy(Update update) {
+        this.update.setChanges(update.getChanges());
+        this.update.setCommand(update.getCommand());
+        this.update.setDevelopmentVersion(update.isDevelopmentVersion());
+        this.update.setFile(update.getFile());
+        this.update.setID(update.getID());
+        this.update.setOriginalName(update.getOriginalName());
+        this.update.setPackage(update.getPackage());
+        this.update.setPackageID(update.getPackageID());
+        this.update.setPackageName(update.getPackageName());
+        this.update.setRelativePath(update.getRelativePath());
+        this.update.setStatus(update.getStatus());
+        this.update.setStatusMessage(update.getStatusMessage());
+        this.update.setUpdateStrategy(update.getUpdateStrategy());
+        this.update.setVersionNumber(update.getVersionNumber());
+        return this;
+    }
+
     public UpdateBuilder setPackage(Package _package) {
         update.setPackage(_package);
         return this;

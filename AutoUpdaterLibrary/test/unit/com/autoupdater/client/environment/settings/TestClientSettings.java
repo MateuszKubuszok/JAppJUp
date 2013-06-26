@@ -83,4 +83,15 @@ public class TestClientSettings {
         assertThat(clientSettings.getProxyPort()).as("Constructor should set proxy port properly")
                 .isNotNull().isEqualTo(Values.ClientSettings.proxyPort);
     }
+
+    @Test
+    public void testToString() {
+        // given
+
+        // when
+        ClientSettings clientSettings = ClientSettingsBuilder.builder().build();
+
+        // then
+        assertThat(clientSettings.toString()).as("toString should not be null").isNotNull();
+    }
 }
