@@ -16,12 +16,16 @@
 package com.autoupdater.client.environment;
 
 import static org.mockito.Mockito.*;
+
+import java.util.TreeSet;
+
 import net.jsdpu.IOperatingSystem;
 import net.jsdpu.process.executors.IProcessExecutor;
 import net.jsdpu.process.killers.IProcessKiller;
 
 import org.mockito.Matchers;
 
+import com.autoupdater.client.models.Program;
 import com.autoupdater.client.models.Update;
 
 public class Mocks {
@@ -54,6 +58,8 @@ public class Mocks {
         when(environmentData.getSystem()).thenReturn(system);
         when(environmentData.findProgramSettingsForUpdate(Matchers.<Update> any())).thenReturn(
                 com.autoupdater.client.environment.settings.Mocks.programSettings());
+        when(environmentData.getAvailabilityFilter()).thenReturn(
+                new AvailabilityFilter(new TreeSet<Program>(), new TreeSet<Program>()));
         return environmentData;
     }
 }

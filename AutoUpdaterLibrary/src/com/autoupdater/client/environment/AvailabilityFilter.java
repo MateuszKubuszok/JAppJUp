@@ -45,9 +45,8 @@ public class AvailabilityFilter {
      *            environment data
      */
     AvailabilityFilter(EnvironmentData environmentData) {
-        installedPrograms = environmentData.getInstallationsData();
-        registeredPrograms = getRegisteredPrograms(environmentData.getProgramsSettings(),
-                environmentData.getInstallationsData());
+        this(environmentData.getInstallationsData(), getRegisteredPrograms(
+                environmentData.getProgramsSettings(), environmentData.getInstallationsData()));
     }
 
     /**
