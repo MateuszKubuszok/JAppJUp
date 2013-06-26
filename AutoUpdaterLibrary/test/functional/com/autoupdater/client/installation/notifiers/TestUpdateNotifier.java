@@ -15,6 +15,7 @@
  */
 package com.autoupdater.client.installation.notifiers;
 
+import static com.autoupdater.client.models.EUpdateStatus.INSTALLED;
 import static org.fest.assertions.api.Assertions.assertThat;
 
 import org.junit.Test;
@@ -38,7 +39,7 @@ public class TestUpdateNotifier {
         // when
         message = null;
         sender.hasChanged();
-        sender.notifyObservers(EUpdateStatus.INSTALLED);
+        sender.notifyObservers(INSTALLED);
 
         // then
         assertThat(message).as(
@@ -46,7 +47,7 @@ public class TestUpdateNotifier {
                 .isNotNull();
         assertThat(message.getMessage())
                 .as("UpdateNotifier should recieve EUpdateState and send InstallationServiceMessage")
-                .isNotNull().isEqualTo(EUpdateStatus.INSTALLED.getMessage());
+                .isNotNull().isEqualTo(INSTALLED.getMessage());
     }
 
     private class Reciever implements IObserver<InstallationServiceMessage> {

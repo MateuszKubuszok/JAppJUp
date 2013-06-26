@@ -44,7 +44,7 @@ public class TestChangelogEntryFunctional {
     public void testAlternativeSetters() {
         // given
         ChangelogEntry changelog = new ChangelogEntry();
-        VersionNumber version = VersionNumber.version(1, 2, 3, 4);
+        VersionNumber version = version(1, 2, 3, 4);
 
         // when
         changelog.setVersionNumber(version);

@@ -361,4 +361,15 @@ public class TestChangelogEntry {
         assertThat(comparator).as("Local2ServerComparator is instance of GeneralComparator")
                 .isInstanceOf(ChangelogEntry.GeneralComparator.class);
     }
+
+    @Test
+    public void testToString() {
+        // given
+
+        // when
+        ChangelogEntry changelog = new ChangelogEntry();
+
+        // then
+        assertThat(changelog.toString()).as("toString is not null");
+    }
 }

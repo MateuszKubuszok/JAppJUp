@@ -236,4 +236,15 @@ public class TestPackage {
         assertThat(comparator).as("Local2ServerComparator is instance of OuterMatchingComparator")
                 .isInstanceOf(Package.OuterMatchingComparator.class);
     }
+
+    @Test
+    public void testToString() {
+        // given
+
+        // when
+        Package _package = new Package();
+
+        // then
+        assertThat(_package.toString()).as("toString is not null");
+    }
 }

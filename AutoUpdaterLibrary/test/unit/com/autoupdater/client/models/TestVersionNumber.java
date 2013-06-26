@@ -1,6 +1,9 @@
 package com.autoupdater.client.models;
 
+import static com.autoupdater.client.models.VersionNumber.UNVERSIONED;
 import static org.fest.assertions.api.Assertions.assertThat;
+
+import java.util.Comparator;
 
 import org.junit.Test;
 
@@ -45,7 +48,7 @@ public class TestVersionNumber {
     @Test
     public void testEquals() {
         forEqualNumbersShouldBeEqual();
-        forDifferentNumbersShouldBeEqual();
+        forDifferentNumbersShouldNotBeEqual();
     }
 
     private void forEqualNumbersShouldBeEqual() {
@@ -60,7 +63,7 @@ public class TestVersionNumber {
                 .isEqualTo(versionNumber2);
     }
 
-    private void forDifferentNumbersShouldBeEqual() {
+    private void forDifferentNumbersShouldNotBeEqual() {
         // given
 
         // when
@@ -106,5 +109,90 @@ public class TestVersionNumber {
         // then
         assertThat(comparison).as("compareTo should not be 0 for differenr VersionNumbers")
                 .isLessThan(0);
+    }
+
+    @Test
+    public void testGeneralComparator() {
+        forEqualVersionNumbersShouldBe0();
+        forDifferentVersionNumbersShouldNotBe0();
+    }
+
+    private void forEqualVersionNumbersShouldBe0() {
+        // given
+
+        // when
+        VersionNumber version1 = VersionNumber.version(1, 2, 3, 4);
+        VersionNumber version2 = VersionNumber.version(1, 2, 3, 4);
+        Comparator<VersionNumber> comparator = new VersionNumber.GeneralComparator();
+
+        // then
+        assertThat(comparator.compare(version1, version2)).as(
+                "For equal Version Numbers should be 0").isEqualTo(0);
+        assertThat(comparator.compare(version2, version1)).as(
+                "For equal Version Numbers should be 0").isEqualTo(0);
+    }
+
+    private void forDifferentVersionNumbersShouldNotBe0() {
+        // given
+
+        // when
+        VersionNumber version1 = VersionNumber.version(1, 2, 3, 4);
+        VersionNumber version2 = VersionNumber.version(1, 2, 3, 5);
+        Comparator<VersionNumber> comparator = new VersionNumber.GeneralComparator();
+
+        // then
+        assertThat(comparator.compare(version1, version2)).as(
+                "For different Version Numbers should not be 0").isLessThan(0);
+        assertThat(comparator.compare(version2, version1)).as(
+                "For different Version Numbers should not be 0").isGreaterThan(0);
+    }
+
+    @Test
+    public void testGetInstallationsServerPropertiesComparator() {
+        // given
+
+        // when
+        Comparator<VersionNumber> comparator = UNVERSIONED
+                .getInstallationsServerPropertiesComparator();
+
+        // then
+        assertThat(comparator).as(
+                "InstallationsServerPropertiesComparator is instance of GeneralComparator")
+                .isInstanceOf(VersionNumber.GeneralComparator.class);
+    }
+
+    @Test
+    public void testGetLocalInstallationsComparator() {
+        // given
+
+        // when
+        Comparator<VersionNumber> comparator = UNVERSIONED.getLocalInstallationsComparator();
+
+        // then
+        assertThat(comparator).as("LocalInstallationsComparator is instance of GeneralComparator")
+                .isInstanceOf(VersionNumber.GeneralComparator.class);
+    }
+
+    @Test
+    public void testGetLocal2ServerComparator() {
+        // given
+
+        // when
+        Comparator<VersionNumber> comparator = UNVERSIONED.getLocal2ServerComparator();
+
+        // then
+        assertThat(comparator).as("Local2ServerComparator is instance of GeneralComparator")
+                .isInstanceOf(VersionNumber.GeneralComparator.class);
+    }
+
+    @Test
+    public void testToString() {
+        // given
+
+        // when
+        VersionNumber version = new VersionNumber(1, 2, 3, 4);
+
+        // then
+        assertThat(version.toString()).as("toString is not null");
     }
 }

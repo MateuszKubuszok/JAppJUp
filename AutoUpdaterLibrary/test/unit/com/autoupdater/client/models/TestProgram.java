@@ -294,4 +294,15 @@ public class TestProgram {
         assertThat(comparator).as("Local2ServerComparator is instance of Local2ServerComparator")
                 .isInstanceOf(Program.Local2ServerComparator.class);
     }
+
+    @Test
+    public void testToString() {
+        // given
+
+        // when
+        Program program = new Program();
+
+        // then
+        assertThat(program.toString()).as("toString is not null");
+    }
 }

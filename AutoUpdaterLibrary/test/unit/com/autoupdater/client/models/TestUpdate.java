@@ -212,4 +212,15 @@ public class TestUpdate {
         assertThat(comparator).as("Local2ServerComparator is instance of Local2ServerComparator")
                 .isInstanceOf(Update.Local2ServerComparator.class);
     }
+
+    @Test
+    public void testToString() {
+        // given
+
+        // when
+        Update update = new Update();
+
+        // then
+        assertThat(update.toString()).as("toString is not null");
+    }
 }

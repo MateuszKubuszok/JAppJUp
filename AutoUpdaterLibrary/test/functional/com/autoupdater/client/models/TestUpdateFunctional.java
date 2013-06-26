@@ -15,6 +15,7 @@
  */
 package com.autoupdater.client.models;
 
+import static com.autoupdater.client.models.EUpdateStrategy.EXECUTE;
 import static com.autoupdater.client.models.VersionNumber.version;
 import static org.fest.assertions.api.Assertions.assertThat;
 
@@ -93,7 +94,7 @@ public class TestUpdateFunctional {
         Update update = new Update();
         VersionNumber version = version(23, 47, 78, 0);
         boolean developmentVersion = true;
-        EUpdateStrategy strategy = EUpdateStrategy.EXECUTE;
+        EUpdateStrategy strategy = EXECUTE;
 
         // when
         update.setVersionNumber(version);

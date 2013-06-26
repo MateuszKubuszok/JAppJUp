@@ -15,6 +15,8 @@
  */
 package com.autoupdater.client.installation.runnable;
 
+import static com.google.common.collect.Iterables.filter;
+
 import java.io.IOException;
 import java.util.SortedSet;
 
@@ -24,6 +26,7 @@ import net.jsdpu.process.killers.ProcessKillerException;
 import com.autoupdater.client.environment.EnvironmentData;
 import com.autoupdater.client.environment.ProgramSettingsNotFoundException;
 import com.autoupdater.client.models.Update;
+import com.google.common.base.Predicate;
 
 /**
  * Helper responsible for shutting down all updated programs that might be
@@ -65,10 +68,16 @@ class ProcessShutdownHelper {
      */
     public void killProcesses(SortedSet<Update> updates) throws ProgramSettingsNotFoundException,
             IOException, InterruptedException, ProcessKillerException {
+        Iterable<Update> updatesToInstall = filter(updates, new Predicate<Update>() {
+            @Override
+            public boolean apply(Update update) {
+                return update != null && update.getStatus().isIntendedToBeChanged();
+            }
+        });
+
         IProcessKiller killer = environmentData.getSystem().getProcessKiller();
-        for (Update update : updates)
-            if (update != null && update.getStatus().isIntendedToBeChanged())
-                killer.killProcess(environmentData.findProgramSettingsForUpdate(update)
-                        .getProgramExecutableName());
+        for (Update update : updatesToInstall)
+            killer.killProcess(environmentData.findProgramSettingsForUpdate(update)
+                    .getProgramExecutableName());
     }
 }

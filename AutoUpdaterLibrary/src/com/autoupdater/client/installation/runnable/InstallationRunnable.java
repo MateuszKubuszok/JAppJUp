@@ -51,7 +51,7 @@ public class InstallationRunnable extends ObservableService<InstallationServiceM
     private final CommandGenerationHelper commandGenerationHelper;
     private final ProcessShutdownHelper processHelper;
     private final SortedSet<Update> updates;
-    private EInstallationStatus state = EInstallationStatus.PREPARING_INSTALLATION;
+    private EInstallationStatus state = PREPARING_INSTALLATION;
 
     private List<String[]> updateExecutionCommands;
     private ExecutionQueueReader reader;

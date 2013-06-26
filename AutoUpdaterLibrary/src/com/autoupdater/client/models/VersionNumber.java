@@ -198,7 +198,7 @@ public class VersionNumber implements IModel<VersionNumber> {
     /**
      * Comparator for everything.
      */
-    private class GeneralComparator implements Comparator<VersionNumber> {
+    static class GeneralComparator implements Comparator<VersionNumber> {
         @Override
         public int compare(VersionNumber o1, VersionNumber o2) {
             if (o1 == null)
