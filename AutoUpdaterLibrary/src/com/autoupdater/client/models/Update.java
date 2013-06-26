@@ -16,6 +16,7 @@
 package com.autoupdater.client.models;
 
 import static com.autoupdater.client.models.EUpdateStatus.*;
+import static com.autoupdater.client.models.EUpdateStrategy.COPY;
 import static com.autoupdater.client.models.Models.secureRelativePath;
 import static com.autoupdater.client.models.VersionNumber.UNVERSIONED;
 import static com.autoupdater.client.utils.comparables.Comparables.compare;
@@ -56,6 +57,16 @@ public class Update extends ObservableService<EUpdateStatus> implements IModel<U
     private String uniqueIdentifier;
 
     Update() {
+        packageID = "";
+        packageName = "";
+        id = "";
+        changes = "";
+        versionNumber = UNVERSIONED;
+        updateStrategy = COPY;
+        originalName = "";
+        relativePath = "";
+        command = "";
+
         status = NOT_SELECTED;
     }
 
@@ -480,18 +491,18 @@ public class Update extends ObservableService<EUpdateStatus> implements IModel<U
         return new Local2ServerComparator();
     }
 
-    private class LocalInstallationsComparator implements Comparator<Update> {
+    static class LocalInstallationsComparator implements Comparator<Update> {
         @Override
         public int compare(Update o1, Update o2) {
             if (o1 == null)
                 return o2 == null ? 0 : -1;
             if (!equal(o1.packageName, o2.packageName))
-                Comparables.compare(o1.packageName, o2.packageName);
+                return Comparables.compare(o1.packageName, o2.packageName);
             return Comparables.compare(o1.versionNumber, o2.versionNumber);
         }
     }
 
-    private class Local2ServerComparator implements Comparator<Update> {
+    static class Local2ServerComparator implements Comparator<Update> {
         @Override
         public int compare(Update o1, Update o2) {
             if (o1 == null)

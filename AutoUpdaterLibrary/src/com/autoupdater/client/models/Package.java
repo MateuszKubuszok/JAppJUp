@@ -131,6 +131,22 @@ public class Package implements IModel<Package>, IModelWithVersionNumber {
     /**
      * Sets Package's version number.
      * 
+     * @param major
+     *            Package's major version number
+     * @param minor
+     *            Package's minor version number
+     * @param release
+     *            Package's release version number
+     * @param nightly
+     *            Package's nightly version number
+     */
+    public void setVersionNumber(int major, int minor, int release, int nightly) {
+        this.versionNumber = new VersionNumber(major, minor, release, nightly);
+    }
+
+    /**
+     * Sets Package's version number.
+     * 
      * @param versionNumber
      *            Package's version number
      */
@@ -278,14 +294,14 @@ public class Package implements IModel<Package>, IModelWithVersionNumber {
         return new OuterMatchingComparator();
     }
 
-    private class CreationHelperComparator implements Comparator<Package> {
+    static class CreationHelperComparator implements Comparator<Package> {
         @Override
         public int compare(Package o1, Package o2) {
             return (o1 == null) ? (o2 == null ? 0 : -1) : Comparables.compare(o1.name, o2.name);
         }
     }
 
-    private class InnerConsistencyComparator implements Comparator<Package> {
+    static class InnerConsistencyComparator implements Comparator<Package> {
         @Override
         public int compare(Package o1, Package o2) {
             if (o1 == null)
@@ -296,7 +312,7 @@ public class Package implements IModel<Package>, IModelWithVersionNumber {
         }
     }
 
-    private class OuterMatchingComparator implements Comparator<Package> {
+    static class OuterMatchingComparator implements Comparator<Package> {
         @Override
         public int compare(Package o1, Package o2) {
             return (o1 == null) ? (o2 == null ? 0 : -1) : Comparables.compare(o1.name, o2.name);

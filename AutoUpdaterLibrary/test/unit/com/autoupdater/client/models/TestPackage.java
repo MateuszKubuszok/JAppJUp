@@ -3,6 +3,8 @@ package com.autoupdater.client.models;
 import static com.autoupdater.client.models.VersionNumber.*;
 import static org.fest.assertions.api.Assertions.assertThat;
 
+import java.util.Comparator;
+
 import org.junit.Test;
 
 public class TestPackage {
@@ -48,6 +50,8 @@ public class TestPackage {
         // then
         assertThat(package1).as("Packages with equal properites should be equal").isEqualTo(
                 package2);
+        assertThat(package2).as("Packages with equal properites should be equal").isEqualTo(
+                package1);
     }
 
     private void forDifferentPackagesShouldNotBeEqual() {
@@ -66,5 +70,132 @@ public class TestPackage {
         // then
         assertThat(package1).as("Packages with equal properites should be equal").isNotEqualTo(
                 package2);
+        assertThat(package2).as("Packages with equal properites should be equal").isNotEqualTo(
+                package1);
+    }
+
+    @Test
+    public void testCreationHelperComparator() {
+        forEqualPackagesCreationHelperComparatorShouldBe0();
+        forDifferentPackagesCreationHelperComparatorNotShouldBe0();
+    }
+
+    private void forEqualPackagesCreationHelperComparatorShouldBe0() {
+        // given
+        String name = "some name";
+
+        // when
+        Package package1 = PackageBuilder.builder().setName(name).build();
+        Package package2 = PackageBuilder.builder().setName(name).build();
+        Comparator<Package> comparator = new Package.CreationHelperComparator();
+
+        // then
+        assertThat(comparator.compare(package1, package2)).as(
+                "For equal Packages CreationHelperComparator should be 0").isEqualTo(0);
+        assertThat(comparator.compare(package2, package1)).as(
+                "For equal Packages CreationHelperComparator should be 0").isEqualTo(0);
+    }
+
+    private void forDifferentPackagesCreationHelperComparatorNotShouldBe0() {
+        // given
+        String name = "some name";
+
+        // when
+        Package package1 = PackageBuilder.builder().setName(name).build();
+        Package package2 = PackageBuilder.builder().setName("some other name").build();
+        Comparator<Package> comparator = new Package.CreationHelperComparator();
+
+        // then
+        assertThat(comparator.compare(package1, package2)).as(
+                "For equal Packages CreationHelperComparator should not be equal to 0").isLessThan(
+                0);
+        assertThat(comparator.compare(package2, package1)).as(
+                "For equal Packages CreationHelperComparator should not be equal to 0")
+                .isGreaterThan(0);
+    }
+
+    @Test
+    public void testInnerConsistencyComparator() {
+        forEqualPackagesInnerConsistencyComparatorShouldBe0();
+        forDifferentPackagesInnerConsistencyComparatorNotShouldBe0();
+    }
+
+    private void forEqualPackagesInnerConsistencyComparatorShouldBe0() {
+        // given
+        Program program = ProgramBuilder.builder().setName("some name")
+                .setPathToProgramDirectory("some/path").setServerAddress("some address").build();
+        String name = "some name";
+
+        // when
+        Package package1 = PackageBuilder.builder().setName(name).setProgram(program).build();
+        Package package2 = PackageBuilder.builder().setName(name).setProgram(program).build();
+        Comparator<Package> comparator = new Package.InnerConsistencyComparator();
+
+        // then
+        assertThat(comparator.compare(package1, package2)).as(
+                "For equal Packages InnerConsistencyComparator should be 0").isEqualTo(0);
+        assertThat(comparator.compare(package2, package1)).as(
+                "For equal Packages InnerConsistencyComparator should be 0").isEqualTo(0);
+    }
+
+    private void forDifferentPackagesInnerConsistencyComparatorNotShouldBe0() {
+        // given
+        Program program = ProgramBuilder.builder().setName("some name")
+                .setPathToProgramDirectory("some/path").setServerAddress("some address").build();
+        String name = "some name";
+
+        // when
+        Package package1 = PackageBuilder.builder().setName(name).setProgram(program).build();
+        Package package2 = PackageBuilder.builder().setName("some other name").setProgram(program)
+                .build();
+        Comparator<Package> comparator = new Package.InnerConsistencyComparator();
+
+        // then
+        assertThat(comparator.compare(package1, package2)).as(
+                "For equal Packages CreationHelperComparator should not be equal to 0").isLessThan(
+                0);
+        assertThat(comparator.compare(package2, package1)).as(
+                "For equal Packages CreationHelperComparator should not be equal to 0")
+                .isGreaterThan(0);
+    }
+
+    @Test
+    public void testOuterMatchingComparator() {
+        forEqualPackagesOuterMatchingComparatorShouldBe0();
+        forDifferentPackagesOuterMatchingComparatorNotShouldBe0();
+    }
+
+    private void forEqualPackagesOuterMatchingComparatorShouldBe0() {
+        // given
+        String name = "some name";
+
+        // when
+        Package package1 = PackageBuilder.builder().setName(name).build();
+        Package package2 = PackageBuilder.builder().setName(name).build();
+        Comparator<Package> comparator = new Package.OuterMatchingComparator();
+
+        // then
+        assertThat(comparator.compare(package1, package2)).as(
+                "For equal Packages OuterMatchingComparator should be 0").isEqualTo(0);
+        assertThat(comparator.compare(package2, package1)).as(
+                "For equal Packages OuterMatchingComparator should be 0").isEqualTo(0);
+    }
+
+    private void forDifferentPackagesOuterMatchingComparatorNotShouldBe0() {
+        // given
+        String name = "some name";
+
+        // when
+        Package package1 = PackageBuilder.builder().setName(name).build();
+        Package package2 = PackageBuilder.builder().setName("some other name").build();
+        Comparator<Package> comparator = new Package.OuterMatchingComparator();
+
+        // then
+        assertThat(comparator.compare(package1, package2)).as(
+                "For equal Packages OuterMatchingComparator should not be equal to 0")
+                .isLessThan(0);
+        assertThat(comparator.compare(package2, package1)).as(
+                "For equal Packages OuterMatchingComparator should not be equal to 0")
+                .isGreaterThan(0);
     }
 }

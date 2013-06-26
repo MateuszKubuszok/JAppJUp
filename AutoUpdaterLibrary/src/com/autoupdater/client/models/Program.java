@@ -291,7 +291,7 @@ public class Program implements IModel<Program> {
         return new Local2ServerComparator();
     }
 
-    private class InstallationsServerPropertiesComparator implements Comparator<Program> {
+    static class InstallationsServerPropertiesComparator implements Comparator<Program> {
         @Override
         public int compare(Program o1, Program o2) {
             if (o1 == null)
@@ -304,7 +304,7 @@ public class Program implements IModel<Program> {
         }
     }
 
-    private class LocalInstallationsComparator implements Comparator<Program> {
+    static class LocalInstallationsComparator implements Comparator<Program> {
         @Override
         public int compare(Program o1, Program o2) {
             if (o1 == null)
@@ -317,7 +317,7 @@ public class Program implements IModel<Program> {
         }
     }
 
-    private class Local2ServerComparator implements Comparator<Program> {
+    static class Local2ServerComparator implements Comparator<Program> {
         @Override
         public int compare(Program o1, Program o2) {
             return (o1 == null) ? (o2 == null ? 0 : -1) : Comparables.compare(o1.name, o2.name);

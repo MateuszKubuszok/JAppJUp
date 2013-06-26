@@ -73,6 +73,11 @@ public class PackageBuilder {
         return this;
     }
 
+    public PackageBuilder setVersionNumber(int major, int minor, int release, int nightly) {
+        _package.setVersionNumber(major, minor, release, nightly);
+        return this;
+    }
+
     public PackageBuilder setVersionNumber(String versionNumber) {
         _package.setVersionNumber(versionNumber);
         return this;

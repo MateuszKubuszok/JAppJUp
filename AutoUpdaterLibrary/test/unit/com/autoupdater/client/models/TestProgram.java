@@ -54,6 +54,8 @@ public class TestProgram {
         // then
         assertThat(program1).as("Programs should be equal when their properties are equal")
                 .isEqualTo(program2);
+        assertThat(program2).as("Programs should be equal when their properties are equal")
+                .isEqualTo(program1);
     }
 
     private void forDifferentPropertiesShouldNotBeEqual() {
@@ -83,6 +85,8 @@ public class TestProgram {
         // then
         assertThat(program1).as("Programs should not be equal when their properties are different")
                 .isNotEqualTo(program2).isNotEqualTo(program3).isNotEqualTo(program4);
+        assertThat(program2).as("Programs should not be equal when their properties are different")
+                .isNotEqualTo(program1).isNotEqualTo(program3).isNotEqualTo(program4);
     }
 
     @Test
@@ -106,10 +110,13 @@ public class TestProgram {
         program2.setPathToProgramDirectory(pathToDirectory);
         program1.setServerAddress(serverAddress);
         program2.setServerAddress(serverAddress);
-        Comparator<Program> comparator = new Program().getInstallationsServerPropertiesComparator();
+        Comparator<Program> comparator = new Program.InstallationsServerPropertiesComparator();
 
         // then
         assertThat(comparator.compare(program1, program2)).as(
+                "InstallationsServerPropertiesComparator should be 0 for equal Programs")
+                .isEqualTo(0);
+        assertThat(comparator.compare(program2, program1)).as(
                 "InstallationsServerPropertiesComparator should be 0 for equal Programs")
                 .isEqualTo(0);
     }
@@ -129,7 +136,7 @@ public class TestProgram {
         program2.setPathToProgramDirectory(pathToDirectory);
         program1.setServerAddress(serverAddress);
         program2.setServerAddress(serverAddress);
-        Comparator<Program> comparator = new Program().getInstallationsServerPropertiesComparator();
+        Comparator<Program> comparator = new Program.InstallationsServerPropertiesComparator();
 
         // then
         assertThat(comparator.compare(program1, program2)).as(
@@ -161,10 +168,12 @@ public class TestProgram {
         program2.setPathToProgramDirectory(pathToDirectory);
         program1.setServerAddress(serverAddress);
         program2.setServerAddress(serverAddress);
-        Comparator<Program> comparator = new Program().getLocalInstallationsComparator();
+        Comparator<Program> comparator = new Program.LocalInstallationsComparator();
 
         // then
         assertThat(comparator.compare(program1, program2)).as(
+                "LocalInstallationsComparator should be 0 for equal Programs").isEqualTo(0);
+        assertThat(comparator.compare(program2, program1)).as(
                 "LocalInstallationsComparator should be 0 for equal Programs").isEqualTo(0);
     }
 
@@ -183,7 +192,7 @@ public class TestProgram {
         program2.setPathToProgramDirectory(pathToDirectory);
         program1.setServerAddress(serverAddress);
         program2.setServerAddress(serverAddress);
-        Comparator<Program> comparator = new Program().getLocalInstallationsComparator();
+        Comparator<Program> comparator = new Program.LocalInstallationsComparator();
 
         // then
         assertThat(comparator.compare(program1, program2)).as(
@@ -215,10 +224,12 @@ public class TestProgram {
         program2.setPathToProgramDirectory("other path");
         program1.setServerAddress(serverAddress);
         program2.setServerAddress("other server");
-        Comparator<Program> comparator = new Program().getLocal2ServerComparator();
+        Comparator<Program> comparator = new Program.Local2ServerComparator();
 
         // then
         assertThat(comparator.compare(program1, program2)).as(
+                "Local2ServerComparator should be 0 for equal Programs").isEqualTo(0);
+        assertThat(comparator.compare(program2, program1)).as(
                 "Local2ServerComparator should be 0 for equal Programs").isEqualTo(0);
     }
 
@@ -237,7 +248,7 @@ public class TestProgram {
         program2.setPathToProgramDirectory(pathToDirectory);
         program1.setServerAddress(serverAddress);
         program2.setServerAddress(serverAddress);
-        Comparator<Program> comparator = new Program().getLocal2ServerComparator();
+        Comparator<Program> comparator = new Program.Local2ServerComparator();
 
         // then
         assertThat(comparator.compare(program1, program2)).as(
