@@ -15,7 +15,7 @@
  */
 package com.autoupdater.client.download.aggregated.services;
 
-import static org.fest.assertions.api.Assertions.*;
+import static org.fest.assertions.api.Assertions.assertThat;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -57,71 +57,63 @@ public class TestBugsInfoAggregatedDownloadService {
             .setDescription("Some other description 3").build();
 
     @Test
-    public void testService() {
-        try {
-            // given
-            Program program1 = ProgramBuilder.builder().setName("Program")
-                    .setPathToProgramDirectory("/").setServerAddress("127.0.0.1").build();
-            Program program2 = ProgramBuilder.builder().setName("Program 2")
-                    .setPathToProgramDirectory("/").setServerAddress("127.0.0.1").build();
+    public void testService() throws DownloadResultException {
+        // given
+        Program program1 = ProgramBuilder.builder().setName("Program")
+                .setPathToProgramDirectory("/").setServerAddress("127.0.0.1").build();
+        Program program2 = ProgramBuilder.builder().setName("Program 2")
+                .setPathToProgramDirectory("/").setServerAddress("127.0.0.1").build();
 
-            BugsInfoAggregatedDownloadService aggregatedService = new BugsInfoAggregatedDownloadService();
-            addService(aggregatedService, program1Bugs1, program1);
-            addService(aggregatedService, program2Bugs1, program2);
+        BugsInfoAggregatedDownloadService aggregatedService = new BugsInfoAggregatedDownloadService();
+        addService(aggregatedService, program1Bugs1, program1);
+        addService(aggregatedService, program2Bugs1, program2);
 
-            SortedSet<Program> result = null;
+        SortedSet<Program> result = null;
 
-            // when
-            aggregatedService.start();
-            aggregatedService.joinThread();
-            result = aggregatedService.getResult();
+        // when
+        aggregatedService.start();
+        aggregatedService.joinThread();
+        result = aggregatedService.getResult();
 
-            // then
-            assertThat(result).as("getResult() should aggregate results from all services")
-                    .isNotNull().hasSize(2);
-            assertThat(program1.getBugs()).as("getResult() should properly insert Bugs")
-                    .isNotNull().hasSize(2).containsExactly(bug1, bug2);
-            assertThat(program2.getBugs()).as("getResult() should properly insert Bugs")
-                    .isNotNull().hasSize(2).containsExactly(bug3, bug4);
-        } catch (DownloadResultException e) {
-            fail("getResult() should not throw exception when result is ready, and without errors");
-        }
+        // then
+        assertThat(result).as("getResult() should aggregate results from all services").isNotNull()
+                .hasSize(2);
+        assertThat(program1.getBugs()).as("getResult() should properly insert Bugs").isNotNull()
+                .hasSize(2).containsExactly(bug1, bug2);
+        assertThat(program2.getBugs()).as("getResult() should properly insert Bugs").isNotNull()
+                .hasSize(2).containsExactly(bug3, bug4);
     }
 
     @Test
-    public void testUpdate() {
-        try {
-            // given
-            Program program1 = ProgramBuilder.builder().setName("Program")
-                    .setPathToProgramDirectory("/").setServerAddress("127.0.0.1").build();
-            Program program2 = ProgramBuilder.builder().setName("Program 2")
-                    .setPathToProgramDirectory("/").setServerAddress("127.0.0.1").build();
+    public void testUpdate() throws DownloadResultException {
+        // given
+        Program program1 = ProgramBuilder.builder().setName("Program")
+                .setPathToProgramDirectory("/").setServerAddress("127.0.0.1").build();
+        Program program2 = ProgramBuilder.builder().setName("Program 2")
+                .setPathToProgramDirectory("/").setServerAddress("127.0.0.1").build();
 
-            BugsInfoAggregatedDownloadService aggregatedService = new BugsInfoAggregatedDownloadService();
-            addService(aggregatedService, program1Bugs1, program1);
-            addService(aggregatedService, program2Bugs1, program2);
+        BugsInfoAggregatedDownloadService aggregatedService = new BugsInfoAggregatedDownloadService();
+        addService(aggregatedService, program1Bugs1, program1);
+        addService(aggregatedService, program2Bugs1, program2);
 
-            BugsInfoAggregatedDownloadService aggregatedService2 = new BugsInfoAggregatedDownloadService();
-            addService(aggregatedService2, program1Bugs2, program1);
-            addService(aggregatedService2, program2Bugs1, program2);
+        BugsInfoAggregatedDownloadService aggregatedService2 = new BugsInfoAggregatedDownloadService();
+        addService(aggregatedService2, program1Bugs2, program1);
+        addService(aggregatedService2, program2Bugs1, program2);
 
-            // when
-            aggregatedService.start();
-            aggregatedService.joinThread();
-            aggregatedService.getResult();
+        // when
+        aggregatedService.start();
+        aggregatedService.joinThread();
+        aggregatedService.getResult();
 
-            aggregatedService2.start();
-            aggregatedService2.joinThread();
-            aggregatedService2.getResult();
+        aggregatedService2.start();
+        aggregatedService2.joinThread();
+        aggregatedService2.getResult();
 
-            // then
-            assertThat(program1.getBugs()).as("getResult() should properly insert Bugs")
-                    .isNotNull().hasSize(3).containsExactly(bug1, bug5, bug6);
-            assertThat(program2.getBugs()).as("getResult() should properly insert Bugs")
-                    .isNotNull().hasSize(2).containsExactly(bug3, bug4);
-        } catch (DownloadResultException e) {
-            fail("getResult() should not throw exception when result is ready, and without errors");
-        }
+        // then
+        assertThat(program1.getBugs()).as("getResult() should properly insert Bugs").isNotNull()
+                .hasSize(3).containsExactly(bug1, bug5, bug6);
+        assertThat(program2.getBugs()).as("getResult() should properly insert Bugs").isNotNull()
+                .hasSize(2).containsExactly(bug3, bug4);
     }
 
     private void addService(BugsInfoAggregatedDownloadService aggregatedService, String xml,

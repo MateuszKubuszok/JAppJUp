@@ -15,6 +15,7 @@
  */
 package com.autoupdater.client.xml.creators;
 
+import static java.io.File.separator;
 import static org.fest.assertions.api.Assertions.assertThat;
 
 import java.io.File;
@@ -29,27 +30,18 @@ import com.autoupdater.client.models.Program;
 
 public class TestInstallationDataXMLCreator {
     @Test
-    public void testCreation() {
+    public void testCreation() throws IOException {
         // given
-        String filePath = Paths.Library.testDir + File.separator + "testInstallationData.xml";
+        String filePath = Paths.Library.testDir + separator + "testInstallationData.xml";
         File documentXML = new File(filePath);
         documentXML.deleteOnExit();
 
         SortedSet<Program> installationData = new TreeSet<Program>();
 
-        boolean exceptionThrown = false;
-
         // when
-        try {
-            new InstallationDataXMLCreator().createXML(documentXML, installationData);
-        } catch (IOException e) {
-            exceptionThrown = true;
-        }
+        new InstallationDataXMLCreator().createXML(documentXML, installationData);
 
         // then
-        assertThat(exceptionThrown).as(
-                "createXML() shouldn't throw exception while saving file in accesible place")
-                .isFalse();
         assertThat(documentXML).as("createXML() should save file in chosen location").exists();
     }
 }

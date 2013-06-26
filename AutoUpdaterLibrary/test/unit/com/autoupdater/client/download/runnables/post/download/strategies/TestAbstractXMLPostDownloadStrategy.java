@@ -44,25 +44,19 @@ public class TestAbstractXMLPostDownloadStrategy {
     }
 
     @Test
-    public void testProcessDownload() {
+    public void testProcessDownload() throws DownloadResultException, ParserException {
         // given
         String content = CorrectXMLExamples.genericXml;
         AbstractXMLPostDownloadStrategy<Document> strategy = new AbstractXMLDownloadStrategyTester();
         Document document = null;
-        boolean exceptionThrown = false;
 
         // when
         strategy.write((content).getBytes(ConnectionConfiguration.XML_ENCODING), content.length());
-        try {
-            document = strategy.processDownload();
-        } catch (ParserException | DownloadResultException e) {
-            exceptionThrown = true;
-        }
+        document = strategy.processDownload();
 
         // then
-        assertThat(exceptionThrown).as(
-                "processDownload() should not throw exception for correct XML").isFalse();
-        assertThat(document).isNotNull().as(
-                "processDownload() should return effect of AbstractXmlParser processing");
+        assertThat(document).as(
+                "processDownload() should return effect of AbstractXmlParser processing")
+                .isNotNull();
     }
 }

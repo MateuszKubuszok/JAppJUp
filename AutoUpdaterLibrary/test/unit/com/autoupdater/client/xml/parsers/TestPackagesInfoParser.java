@@ -19,6 +19,7 @@ import static org.fest.assertions.api.Assertions.assertThat;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.SortedSet;
 
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
@@ -56,29 +57,28 @@ public class TestPackagesInfoParser extends AbstractTestXMLParser<List<Program>>
                 .read(getInputStreamForString(CorrectXMLExamples.packagesInfo));
 
         // when
-        List<Program> programs = new ArrayList<Program>(
-                new PackagesInfoParser().parseDocument(document));
-        List<Package> packages1 = new ArrayList<Package>(("Program 1".equals(programs.get(0)
-                .getName()) ? programs.get(0) : programs.get(1)).getPackages());
-        List<Package> packages2 = new ArrayList<Package>(("Program 2".equals(programs.get(0)
-                .getName()) ? programs.get(0) : programs.get(1)).getPackages());
+        SortedSet<Program> programs = new PackagesInfoParser().parseDocument(document);
+        SortedSet<Package> packages1 = ("Program 1".equals(programs.first().getName()) ? programs
+                .first() : programs.last()).getPackages();
+        SortedSet<Package> packages2 = ("Program 2".equals(programs.first().getName()) ? programs
+                .first() : programs.last()).getPackages();
 
         // then
         assertThat(packages1).as(
                 "parseDocument() should parse all packages without removing/adding empty").hasSize(
                 2);
-        assertThat(packages1.get(0).getName()).as(
+        assertThat(packages1.first().getName()).as(
                 "parseDocument() should properly parse package's name").isEqualTo("Package 1");
-        assertThat(packages1.get(0).getID()).as(
+        assertThat(packages1.first().getID()).as(
                 "parseDocument() should properly parse package's ID").isEqualTo("1");
-        assertThat(packages1.get(1).getName()).as(
+        assertThat(packages1.last().getName()).as(
                 "parseDocument() should properly parse package's name").isEqualTo("Package 2");
         assertThat(packages2).as(
                 "parseDocument() should parse all packages without removing/adding empty").hasSize(
                 1);
-        assertThat(packages2.get(0).getName()).as(
+        assertThat(packages2.first().getName()).as(
                 "parseDocument() should properly parse package's name").isEqualTo("Package 3");
-        assertThat(packages2.get(0).getID()).as(
+        assertThat(packages2.first().getID()).as(
                 "parseDocument() should properly parse package's ID").isEqualTo("3");
     }
 }

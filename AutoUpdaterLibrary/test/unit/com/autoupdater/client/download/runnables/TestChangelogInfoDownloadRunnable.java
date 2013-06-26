@@ -28,27 +28,18 @@ import com.autoupdater.client.xml.parsers.CorrectXMLExamples;
 
 public class TestChangelogInfoDownloadRunnable extends AbstractTestDownloadRunnable {
     @Test
-    public void testRun() throws MalformedURLException {
+    public void testRun() throws MalformedURLException, DownloadResultException {
         // given
         ChangelogInfoDownloadRunnable downloadRunnable = new ChangelogInfoDownloadRunnable(
                 getConnection(CorrectXMLExamples.changelogInfo));
         SortedSet<ChangelogEntry> changelogs = null;
-        boolean exceptionThrown = false;
 
         // when
         downloadRunnable.run();
-        try {
-            changelogs = downloadRunnable.getResult();
-        } catch (DownloadResultException e) {
-            exceptionThrown = true;
-        }
+        changelogs = downloadRunnable.getResult();
 
         // then
-        assertThat(exceptionThrown).as(
-                "getResult() should not throw exception when trying to access parsed result")
-                .isFalse();
         assertThat(changelogs).as("getResult() should return result when it's ready").isNotNull()
                 .isNotEmpty();
     }
-
 }

@@ -176,4 +176,40 @@ public class TestUpdate {
         assertThat(comparator.compare(update2, update1)).as(
                 "For different Updates Local2ServerComparator should not be 0").isGreaterThan(0);
     }
+
+    @Test(expected = UnsupportedOperationException.class)
+    public void testGetInstallationsServerPropertiesComparator() {
+        // given
+
+        // when
+        new Update().getInstallationsServerPropertiesComparator();
+
+        // then
+        // UnsupportedOperationException
+    }
+
+    @Test
+    public void testGetLocalInstallationsComparator() {
+        // given
+
+        // when
+        Comparator<Update> comparator = new Update().getLocalInstallationsComparator();
+
+        // then
+        assertThat(comparator).as(
+                "LocalInstallationsComparator is instance of LocalInstallationsComparator")
+                .isInstanceOf(Update.LocalInstallationsComparator.class);
+    }
+
+    @Test
+    public void testGetLocal2ServerComparator() {
+        // given
+
+        // when
+        Comparator<Update> comparator = new Update().getLocal2ServerComparator();
+
+        // then
+        assertThat(comparator).as("Local2ServerComparator is instance of Local2ServerComparator")
+                .isInstanceOf(Update.Local2ServerComparator.class);
+    }
 }

@@ -15,6 +15,7 @@
  */
 package com.autoupdater.client.download.aggregated.notifiers;
 
+import static com.autoupdater.client.download.EDownloadStatus.PROCESSED;
 import static org.fest.assertions.api.Assertions.assertThat;
 
 import java.net.MalformedURLException;
@@ -23,7 +24,6 @@ import java.net.URL;
 import org.junit.Test;
 
 import com.autoupdater.client.download.DownloadServiceMessage;
-import com.autoupdater.client.download.EDownloadStatus;
 import com.autoupdater.client.download.aggregated.services.UpdateInfoAggregatedDownloadService;
 import com.autoupdater.client.download.runnables.HttpURLConnectionMock;
 import com.autoupdater.client.download.services.UpdateInfoDownloadService;
@@ -64,7 +64,7 @@ public class TestUpdateInfoAggregatedNotifier {
         // then
         assertThat(recievedMessage)
                 .as("UpdateInfoAggregatedNotifier should inform about finishing of all downloads")
-                .isNotNull().isEqualTo(EDownloadStatus.PROCESSED.getMessage());
+                .isNotNull().isEqualTo(PROCESSED.getMessage());
     }
 
     private class ListenerObserver implements IObserver<DownloadServiceMessage> {

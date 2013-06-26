@@ -28,20 +28,20 @@ public class TestConnectionFactory {
     public void testGetPerProgramConnectionFactory() {
         // given
         ConnectionFactory factory = getFactory();
-
-        // when
         ProgramSettings programConfiguration = ProgramSettingsBuilder.builder()
                 .setProgramName("Test program").setProgramExecutableName("program.exe")
                 .setPathToProgramDirectory("C:\\program")
                 .setPathToProgram("C:\\program\\program.exe").setServerAddress("test.server.com/")
                 .setDevelopmentVersion(true).build();
+
+        // when
         PerProgramConnectionFactory perProgramFactory = factory
                 .getPerProgramConnectionFactory(programConfiguration);
 
         // then
-        assertThat(perProgramFactory)
-                .as("getPerProgramConnection() should return PerProgramConnectionFactory instance")
-                .isNotNull().isInstanceOf(PerProgramConnectionFactory.class);
+        assertThat(perProgramFactory).as(
+                "getPerProgramConnection() should return PerProgramConnectionFactory instance")
+                .isNotNull();
     }
 
     private ConnectionFactory getFactory() {

@@ -27,25 +27,17 @@ import com.autoupdater.client.xml.parsers.ParserException;
 
 public class TestUpdateInfoPostDownloadStrategy {
     @Test
-    public void testStrategy() {
+    public void testStrategy() throws DownloadResultException, ParserException {
         // given
         UpdateInfoPostDownloadStrategy strategy = new UpdateInfoPostDownloadStrategy();
         String content = CorrectXMLExamples.updateInfo;
         Update result = null;
-        boolean exceptionThrown = false;
 
         // when
         strategy.write(content.getBytes(ConnectionConfiguration.XML_ENCODING), content.length());
-        try {
-            result = strategy.processDownload().first();
-        } catch (ParserException | DownloadResultException e) {
-            exceptionThrown = true;
-        }
+        result = strategy.processDownload().first();
 
-        // then
-        assertThat(exceptionThrown).as(
-                "processDownload() should not throw exception for correct XML").isFalse();
-        assertThat(result).isNotNull().as(
-                "processDownload() should properly parse packages' information");
+        assertThat(result).as("processDownload() should properly parse packages' information")
+                .isNotNull();
     }
 }

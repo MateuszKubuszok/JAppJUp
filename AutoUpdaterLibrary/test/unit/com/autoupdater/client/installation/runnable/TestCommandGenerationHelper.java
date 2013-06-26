@@ -15,6 +15,8 @@
  */
 package com.autoupdater.client.installation.runnable;
 
+import static com.autoupdater.client.models.EUpdateStatus.SELECTED;
+import static java.io.File.separator;
 import static org.fest.assertions.api.Assertions.assertThat;
 
 import java.io.File;
@@ -30,7 +32,6 @@ import com.autoupdater.client.AbstractTest;
 import com.autoupdater.client.Paths;
 import com.autoupdater.client.Values;
 import com.autoupdater.client.environment.ProgramSettingsNotFoundException;
-import com.autoupdater.client.models.EUpdateStatus;
 import com.autoupdater.client.models.Package;
 import com.autoupdater.client.models.PackageBuilder;
 import com.autoupdater.client.models.ProgramBuilder;
@@ -79,8 +80,8 @@ public class TestCommandGenerationHelper extends AbstractTest {
         update1.setFile(new File(Paths.Library.testDir + File.separator + "update2.txt"));
         updates.add(update1);
 
-        update0.setStatus(EUpdateStatus.SELECTED);
-        update1.setStatus(EUpdateStatus.SELECTED);
+        update0.setStatus(SELECTED);
+        update1.setStatus(SELECTED);
 
         // when
         CommandGenerationHelper commandGenerationHelper = new CommandGenerationHelper(
@@ -97,7 +98,7 @@ public class TestCommandGenerationHelper extends AbstractTest {
                 .isEqualTo(
                         new String[] { "java", "-jar", Paths.Library.installerPath,
                                 update0.getUniqueIdentifer(), "unzip",
-                                Paths.Library.testDir + File.separator + "update.txt",
+                                Paths.Library.testDir + separator + "update.txt",
                                 Paths.Installations.Program.programDir });
         assertThat(updateCommand.get(1))
                 .as("getUpdateExecutionCommands should create commands properly")
@@ -110,7 +111,7 @@ public class TestCommandGenerationHelper extends AbstractTest {
                                 update1.getUniqueIdentifer(),
                                 "copy",
                                 Paths.Library.testDir + File.separator + "update2.txt",
-                                Paths.Installations.Program.programDir + File.separator
+                                Paths.Installations.Program.programDir + separator
                                         + update1.getOriginalName() });
     }
 
@@ -140,7 +141,7 @@ public class TestCommandGenerationHelper extends AbstractTest {
                 .setDevelopmentVersion(developmentVersion).setChanges(changes)
                 .setUpdateStrategy(strategy).setOriginalName(originalName)
                 .setRelativePath(relativePath).setCommand(command).setPackage(packages.first())
-                .setFile(new File(Paths.Library.testDir + File.separator + "update.txt")).build();
+                .setFile(new File(Paths.Library.testDir + separator + "update.txt")).build();
 
     }
 }

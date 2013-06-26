@@ -36,7 +36,7 @@ public class TestAbstractXMLParser {
 
         // then
         assertThat(testParser.getXMLParser()).as("getXmlParser() should return SAXReader instance")
-                .isNotNull().isInstanceOf(SAXReader.class);
+                .isNotNull();
     }
 
     @Test

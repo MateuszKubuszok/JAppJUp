@@ -200,4 +200,42 @@ public class TestBugEntry {
                 .as("Bugs with different descriptions should have comparator's compareTos of the descriptions")
                 .isGreaterThan(0);
     }
+
+    @Test
+    public void testGetInstallationsServerPropertiesComparator() {
+        // given
+
+        // when
+        Comparator<BugEntry> comparator = new BugEntry()
+                .getInstallationsServerPropertiesComparator();
+
+        // then
+        assertThat(comparator).as(
+                "InstallationsServerPropertiesComparator is instance of GeneralComparator")
+                .isInstanceOf(BugEntry.GeneralComparator.class);
+    }
+
+    @Test
+    public void testGetLocalInstallationsComparator() {
+        // given
+
+        // when
+        Comparator<BugEntry> comparator = new BugEntry().getLocalInstallationsComparator();
+
+        // then
+        assertThat(comparator).as("LocalInstallationsComparator is instance of GeneralComparator")
+                .isInstanceOf(BugEntry.GeneralComparator.class);
+    }
+
+    @Test
+    public void testGetLocal2ServerComparator() {
+        // given
+
+        // when
+        Comparator<BugEntry> comparator = new BugEntry().getLocal2ServerComparator();
+
+        // then
+        assertThat(comparator).as("Local2ServerComparator is instance of GeneralComparator")
+                .isInstanceOf(BugEntry.GeneralComparator.class);
+    }
 }

@@ -198,4 +198,42 @@ public class TestPackage {
                 "For equal Packages OuterMatchingComparator should not be equal to 0")
                 .isGreaterThan(0);
     }
+
+    @Test
+    public void testGetInstallationsServerPropertiesComparator() {
+        // given
+
+        // when
+        Comparator<Package> comparator = new Package().getInstallationsServerPropertiesComparator();
+
+        // then
+        assertThat(comparator).as(
+                "InstallationsServerPropertiesComparator is instance of CreationHelperComparator")
+                .isInstanceOf(Package.CreationHelperComparator.class);
+    }
+
+    @Test
+    public void testGetLocalInstallationsComparator() {
+        // given
+
+        // when
+        Comparator<Package> comparator = new Package().getLocalInstallationsComparator();
+
+        // then
+        assertThat(comparator).as(
+                "LocalInstallationsComparator is instance of InnerConsistencyComparator")
+                .isInstanceOf(Package.InnerConsistencyComparator.class);
+    }
+
+    @Test
+    public void testGetLocal2ServerComparator() {
+        // given
+
+        // when
+        Comparator<Package> comparator = new Package().getLocal2ServerComparator();
+
+        // then
+        assertThat(comparator).as("Local2ServerComparator is instance of OuterMatchingComparator")
+                .isInstanceOf(Package.OuterMatchingComparator.class);
+    }
 }

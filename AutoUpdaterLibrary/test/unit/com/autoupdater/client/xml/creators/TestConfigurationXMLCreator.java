@@ -15,7 +15,8 @@
  */
 package com.autoupdater.client.xml.creators;
 
-import static org.fest.assertions.api.Assertions.*;
+import static java.io.File.separator;
+import static org.fest.assertions.api.Assertions.assertThat;
 
 import java.io.File;
 import java.io.IOException;
@@ -31,23 +32,19 @@ import com.autoupdater.client.environment.settings.ProgramSettings;
 
 public class TestConfigurationXMLCreator {
     @Test
-    public void testCreation() {
-        try {
-            // given
-            String filePath = Paths.Library.testDir + File.separator + "testConfiguration.xml";
-            File documentXML = new File(filePath);
-            documentXML.deleteOnExit();
+    public void testCreation() throws IOException {
+        // given
+        String filePath = Paths.Library.testDir + separator + "testConfiguration.xml";
+        File documentXML = new File(filePath);
+        documentXML.deleteOnExit();
 
-            ClientSettings clientSettings = ClientSettingsBuilder.builder().build();
-            SortedSet<ProgramSettings> programsSettings = new TreeSet<ProgramSettings>();
+        ClientSettings clientSettings = ClientSettingsBuilder.builder().build();
+        SortedSet<ProgramSettings> programsSettings = new TreeSet<ProgramSettings>();
 
-            // when
-            new ConfigurationXMLCreator().createXML(documentXML, clientSettings, programsSettings);
+        // when
+        new ConfigurationXMLCreator().createXML(documentXML, clientSettings, programsSettings);
 
-            // then
-            assertThat(documentXML).as("createXML() should save file in chosen location").exists();
-        } catch (IOException e) {
-            fail("createXML() shouldn't throw exception while saving file in accesible place");
-        }
+        // then
+        assertThat(documentXML).as("createXML() should save file in chosen location").exists();
     }
 }

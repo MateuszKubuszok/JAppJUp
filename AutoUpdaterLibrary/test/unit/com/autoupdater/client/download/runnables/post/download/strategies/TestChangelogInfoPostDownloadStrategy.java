@@ -29,26 +29,18 @@ import com.autoupdater.client.xml.parsers.ParserException;
 
 public class TestChangelogInfoPostDownloadStrategy {
     @Test
-    public void testStrategy() {
+    public void testStrategy() throws DownloadResultException, ParserException {
         // given
         ChangelogInfoPostDownloadStrategy strategy = new ChangelogInfoPostDownloadStrategy();
         String content = CorrectXMLExamples.changelogInfo;
         SortedSet<ChangelogEntry> result = null;
-        boolean exceptionThrown = false;
 
         // when
         strategy.write(content.getBytes(ConnectionConfiguration.XML_ENCODING), content.length());
-        try {
-            result = strategy.processDownload();
-        } catch (ParserException | DownloadResultException e) {
-            exceptionThrown = true;
-        }
+        result = strategy.processDownload();
 
         // then
-        assertThat(exceptionThrown).as(
-                "processDownload() should not throw exception for correct XML").isFalse();
-        assertThat(result).isNotNull().isNotEmpty()
-                .as("processDownload() should properly parse changelog information");
-
+        assertThat(result).as("processDownload() should properly parse changelog information")
+                .isNotNull().isNotEmpty();
     }
 }

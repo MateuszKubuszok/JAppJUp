@@ -15,7 +15,7 @@
  */
 package com.autoupdater.client.download.aggregated.services;
 
-import static org.fest.assertions.api.Assertions.*;
+import static org.fest.assertions.api.Assertions.assertThat;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -62,77 +62,69 @@ public class TestUpdateInfoAggregatedDownloadService {
                     + "</updates>");
 
     @Test
-    public void testService() {
-        try {
-            // given
-            Program program = program();
+    public void testService() throws DownloadResultException {
+        // given
+        Program program = program();
 
-            UpdateInfoAggregatedDownloadService aggregatedService = new UpdateInfoAggregatedDownloadService();
-            addService(aggregatedService, update1Package1, program.getPackages().first());
-            addService(aggregatedService, update1Package2, program.getPackages().last());
+        UpdateInfoAggregatedDownloadService aggregatedService = new UpdateInfoAggregatedDownloadService();
+        addService(aggregatedService, update1Package1, program.getPackages().first());
+        addService(aggregatedService, update1Package2, program.getPackages().last());
 
-            SortedSet<Update> result = null;
+        SortedSet<Update> result = null;
 
-            // when
-            aggregatedService.start();
-            aggregatedService.joinThread();
-            result = aggregatedService.getResult();
+        // when
+        aggregatedService.start();
+        aggregatedService.joinThread();
+        result = aggregatedService.getResult();
 
-            // then
-            assertThat(result).as("getResult() should aggregate results from all services")
-                    .isNotNull().hasSize(2);
-            assertThat(program.getPackages().first().getUpdates()).as(
-                    "getResult() properly inserts Update into Package").isNotNull();
-            assertThat(program.getPackages().first().getUpdates().last().getVersionNumber())
-                    .as("getResult() properly inserts Update into Package").isNotNull()
-                    .isEqualTo(VersionNumber.version(12, 34, 56, 78));
-            assertThat(program.getPackages().last().getUpdates()).as(
-                    "getResult() properly inserts Update into Package").isNotNull();
-            assertThat(program.getPackages().last().getUpdates().last().getVersionNumber())
-                    .as("getResult() properly inserts Update into Package").isNotNull()
-                    .isEqualTo(VersionNumber.version(98, 76, 54, 32));
-        } catch (DownloadResultException e) {
-            fail("getResult() should not throw exception when result is ready, and without errors");
-        }
+        // then
+        assertThat(result).as("getResult() should aggregate results from all services").isNotNull()
+                .hasSize(2);
+        assertThat(program.getPackages().first().getUpdates()).as(
+                "getResult() properly inserts Update into Package").isNotNull();
+        assertThat(program.getPackages().first().getUpdates().last().getVersionNumber())
+                .as("getResult() properly inserts Update into Package").isNotNull()
+                .isEqualTo(VersionNumber.version(12, 34, 56, 78));
+        assertThat(program.getPackages().last().getUpdates()).as(
+                "getResult() properly inserts Update into Package").isNotNull();
+        assertThat(program.getPackages().last().getUpdates().last().getVersionNumber())
+                .as("getResult() properly inserts Update into Package").isNotNull()
+                .isEqualTo(VersionNumber.version(98, 76, 54, 32));
     }
 
     @Test
-    public void testUpdate() {
-        try {
-            // given
-            Program program = program();
+    public void testUpdate() throws DownloadResultException {
+        // given
+        Program program = program();
 
-            UpdateInfoAggregatedDownloadService aggregatedService = new UpdateInfoAggregatedDownloadService();
-            addService(aggregatedService, update1Package1, program.getPackages().first());
-            addService(aggregatedService, update1Package2, program.getPackages().last());
+        UpdateInfoAggregatedDownloadService aggregatedService = new UpdateInfoAggregatedDownloadService();
+        addService(aggregatedService, update1Package1, program.getPackages().first());
+        addService(aggregatedService, update1Package2, program.getPackages().last());
 
-            UpdateInfoAggregatedDownloadService aggregatedService2 = new UpdateInfoAggregatedDownloadService();
-            addService(aggregatedService2, update2Package1, program.getPackages().first());
-            addService(aggregatedService2, update2Package2, program.getPackages().last());
+        UpdateInfoAggregatedDownloadService aggregatedService2 = new UpdateInfoAggregatedDownloadService();
+        addService(aggregatedService2, update2Package1, program.getPackages().first());
+        addService(aggregatedService2, update2Package2, program.getPackages().last());
 
-            // when
-            aggregatedService.start();
-            aggregatedService.joinThread();
-            aggregatedService.getResult();
+        // when
+        aggregatedService.start();
+        aggregatedService.joinThread();
+        aggregatedService.getResult();
 
-            aggregatedService2.start();
-            aggregatedService2.joinThread();
-            aggregatedService2.getResult();
+        aggregatedService2.start();
+        aggregatedService2.joinThread();
+        aggregatedService2.getResult();
 
-            // then
-            assertThat(program.getPackages().first().getUpdates()).as(
-                    "getResult() properly inserts Update into Package").isNotNull();
-            assertThat(program.getPackages().first().getUpdates().last().getVersionNumber())
-                    .as("getResult() properly inserts Update into Package").isNotNull()
-                    .isEqualTo(VersionNumber.version(12, 34, 56, 89));
-            assertThat(program.getPackages().last().getUpdates()).as(
-                    "getResult() properly inserts Update into Package").isNotNull();
-            assertThat(program.getPackages().last().getUpdates().last().getVersionNumber())
-                    .as("getResult() properly inserts Update into Package").isNotNull()
-                    .isEqualTo(VersionNumber.version(98, 76, 54, 43));
-        } catch (DownloadResultException e) {
-            fail("getResult() should not throw exception when result is ready, and without errors");
-        }
+        // then
+        assertThat(program.getPackages().first().getUpdates()).as(
+                "getResult() properly inserts Update into Package").isNotNull();
+        assertThat(program.getPackages().first().getUpdates().last().getVersionNumber())
+                .as("getResult() properly inserts Update into Package").isNotNull()
+                .isEqualTo(VersionNumber.version(12, 34, 56, 89));
+        assertThat(program.getPackages().last().getUpdates()).as(
+                "getResult() properly inserts Update into Package").isNotNull();
+        assertThat(program.getPackages().last().getUpdates().last().getVersionNumber())
+                .as("getResult() properly inserts Update into Package").isNotNull()
+                .isEqualTo(VersionNumber.version(98, 76, 54, 43));
     }
 
     private Program program() {

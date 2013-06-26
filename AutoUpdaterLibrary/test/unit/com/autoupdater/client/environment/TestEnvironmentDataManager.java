@@ -15,6 +15,7 @@
  */
 package com.autoupdater.client.environment;
 
+import static com.google.common.base.Charsets.UTF_8;
 import static org.fest.assertions.api.Assertions.assertThat;
 
 import java.io.File;
@@ -30,12 +31,13 @@ import com.autoupdater.client.Values;
 import com.autoupdater.client.environment.settings.ClientSettings;
 import com.autoupdater.client.environment.settings.ProgramSettings;
 import com.autoupdater.client.xml.parsers.CorrectXMLExamples;
-import com.google.common.base.Charsets;
 import com.google.common.io.Files;
 
 public class TestEnvironmentDataManager extends AbstractTest {
     @Test
     public void testDefaultConstructor() {
+        // given
+
         // when
         EnvironmentContext environmentContext = new EnvironmentDataManager().getEnviromentContext();
 
@@ -58,16 +60,15 @@ public class TestEnvironmentDataManager extends AbstractTest {
                 .isNotNull().isEqualTo(originalEnvironmentContext);
     }
 
-    @SuppressWarnings("null")
     @Test
-    public void testGetEnvironmentData() throws IOException {
+    public void testGetEnvironmentData() throws IOException, ClientEnvironmentException {
         // given
         File settingsXML = new File(Paths.Setting.settingsXMLPath);
-        Files.write(CorrectXMLExamples.clientConfiguration, settingsXML, Charsets.UTF_8);
+        Files.write(CorrectXMLExamples.clientConfiguration, settingsXML, UTF_8);
         settingsXML.deleteOnExit();
 
         File installationData = new File(Paths.Setting.installationDataXMLPath);
-        Files.write(CorrectXMLExamples.installationData, installationData, Charsets.UTF_8);
+        Files.write(CorrectXMLExamples.installationData, installationData, UTF_8);
         installationData.deleteOnExit();
 
         EnvironmentContext environmentContext = new EnvironmentContext();
@@ -75,19 +76,11 @@ public class TestEnvironmentDataManager extends AbstractTest {
         environmentContext.setInstallationDataXMLPath(Paths.Setting.installationDataXMLPath);
 
         EnvironmentData environmentData = null;
-        boolean exceptionThrown = false;
 
         // when
-        try {
-            environmentData = new EnvironmentDataManager(environmentContext).getEnvironmentData();
-        } catch (ClientEnvironmentException e) {
-            exceptionThrown = true;
-        }
+        environmentData = new EnvironmentDataManager(environmentContext).getEnvironmentData();
 
         // then
-        assertThat(exceptionThrown)
-                .as("getEnvironmentData() should not throw exception while attempting to obtain data from legitimate sources")
-                .isFalse();
         assertThat(environmentData).as("getEnvironmentData() should return result properly")
                 .isNotNull();
         assertThat(environmentData.getClientSettings()).as(

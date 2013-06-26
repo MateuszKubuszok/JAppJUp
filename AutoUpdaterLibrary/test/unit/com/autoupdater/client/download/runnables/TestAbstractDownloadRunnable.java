@@ -15,6 +15,8 @@
  */
 package com.autoupdater.client.download.runnables;
 
+import static com.autoupdater.client.download.EDownloadStatus.*;
+import static java.io.File.separator;
 import static org.fest.assertions.api.Assertions.assertThat;
 
 import java.io.File;
@@ -30,7 +32,6 @@ import com.autoupdater.client.AutoUpdaterClientException;
 import com.autoupdater.client.Paths;
 import com.autoupdater.client.download.DownloadResultException;
 import com.autoupdater.client.download.DownloadServiceMessage;
-import com.autoupdater.client.download.EDownloadStatus;
 import com.autoupdater.client.utils.services.IObserver;
 import com.autoupdater.client.utils.services.ObservableService;
 import com.autoupdater.client.xml.parsers.CorrectXMLExamples;
@@ -38,276 +39,195 @@ import com.autoupdater.client.xml.parsers.CorrectXMLExamples;
 public class TestAbstractDownloadRunnable {
     private DownloadServiceMessage message;
 
-    @Test
-    public void testCreationForXmL() throws MalformedURLException {
+    @Test(expected = DownloadResultException.class)
+    public void testCreationForXmL() throws MalformedURLException, DownloadResultException {
         // given
         AbstractDownloadRunnable<Document> downloadRunnable = new AbstractDownloadRunnableXmlTester(
                 getConnection(CorrectXMLExamples.genericXml));
-        DownloadResultException exception = null;
 
         // when
-        try {
-            downloadRunnable.getResult();
-        } catch (DownloadResultException e) {
-            exception = e;
-        }
 
         // then
         assertThat(downloadRunnable.getStatus()).as(
-                "Constructor should set initial state to HASNT_STARTED").isEqualTo(
-                EDownloadStatus.HASNT_STARTED);
-        assertThat(exception)
-                .as("getResult() should throw exception when trying to access result prematurely")
-                .isNotNull().hasMessage("Cannot obtain results - download hasn't started");
+                "Constructor should set initial state to HASNT_STARTED").isEqualTo(HASNT_STARTED);
+        downloadRunnable.getResult(); // exception
     }
 
-    @Test
-    public void testConnectionForXml() throws IOException, InterruptedException {
+    @Test(expected = DownloadResultException.class)
+    public void testConnectionForXml() throws IOException, InterruptedException,
+            DownloadResultException {
         // given
         AbstractDownloadRunnable<Document> downloadRunnable = new AbstractDownloadRunnableXmlTester(
                 getConnection(CorrectXMLExamples.genericXml));
-        DownloadResultException exception = null;
 
         // when
         downloadRunnable.addObserver(new MessagesObserver());
         message = null;
         downloadRunnable.connectToServer();
-        try {
-            downloadRunnable.getResult();
-        } catch (DownloadResultException e) {
-            exception = e;
-        }
 
         // then
         assertThat(downloadRunnable.getStatus()).as(
-                "Correct connection should set state to CONNECTED").isEqualTo(
-                EDownloadStatus.CONNECTED);
+                "Correct connection should set state to CONNECTED").isEqualTo(CONNECTED);
         assertThat(message)
                 .as("Correct connection should send message with current download state")
                 .isNotNull().isInstanceOf(DownloadServiceMessage.class);
-        assertThat(exception)
-                .as("getResult() should throw exception when trying to access result prematurely")
-                .isNotNull()
-                .hasMessage("Cannot obtain results - connection to the server was just made");
+        downloadRunnable.getResult(); // exception
     }
 
-    @Test
-    public void testDownloadForXml() throws IOException, InterruptedException {
+    @Test(expected = DownloadResultException.class)
+    public void testDownloadForXml() throws IOException, InterruptedException,
+            DownloadResultException {
         // given
         AbstractDownloadRunnable<Document> downloadRunnable = new AbstractDownloadRunnableXmlTester(
                 getConnection(CorrectXMLExamples.genericXml));
-        DownloadResultException exception = null;
 
         // when
         downloadRunnable.addObserver(new MessagesObserver());
         downloadRunnable.connectToServer();
         message = null;
         downloadRunnable.downloadContent();
-        try {
-            downloadRunnable.getResult();
-        } catch (DownloadResultException e) {
-            exception = e;
-        }
 
         // then
         assertThat(downloadRunnable.getStatus()).as(
-                "Complete download should set state to COMPLETED").isEqualTo(
-                EDownloadStatus.COMPLETED);
+                "Complete download should set state to COMPLETED").isEqualTo(COMPLETED);
         assertThat(message).as("Complete download should send message with current state")
                 .isNotNull().isInstanceOf(DownloadServiceMessage.class);
-        assertThat(exception)
-                .as("getResult() should throw exception when trying to access result prematurely")
-                .isNotNull()
-                .hasMessage(
-                        "Cannot obtain results - download is completed but hasn't been processed yet");
+        downloadRunnable.getResult(); // exception
     }
 
     @Test
-    public void testProcessingForXml() throws IOException, InterruptedException {
+    public void testProcessingForXml() throws IOException, InterruptedException,
+            AutoUpdaterClientException {
         // given
         AbstractDownloadRunnable<Document> downloadRunnable = new AbstractDownloadRunnableXmlTester(
                 getConnection(CorrectXMLExamples.genericXml));
         Document document = null;
-        boolean exceptionThrown = false;
 
         // when
         downloadRunnable.addObserver(new MessagesObserver());
         downloadRunnable.connectToServer();
         downloadRunnable.downloadContent();
         message = null;
-        try {
-            downloadRunnable.processDownload();
-            document = downloadRunnable.getResult();
-        } catch (AutoUpdaterClientException e) {
-            exceptionThrown = true;
-        }
+        downloadRunnable.processDownload();
+        document = downloadRunnable.getResult();
 
         // then
         assertThat(downloadRunnable.getStatus()).as(
-                "Processed download should set state to PROCESSED").isEqualTo(
-                EDownloadStatus.PROCESSED);
+                "Processed download should set state to PROCESSED").isEqualTo(PROCESSED);
         assertThat(message).as("Processed download should send message with current state")
                 .isNotNull().isInstanceOf(DownloadServiceMessage.class);
-        assertThat(exceptionThrown).as(
-                "getResult() should not throw exception when trying to access parsed result")
-                .isFalse();
         assertThat(document).as("getResult() should return result when it's ready").isNotNull();
     }
 
     @Test
-    public void testRunForXml() throws MalformedURLException {
+    public void testRunForXml() throws MalformedURLException, DownloadResultException {
         // given
         AbstractDownloadRunnable<Document> downloadRunnable = new AbstractDownloadRunnableXmlTester(
                 getConnection(CorrectXMLExamples.genericXml));
-        DownloadResultException exception = null;
         Document document = null;
 
         // when
         downloadRunnable.addObserver(new MessagesObserver());
         message = null;
         downloadRunnable.run();
-        try {
-            document = downloadRunnable.getResult();
-        } catch (DownloadResultException e) {
-            exception = e;
-        }
+        document = downloadRunnable.getResult();
 
         // then
         assertThat(downloadRunnable.getStatus()).as(
-                "Processed download should set state to PROCESSED").isEqualTo(
-                EDownloadStatus.PROCESSED);
+                "Processed download should set state to PROCESSED").isEqualTo(PROCESSED);
         assertThat(message).as("Processed download should send message with current state")
                 .isNotNull().isInstanceOf(DownloadServiceMessage.class);
-        assertThat(exception).as(
-                "getResult() should not throw exception when trying to access parsed result")
-                .isNull();
         assertThat(document).as("getResult() should return result when it's ready").isNotNull();
     }
 
-    @Test
-    public void testCreationForFile() throws MalformedURLException {
+    @Test(expected = DownloadResultException.class)
+    public void testCreationForFile() throws MalformedURLException, DownloadResultException {
         // given
         String filePath = getFilePath();
         AbstractDownloadRunnable<File> downloadRunnable = new AbstractDownloadRunnableFileTester(
                 getConnection(CorrectXMLExamples.genericXml), filePath);
-        DownloadResultException exception = null;
 
         // when
-        try {
-            downloadRunnable.getResult();
-        } catch (DownloadResultException e) {
-            exception = e;
-        }
 
         // then
         assertThat(downloadRunnable.getStatus()).as(
-                "Constructor should set initial state to HASNT_STARTED").isEqualTo(
-                EDownloadStatus.HASNT_STARTED);
-        assertThat(exception)
-                .as("getResult() should throw exception when trying to access result prematurely")
-                .isNotNull().hasMessage("Cannot obtain results - download hasn't started");
+                "Constructor should set initial state to HASNT_STARTED").isEqualTo(HASNT_STARTED);
+        downloadRunnable.getResult(); // exception
     }
 
-    @Test
-    public void testConnectionForFile() throws IOException, InterruptedException {
+    @Test(expected = DownloadResultException.class)
+    public void testConnectionForFile() throws IOException, InterruptedException,
+            DownloadResultException {
         // given
         String filePath = getFilePath();
         AbstractDownloadRunnable<File> downloadRunnable = new AbstractDownloadRunnableFileTester(
                 getConnection(CorrectXMLExamples.genericXml), filePath);
-        DownloadResultException exception = null;
 
         // when
         downloadRunnable.addObserver(new MessagesObserver());
         message = null;
         downloadRunnable.connectToServer();
-        try {
-            downloadRunnable.getResult();
-        } catch (DownloadResultException e) {
-            exception = e;
-        }
 
         // then
         assertThat(downloadRunnable.getStatus()).as(
-                "Correct connection should set state to CONNECTED").isEqualTo(
-                EDownloadStatus.CONNECTED);
+                "Correct connection should set state to CONNECTED").isEqualTo(CONNECTED);
         assertThat(message)
                 .as("Correct connection should send message with current download state")
                 .isNotNull().isInstanceOf(DownloadServiceMessage.class);
-        assertThat(exception)
-                .as("getResult() should throw exception when trying to access result prematurely")
-                .isNotNull()
-                .hasMessage("Cannot obtain results - connection to the server was just made");
+        downloadRunnable.getResult(); // exception
     }
 
-    @Test
-    public void testDownloadForFile() throws IOException, InterruptedException {
+    @Test(expected = DownloadResultException.class)
+    public void testDownloadForFile() throws IOException, InterruptedException,
+            DownloadResultException {
         // given
         String filePath = getFilePath();
         AbstractDownloadRunnable<File> downloadRunnable = new AbstractDownloadRunnableFileTester(
                 getConnection(CorrectXMLExamples.genericXml), filePath);
-        DownloadResultException exception = null;
 
         // when
         downloadRunnable.addObserver(new MessagesObserver());
         downloadRunnable.connectToServer();
         message = null;
         downloadRunnable.downloadContent();
-        try {
-            downloadRunnable.getResult().deleteOnExit();
-        } catch (DownloadResultException e) {
-            exception = e;
-        }
 
         // then
         assertThat(downloadRunnable.getStatus()).as(
-                "Complete download should set state to COMPLETED").isEqualTo(
-                EDownloadStatus.COMPLETED);
+                "Complete download should set state to COMPLETED").isEqualTo(COMPLETED);
         assertThat(message).as("Complete download should send message with current state")
                 .isNotNull().isInstanceOf(DownloadServiceMessage.class);
-        assertThat(exception)
-                .as("getResult() should throw exception when trying to access result prematurely")
-                .isNotNull()
-                .hasMessage(
-                        "Cannot obtain results - download is completed but hasn't been processed yet");
+        downloadRunnable.getResult(); // exception
     }
 
     @Test
-    public void testProcessingForFile() throws IOException, InterruptedException {
+    public void testProcessingForFile() throws IOException, InterruptedException,
+            AutoUpdaterClientException {
         // given
         File file = null;
         String filePath = getFilePath();
         AbstractDownloadRunnable<File> downloadRunnable = new AbstractDownloadRunnableFileTester(
                 getConnection(CorrectXMLExamples.genericXml), filePath);
-        boolean exceptionThrown = false;
 
         // when
         downloadRunnable.addObserver(new MessagesObserver());
         downloadRunnable.connectToServer();
         downloadRunnable.downloadContent();
         message = null;
-        try {
-            downloadRunnable.processDownload();
-            file = downloadRunnable.getResult();
-            file.deleteOnExit();
-        } catch (AutoUpdaterClientException e) {
-            exceptionThrown = true;
-        }
+        downloadRunnable.processDownload();
+        file = downloadRunnable.getResult();
+        file.deleteOnExit();
 
         // then
         assertThat(downloadRunnable.getStatus()).as(
-                "Processed download should set state to PROCESSED").isEqualTo(
-                EDownloadStatus.PROCESSED);
+                "Processed download should set state to PROCESSED").isEqualTo(PROCESSED);
         assertThat(message).as("Processed download should send message with current state")
                 .isNotNull().isInstanceOf(DownloadServiceMessage.class);
-        assertThat(exceptionThrown).as(
-                "getResult() should not throw exception when trying to access parsed result")
-                .isFalse();
         assertThat(file).as("getResult() should return result when it's ready").isNotNull()
                 .exists().hasContent(CorrectXMLExamples.genericXml);
     }
 
     @Test
-    public void testRunForFile() throws MalformedURLException {
+    public void testRunForFile() throws MalformedURLException, DownloadResultException {
         String filePath = null;
         File result;
         // given
@@ -315,28 +235,19 @@ public class TestAbstractDownloadRunnable {
         filePath = getFilePath();
         AbstractDownloadRunnable<File> downloadRunnable = new AbstractDownloadRunnableFileTester(
                 getConnection(CorrectXMLExamples.genericXml), filePath);
-        DownloadResultException exception = null;
 
         // when
         downloadRunnable.addObserver(new MessagesObserver());
         message = null;
         downloadRunnable.run();
-        try {
-            result = downloadRunnable.getResult();
-            result.deleteOnExit();
-        } catch (DownloadResultException e) {
-            exception = e;
-        }
+        result = downloadRunnable.getResult();
+        result.deleteOnExit();
 
         // then
         assertThat(downloadRunnable.getStatus()).as(
-                "Processed download should set state to PROCESSED").isEqualTo(
-                EDownloadStatus.PROCESSED);
+                "Processed download should set state to PROCESSED").isEqualTo(PROCESSED);
         assertThat(message).as("Processed download should send message with current state")
                 .isNotNull().isInstanceOf(DownloadServiceMessage.class);
-        assertThat(exception).as(
-                "getResult() should not throw exception when trying to access parsed result")
-                .isEqualTo(null);
         assertThat(result).as("getResult() should return result when it's ready").isNotNull()
                 .exists().hasContent(CorrectXMLExamples.genericXml);
     }
@@ -346,7 +257,7 @@ public class TestAbstractDownloadRunnable {
     }
 
     private String getFilePath() {
-        return Paths.Library.testDir + File.separator + "testAbstractDownloadRunnableTmpFile.xml";
+        return Paths.Library.testDir + separator + "testAbstractDownloadRunnableTmpFile.xml";
     }
 
     private class MessagesObserver implements IObserver<DownloadServiceMessage> {

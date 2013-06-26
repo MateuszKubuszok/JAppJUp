@@ -15,6 +15,7 @@
  */
 package com.autoupdater.client.environment;
 
+import static com.autoupdater.client.environment.AvailabilityFilter.*;
 import static org.fest.assertions.api.Assertions.assertThat;
 
 import java.util.SortedSet;
@@ -45,13 +46,9 @@ public class TestAvailabilityFilter {
                 .getRegisteredPrograms();
 
         // then
-        assertThat(registeredPrograms)
-                .as("Constructor should properly obtain registered programs")
-                .isNotNull()
-                .hasSize(1)
-                .isEqualTo(
-                        AvailabilityFilter
-                                .getRegisteredPrograms(programsSettings, installationData));
+        assertThat(registeredPrograms).as("Constructor should properly obtain registered programs")
+                .isNotNull().hasSize(1)
+                .isEqualTo(getRegisteredPrograms(programsSettings, installationData));
     }
 
     @Test
@@ -61,8 +58,8 @@ public class TestAvailabilityFilter {
         SortedSet<Package> availablePackages = getAvailablePackages();
 
         // when
-        SortedSet<Package> unavailableOnServer = AvailabilityFilter.getPackagesUnavailableOnServer(
-                installedPackages, availablePackages);
+        SortedSet<Package> unavailableOnServer = getPackagesUnavailableOnServer(installedPackages,
+                availablePackages);
 
         // then
         assertThat(unavailableOnServer)
@@ -77,8 +74,8 @@ public class TestAvailabilityFilter {
         SortedSet<Package> availablePackages = getAvailablePackages();
 
         // when
-        SortedSet<Package> availableButNotInstalled = AvailabilityFilter
-                .getPackagesAvailableButNotInstalled(installedPackages, availablePackages);
+        SortedSet<Package> availableButNotInstalled = getPackagesAvailableButNotInstalled(
+                installedPackages, availablePackages);
 
         // then
         assertThat(availableButNotInstalled)
@@ -93,8 +90,8 @@ public class TestAvailabilityFilter {
         SortedSet<Program> installationData = getInstallationData();
 
         // when
-        SortedSet<Program> registeredPrograms = AvailabilityFilter.getRegisteredPrograms(
-                programsSettings, installationData);
+        SortedSet<Program> registeredPrograms = getRegisteredPrograms(programsSettings,
+                installationData);
 
         // then
         assertThat(registeredPrograms)

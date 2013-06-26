@@ -15,6 +15,7 @@
  */
 package com.autoupdater.client.installation.runnable;
 
+import static com.autoupdater.commons.messages.EInstallerMessage.INSTALLATION_FINISHED;
 import static org.fest.assertions.api.Assertions.assertThat;
 
 import java.io.File;
@@ -32,7 +33,6 @@ import com.autoupdater.client.models.Update;
 import com.autoupdater.client.models.UpdateBuilder;
 import com.autoupdater.client.utils.services.IObserver;
 import com.autoupdater.client.utils.services.ObservableService;
-import com.autoupdater.commons.messages.EInstallerMessage;
 
 public class TestInstallationOutputReadHelper extends AbstractTest {
     private Update update;
@@ -45,7 +45,7 @@ public class TestInstallationOutputReadHelper extends AbstractTest {
         updates.add(getUpdate());
 
         String result = "[info] " + updates.first().getUniqueIdentifer() + ": "
-                + EInstallerMessage.INSTALLATION_FINISHED;
+                + INSTALLATION_FINISHED;
 
         // when
         status = null;

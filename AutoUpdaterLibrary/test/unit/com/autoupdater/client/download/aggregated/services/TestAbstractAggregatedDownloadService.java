@@ -30,7 +30,7 @@ import com.autoupdater.client.models.Program;
 
 public class TestAbstractAggregatedDownloadService {
     @Test
-    public void testService() throws MalformedURLException {
+    public void testService() throws MalformedURLException, DownloadResultException {
         // given
         AbstractAggregatedDownloadServiceTester aggregatedService = new AbstractAggregatedDownloadServiceTester();
 
@@ -52,21 +52,13 @@ public class TestAbstractAggregatedDownloadService {
                 new URL("http://127.0.0.1"), xml)));
 
         SortedSet<Program> result = null;
-        boolean exceptionThrown = false;
 
         // when
         aggregatedService.start();
         aggregatedService.joinThread();
-        try {
-            result = aggregatedService.getResult();
-        } catch (DownloadResultException e) {
-            exceptionThrown = true;
-        }
+        result = aggregatedService.getResult();
 
         // then
-        assertThat(exceptionThrown).as(
-                "getResult() should not throw exception when result is ready, and without errors")
-                .isFalse();
         assertThat(result).as("getResult() should aggregate results from all services").isNotNull()
                 .hasSize(2);
     }

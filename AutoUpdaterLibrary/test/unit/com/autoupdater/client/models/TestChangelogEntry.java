@@ -322,4 +322,43 @@ public class TestChangelogEntry {
                 .as("Changelogs with different version numbers should have comparator's compareTos different to 0")
                 .isGreaterThan(0);
     }
+
+    @Test
+    public void testGetInstallationsServerPropertiesComparator() {
+        // given
+
+        // when
+        Comparator<ChangelogEntry> comparator = new ChangelogEntry()
+                .getInstallationsServerPropertiesComparator();
+
+        // then
+        assertThat(comparator).as(
+                "InstallationsServerPropertiesComparator is instance of GeneralComparator")
+                .isInstanceOf(ChangelogEntry.GeneralComparator.class);
+    }
+
+    @Test
+    public void testGetLocalInstallationsComparator() {
+        // given
+
+        // when
+        Comparator<ChangelogEntry> comparator = new ChangelogEntry()
+                .getLocalInstallationsComparator();
+
+        // then
+        assertThat(comparator).as("LocalInstallationsComparator is instance of GeneralComparator")
+                .isInstanceOf(ChangelogEntry.GeneralComparator.class);
+    }
+
+    @Test
+    public void testGetLocal2ServerComparator() {
+        // given
+
+        // when
+        Comparator<ChangelogEntry> comparator = new ChangelogEntry().getLocal2ServerComparator();
+
+        // then
+        assertThat(comparator).as("Local2ServerComparator is instance of GeneralComparator")
+                .isInstanceOf(ChangelogEntry.GeneralComparator.class);
+    }
 }

@@ -27,25 +27,17 @@ import com.autoupdater.client.xml.parsers.CorrectXMLExamples;
 
 public class TestUpdateInfoDownloadRunnable extends AbstractTestDownloadRunnable {
     @Test
-    public void testRun() throws MalformedURLException {
+    public void testRun() throws MalformedURLException, DownloadResultException {
         // given
         UpdateInfoDownloadRunnable downloadRunnable = new UpdateInfoDownloadRunnable(
                 getConnection(CorrectXMLExamples.updateInfo));
         Update update = null;
-        boolean exceptionThrown = false;
 
         // when
         downloadRunnable.run();
-        try {
-            update = downloadRunnable.getResult().first();
-        } catch (DownloadResultException e) {
-            exceptionThrown = true;
-        }
+        update = downloadRunnable.getResult().first();
 
         // then
-        assertThat(exceptionThrown).as(
-                "getResult() should not throw exception when trying to access parsed result")
-                .isFalse();
         assertThat(update).as("getResult() should return result when it's ready").isNotNull();
     }
 }

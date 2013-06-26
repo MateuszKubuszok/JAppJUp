@@ -15,9 +15,10 @@
  */
 package com.autoupdater.client.download.aggregated.notifiers;
 
+import static com.autoupdater.client.download.EDownloadStatus.PROCESSED;
+import static java.io.File.separator;
 import static org.fest.assertions.api.Assertions.assertThat;
 
-import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -25,7 +26,6 @@ import org.junit.Test;
 
 import com.autoupdater.client.Paths;
 import com.autoupdater.client.download.DownloadServiceMessage;
-import com.autoupdater.client.download.EDownloadStatus;
 import com.autoupdater.client.download.aggregated.services.FileAggregatedDownloadService;
 import com.autoupdater.client.download.runnables.HttpURLConnectionMock;
 import com.autoupdater.client.download.services.FileDownloadService;
@@ -42,12 +42,12 @@ public class TestFileAggregatedNotifier {
 
         String content = "some content";
         aggregatedService.addService(new FileDownloadService(new HttpURLConnectionMock(new URL(
-                "http://127.0.0.1"), content), Paths.Library.testDir + File.separator
+                "http://127.0.0.1"), content), Paths.Library.testDir + separator
                 + "TestFileAggreagatedDownload1.txt"));
 
         content = "some other";
         aggregatedService.addService(new FileDownloadService(new HttpURLConnectionMock(new URL(
-                "http://127.0.0.1"), content), Paths.Library.testDir + File.separator
+                "http://127.0.0.1"), content), Paths.Library.testDir + separator
                 + "TestFileAggreagatedDownload2.txt"));
 
         FileAggregatedNotifier listener = aggregatedService.getNotifier();
@@ -60,7 +60,7 @@ public class TestFileAggregatedNotifier {
         // then
         assertThat(recievedMessage)
                 .as("FileDownloadAggregatedNotifier should inform about finishing of all downloads")
-                .isNotNull().isEqualTo(EDownloadStatus.PROCESSED.getMessage());
+                .isNotNull().isEqualTo(PROCESSED.getMessage());
     }
 
     private class ListenerObserver implements IObserver<DownloadServiceMessage> {

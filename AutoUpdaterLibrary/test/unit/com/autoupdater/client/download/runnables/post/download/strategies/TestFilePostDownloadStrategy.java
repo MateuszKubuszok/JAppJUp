@@ -43,12 +43,11 @@ public class TestFilePostDownloadStrategy {
         // when
         strategy.write(content.getBytes(ConnectionConfiguration.XML_ENCODING), content.length());
         result = strategy.processDownload();
-        if (result != null)
-            result.deleteOnExit();
+        result.deleteOnExit();
         contentWritten = Files.toString(temp, ConnectionConfiguration.XML_ENCODING);
 
         // then
-        assertThat(result).exists().as("processDownload() should properly return File");
-        assertThat(contentWritten).isEqualTo(content).as("strategy should properly write to file");
+        assertThat(result).as("processDownload() should properly return File").exists();
+        assertThat(contentWritten).as("strategy should properly write to file").isEqualTo(content);
     }
 }

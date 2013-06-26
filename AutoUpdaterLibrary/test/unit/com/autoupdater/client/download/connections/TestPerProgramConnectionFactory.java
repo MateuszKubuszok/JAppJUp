@@ -33,8 +33,10 @@ public class TestPerProgramConnectionFactory {
         // given
         PerProgramConnectionFactory factory = getFactory();
 
-        // then
+        // when
         HttpURLConnection connection = factory.createPackagesInfoConnection();
+
+        // then
         assertThat(connection.getURL().getHost()).as(
                 "getPackagesInfoConnection() should set host properly").isEqualTo("127.0.0.1");
         assertThat(connection.getURL().getFile()).as(
@@ -46,8 +48,10 @@ public class TestPerProgramConnectionFactory {
         // given
         PerProgramConnectionFactory factory = getFactory();
 
-        // then
+        // when
         HttpURLConnection connection = factory.createUpdateInfoConnection("1");
+
+        // then
         assertThat(connection.getURL().getHost()).as(
                 "getPackagesInfoConnection() should set host properly").isEqualTo("127.0.0.1");
         assertThat(connection.getURL().getFile()).as(
@@ -60,8 +64,10 @@ public class TestPerProgramConnectionFactory {
         // given
         PerProgramConnectionFactory factory = getFactory();
 
-        // then
+        // when
         HttpURLConnection connection = factory.createChangelogInfoConnection("1");
+
+        // then
         assertThat(connection.getURL().getHost()).as(
                 "getPackagesInfoConnection() should set host properly").isEqualTo("127.0.0.1");
         assertThat(connection.getURL().getFile()).as(
@@ -74,8 +80,10 @@ public class TestPerProgramConnectionFactory {
         // given
         PerProgramConnectionFactory factory = getFactory();
 
-        // then
+        // when
         HttpURLConnection connection = factory.createBugsInfoConnection("1");
+
+        // then
         assertThat(connection.getURL().getHost()).as(
                 "getPackagesInfoConnection() should set host properly").isEqualTo("127.0.0.1");
         assertThat(connection.getURL().getFile()).as(
@@ -87,8 +95,10 @@ public class TestPerProgramConnectionFactory {
         // given
         PerProgramConnectionFactory factory = getFactory();
 
-        // then
+        // when
         HttpURLConnection connection = factory.createFileConnection("1");
+
+        // then
         assertThat(connection.getURL().getHost()).as(
                 "getPackagesInfoConnection() should set host properly").isEqualTo("127.0.0.1");
         assertThat(connection.getURL().getFile()).as(

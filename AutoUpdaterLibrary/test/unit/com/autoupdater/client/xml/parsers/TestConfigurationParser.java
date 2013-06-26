@@ -17,8 +17,7 @@ package com.autoupdater.client.xml.parsers;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.SortedSet;
 
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
@@ -41,8 +40,7 @@ public class TestConfigurationParser extends AbstractTestXMLParser<EnvironmentDa
         // when
         EnvironmentData environmentData = new ConfigurationParser().parseDocument(document);
         ClientSettings clientSettings = environmentData.getClientSettings();
-        List<ProgramSettings> programsSettings = new ArrayList<ProgramSettings>(
-                environmentData.getProgramsSettings());
+        SortedSet<ProgramSettings> programsSettings = environmentData.getProgramsSettings();
 
         // then
         assertThat(clientSettings).as("parseDocument() should parse client's settings").isNotNull();
@@ -65,27 +63,27 @@ public class TestConfigurationParser extends AbstractTestXMLParser<EnvironmentDa
                 .as("parseDocument() should parse all programs configurations without removing/adding empty")
                 .isNotNull().hasSize(2);
 
-        assertThat(programsSettings.get(0).getProgramName())
+        assertThat(programsSettings.first().getProgramName())
                 .as("parseDocument() should parse program's name").isNotNull()
                 .isEqualTo(Values.ProgramSettings.programName);
-        assertThat(programsSettings.get(0).getPathToProgram())
+        assertThat(programsSettings.first().getPathToProgram())
                 .as("parseDocument() should parse program's path").isNotNull()
                 .isEqualTo(Paths.Installations.Program.programPath);
-        assertThat(programsSettings.get(0).getPathToProgramDirectory()).isNotNull().isEqualTo(
+        assertThat(programsSettings.first().getPathToProgramDirectory()).isNotNull().isEqualTo(
                 Paths.Installations.Program.programDir);
-        assertThat(programsSettings.get(0).getServerAddress())
+        assertThat(programsSettings.first().getServerAddress())
                 .as("parseDocument() should parse server's address").isNotNull()
                 .isEqualTo(Values.ProgramSettings.serverAddress);
 
-        assertThat(programsSettings.get(1).getProgramName())
+        assertThat(programsSettings.last().getProgramName())
                 .as("parseDocument() should parse program's name").isNotNull()
                 .isEqualTo(Values.ProgramSettings2.programName);
-        assertThat(programsSettings.get(1).getPathToProgram())
+        assertThat(programsSettings.last().getPathToProgram())
                 .as("parseDocument() should parse program's path").isNotNull()
                 .isEqualTo(Paths.Installations.Program2.programPath);
-        assertThat(programsSettings.get(1).getPathToProgramDirectory()).isNotNull().isEqualTo(
+        assertThat(programsSettings.last().getPathToProgramDirectory()).isNotNull().isEqualTo(
                 Paths.Installations.Program2.programDir);
-        assertThat(programsSettings.get(1).getServerAddress())
+        assertThat(programsSettings.last().getServerAddress())
                 .as("parseDocument() should parse server's address").isNotNull()
                 .isEqualTo(Values.ProgramSettings2.serverAddress);
     }

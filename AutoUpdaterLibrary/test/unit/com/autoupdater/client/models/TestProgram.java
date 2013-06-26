@@ -256,4 +256,42 @@ public class TestProgram {
         assertThat(comparator.compare(program2, program1)).as(
                 "Local2ServerComparator should not be 0 for different Programs").isGreaterThan(0);
     }
+
+    @Test
+    public void testGetInstallationsServerPropertiesComparator() {
+        // given
+
+        // when
+        Comparator<Program> comparator = new Program().getInstallationsServerPropertiesComparator();
+
+        // then
+        assertThat(comparator)
+                .as("InstallationsServerPropertiesComparator is instance of InstallationsServerPropertiesComparator")
+                .isInstanceOf(Program.InstallationsServerPropertiesComparator.class);
+    }
+
+    @Test
+    public void testGetLocalInstallationsComparator() {
+        // given
+
+        // when
+        Comparator<Program> comparator = new Program().getLocalInstallationsComparator();
+
+        // then
+        assertThat(comparator).as(
+                "LocalInstallationsComparator is instance of LocalInstallationsComparator")
+                .isInstanceOf(Program.LocalInstallationsComparator.class);
+    }
+
+    @Test
+    public void testGetLocal2ServerComparator() {
+        // given
+
+        // when
+        Comparator<Program> comparator = new Program().getLocal2ServerComparator();
+
+        // then
+        assertThat(comparator).as("Local2ServerComparator is instance of Local2ServerComparator")
+                .isInstanceOf(Program.Local2ServerComparator.class);
+    }
 }
