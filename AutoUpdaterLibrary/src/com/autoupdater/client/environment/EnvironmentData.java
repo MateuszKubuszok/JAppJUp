@@ -25,6 +25,7 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 import net.jsdpu.EOperatingSystem;
+import net.jsdpu.IOperatingSystem;
 import net.jsdpu.logger.Logger;
 
 import com.autoupdater.client.environment.settings.ClientSettings;
@@ -54,7 +55,7 @@ public class EnvironmentData {
     private static final Logger logger = getLogger(EnvironmentData.class);
 
     private EnvironmentDataManager environmentDataManager;
-    private final EOperatingSystem system;
+    private final IOperatingSystem system;
     private final ClientSettings clientSettings;
     private final SortedSet<ProgramSettings> programsSettings;
     private SortedSet<Program> installationsData;
@@ -208,7 +209,7 @@ public class EnvironmentData {
      * 
      * @return operating system
      */
-    public EOperatingSystem getSystem() {
+    public IOperatingSystem getSystem() {
         return system;
     }
 

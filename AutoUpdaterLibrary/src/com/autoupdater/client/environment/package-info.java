@@ -22,8 +22,8 @@
  * @see com.autoupdater.client.environment.EnvironmentDataManager
  * @see com.autoupdater.client.environment.EnvironmentContext
  * @see com.autoupdater.client.environment.EnvironmentDefaultConfiguration
- * @see net.jsdpu.EOperatingSystem
  * @see com.autoupdater.client.environment.ClientEnvironmentException
  * @see com.autoupdater.client.environment.ProgramSettingsNotFoundException
+ * @see net.jsdpu.IOperatingSystem
  */
 package com.autoupdater.client.environment;

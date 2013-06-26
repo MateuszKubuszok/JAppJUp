@@ -15,13 +15,45 @@
  */
 package com.autoupdater.client.environment;
 
-public class Mocks {
-    private static EnvironmentData environmentData;
+import static org.mockito.Mockito.*;
+import net.jsdpu.IOperatingSystem;
+import net.jsdpu.process.executors.IProcessExecutor;
+import net.jsdpu.process.killers.IProcessKiller;
 
-    public static EnvironmentData environmentData() {
-        return (environmentData != null) ? environmentData
-                : (environmentData = new EnvironmentData(
-                        com.autoupdater.client.environment.settings.Mocks.clientSettings(),
-                        com.autoupdater.client.environment.settings.Mocks.programsSettings()));
+import org.mockito.Matchers;
+
+import com.autoupdater.client.models.Update;
+
+public class Mocks {
+    public static IProcessKiller processKiller() {
+        IProcessKiller killer = mock(IProcessKiller.class);
+        return killer;
+    }
+
+    public static IProcessExecutor processExecutor() {
+        IProcessExecutor executor = mock(IProcessExecutor.class);
+        return executor;
+    }
+
+    public static IOperatingSystem operatingSystem() {
+        IProcessExecutor executor = processExecutor();
+        IProcessKiller killer = processKiller();
+        IOperatingSystem system = mock(IOperatingSystem.class);
+        when(system.getProcessExecutor()).thenReturn(executor);
+        when(system.getProcessKiller()).thenReturn(killer);
+        return system;
+    }
+
+    public static EnvironmentData environmentData() throws ProgramSettingsNotFoundException {
+        IOperatingSystem system = operatingSystem();
+        EnvironmentData environmentData = mock(EnvironmentData.class);
+        when(environmentData.getClientSettings()).thenReturn(
+                com.autoupdater.client.environment.settings.Mocks.clientSettings());
+        when(environmentData.getProgramsSettings()).thenReturn(
+                com.autoupdater.client.environment.settings.Mocks.programsSettings());
+        when(environmentData.getSystem()).thenReturn(system);
+        when(environmentData.findProgramSettingsForUpdate(Matchers.<Update> any())).thenReturn(
+                com.autoupdater.client.environment.settings.Mocks.programSettings());
+        return environmentData;
     }
 }

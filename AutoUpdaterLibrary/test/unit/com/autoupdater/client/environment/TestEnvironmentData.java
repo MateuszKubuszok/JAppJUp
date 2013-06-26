@@ -17,22 +17,30 @@ package com.autoupdater.client.environment;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 
+import java.util.SortedSet;
+
 import org.junit.Test;
 
 import com.autoupdater.client.AbstractTest;
+import com.autoupdater.client.environment.settings.ClientSettings;
+import com.autoupdater.client.environment.settings.ProgramSettings;
 
 public class TestEnvironmentData extends AbstractTest {
     @Test
     public void testConstructor() {
+        // given
+        ClientSettings clientSettings = clientSettings();
+        SortedSet<ProgramSettings> programsSettings = programsSettings();
+
         // when
-        EnvironmentData environmentData = new EnvironmentData(clientSettings(), programsSettings());
+        EnvironmentData environmentData = new EnvironmentData(clientSettings, programsSettings);
 
         // then
         assertThat(environmentData.getClientSettings())
                 .as("Constructor should set client's settings properly").isNotNull()
-                .isEqualTo(clientSettings());
+                .isEqualTo(clientSettings);
         assertThat(environmentData.getProgramsSettings())
                 .as("Constructor should set programs' settings properly").isNotNull()
-                .isEqualTo(programsSettings());
+                .isEqualTo(programsSettings);
     }
 }

@@ -23,6 +23,7 @@ import net.jsdpu.process.executors.ProcessQueue;
 
 import com.autoupdater.client.Paths.Library;
 import com.autoupdater.client.environment.EnvironmentData;
+import com.autoupdater.client.environment.ProgramSettingsNotFoundException;
 import com.autoupdater.client.environment.settings.ClientSettings;
 import com.autoupdater.client.environment.settings.ProgramSettings;
 
@@ -47,7 +48,7 @@ public abstract class AbstractTest {
         return com.autoupdater.client.environment.settings.Mocks.programsSettings();
     }
 
-    protected EnvironmentData environmentData() {
+    protected EnvironmentData environmentData() throws ProgramSettingsNotFoundException {
         return com.autoupdater.client.environment.Mocks.environmentData();
     }
 

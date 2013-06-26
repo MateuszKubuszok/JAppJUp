@@ -19,6 +19,7 @@ import static java.io.File.separator;
 import static java.lang.System.getProperty;
 import static net.jsdpu.JavaSystemUtils.getJavaExecutablePath;
 import net.jsdpu.EOperatingSystem;
+import net.jsdpu.IOperatingSystem;
 
 /**
  * Defines default configuration for EnvironmentData.
@@ -29,7 +30,7 @@ public class EnvironmentDefaultConfiguration {
     /**
      * Operating system Client is working on.
      */
-    public static final EOperatingSystem os = EOperatingSystem.current();
+    public static final IOperatingSystem os = EOperatingSystem.current();
 
     /**
      * Defines client name used on server/in repository.

@@ -15,6 +15,8 @@
  */
 package com.autoupdater.client.installation.runnable;
 
+import static com.google.common.collect.Iterables.filter;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.SortedSet;
@@ -25,6 +27,7 @@ import com.autoupdater.client.environment.EnvironmentData;
 import com.autoupdater.client.environment.ProgramSettingsNotFoundException;
 import com.autoupdater.client.environment.settings.ProgramSettings;
 import com.autoupdater.client.models.Update;
+import com.google.common.base.Predicate;
 
 /**
  * Class responsible for generating commands, that will call installer and pass
@@ -64,10 +67,16 @@ class CommandGenerationHelper {
     public List<String[]> getUpdateExecutionCommands(SortedSet<Update> updates)
             throws ProgramSettingsNotFoundException, InvalidCommandException {
         List<String[]> commands = new ArrayList<String[]>();
-        for (Update update : updates)
-            if (update != null && update.getStatus().isIntendedToBeChanged()
-                    && update.getFile() != null)
-                commands.add(getSingleUpdateExecutionCommand(update));
+
+        for (Update update : filter(updates, new Predicate<Update>() {
+            @Override
+            public boolean apply(Update update) {
+                return update != null && update.getStatus().isIntendedToBeChanged()
+                        && update.getFile() != null;
+            }
+        }))
+            commands.add(getSingleUpdateExecutionCommand(update));
+
         return commands;
     }
 
