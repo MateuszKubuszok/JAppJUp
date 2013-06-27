@@ -28,7 +28,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.GrantedAuthorityImpl;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 
 import com.autoupdater.server.models.User;
@@ -37,7 +37,6 @@ import com.autoupdater.server.services.UserService;
 /**
  * Authentication manager using BCrypt to encrypt user's password.
  */
-@SuppressWarnings("deprecation")
 public class BCryptAuthenticationManager implements AuthenticationManager {
     /**
      * Manager's logger.
@@ -98,16 +97,16 @@ public class BCryptAuthenticationManager implements AuthenticationManager {
         List<GrantedAuthority> authList = new ArrayList<GrantedAuthority>(3);
 
         logger.debug("Grant ROLE_USER to this user");
-        authList.add(new GrantedAuthorityImpl("ROLE_USER"));
+        authList.add(new SimpleGrantedAuthority("ROLE_USER"));
 
         if (admin) {
             logger.debug("Grant ROLE_ADMIN to this user");
-            authList.add(new GrantedAuthorityImpl("ROLE_ADMIN"));
+            authList.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
         }
 
         if (packageAdmin) {
             logger.debug("Grant ROLE_PACKAGE_ADMIN to this user");
-            authList.add(new GrantedAuthorityImpl("ROLE_PACKAGE_ADMIN"));
+            authList.add(new SimpleGrantedAuthority("ROLE_PACKAGE_ADMIN"));
         }
 
         return authList;
