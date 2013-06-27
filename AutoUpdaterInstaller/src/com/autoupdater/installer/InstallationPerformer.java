@@ -15,6 +15,8 @@
  */
 package com.autoupdater.installer;
 
+import static com.autoupdater.commons.error.codes.EErrorCode.*;
+import static com.autoupdater.commons.messages.EInstallerMessage.*;
 import static java.lang.System.*;
 import static net.jsdpu.logger.Logger.getLogger;
 import static net.jsdpu.process.executors.Commands.convertSingleConsoleCommand;
@@ -56,9 +58,9 @@ public class InstallationPerformer {
      */
     public EErrorCode install(String[] args) {
         if (args.length > 5)
-            return EErrorCode.TOO_MANY_ARGUMENTS;
+            return TOO_MANY_ARGUMENTS;
         else if (args.length < 4)
-            return EErrorCode.INVALID_ARGUMENT;
+            return INVALID_ARGUMENT;
 
         String ID = args[0];
         String updateStrategy = args[1];
@@ -66,54 +68,53 @@ public class InstallationPerformer {
         String destinationPath = args[3];
         String postInstallationCommand = args.length == 5 ? args[4] : "";
 
-        info(ID, EInstallerMessage.PREPARING_INSTALLATION);
+        info(ID, PREPARING_INSTALLATION);
 
         IInstallationStrategy updateInstallationStrategy;
         if ((updateInstallationStrategy = resolveExecutionDelegate(updateStrategy)) == null)
-            return EErrorCode.INVALID_ARGUMENT;
+            return INVALID_ARGUMENT;
 
-        info(ID, EInstallerMessage.BACKUP_STARTED);
-        if (new BackupPerformer().createBackup(ID, destinationPath) != EErrorCode.SUCCESS) {
-            error(ID, EInstallerMessage.BACKUP_FAILED);
-            return EErrorCode.BACKUP_ERROR;
+        info(ID, BACKUP_STARTED);
+        if (new BackupPerformer().createBackup(ID, destinationPath) != SUCCESS) {
+            error(ID, BACKUP_FAILED);
+            return BACKUP_ERROR;
         }
-        info(ID, EInstallerMessage.BACKUP_FINISHED);
+        info(ID, BACKUP_FINISHED);
 
-        info(ID, EInstallerMessage.INSTALLATION_STARTED);
+        info(ID, INSTALLATION_STARTED);
 
         File source = new File(sourceFilePath);
         if (!source.exists()) {
-            error(ID, EInstallerMessage.INSTALLATION_FAILED);
-            return EErrorCode.FILE_DONT_EXISTS;
+            error(ID, INSTALLATION_FAILED);
+            return FILE_DONT_EXISTS;
         }
 
         try {
             updateInstallationStrategy.process(source, destinationPath);
         } catch (IOException e) {
-            error(ID, EInstallerMessage.INSTALLATION_FAILED);
-            return EErrorCode.IO_ERROR;
+            error(ID, INSTALLATION_FAILED);
+            return IO_ERROR;
         } catch (InvalidCommandException e) {
-            error(ID, EInstallerMessage.INSTALLATION_FAILED);
-            return EErrorCode.INVALID_ARGUMENT;
+            error(ID, INSTALLATION_FAILED);
+            return INVALID_ARGUMENT;
         }
 
         if (!postInstallationCommand.isEmpty())
             try {
-                info(ID, EInstallerMessage.POST_INSTALLATION_COMMAND_EXECUTION);
-                if (runPostInstallationCommand(postInstallationCommand) == EErrorCode.SUCCESS
-                        .getCode())
-                    info(ID, EInstallerMessage.POST_INSTALLATION_COMMAND_EXECUTION_FINISHED);
+                info(ID, POST_INSTALLATION_COMMAND_EXECUTION);
+                if (runPostInstallationCommand(postInstallationCommand) == SUCCESS.getCode())
+                    info(ID, POST_INSTALLATION_COMMAND_EXECUTION_FINISHED);
                 else {
                     error(ID, EInstallerMessage.POST_INSTALLATION_COMMAND_EXECUTION_FAILED);
-                    return EErrorCode.INTERRUPTED_SYSTEM_CALL;
+                    return INTERRUPTED_SYSTEM_CALL;
                 }
             } catch (InvalidCommandException | IOException e) {
-                error(ID, EInstallerMessage.POST_INSTALLATION_COMMAND_EXECUTION_FAILED);
-                return EErrorCode.INTERRUPTED_SYSTEM_CALL;
+                error(ID, POST_INSTALLATION_COMMAND_EXECUTION_FAILED);
+                return INTERRUPTED_SYSTEM_CALL;
             }
 
-        info(ID, EInstallerMessage.INSTALLATION_FINISHED);
-        return EErrorCode.SUCCESS;
+        info(ID, INSTALLATION_FINISHED);
+        return SUCCESS;
     }
 
     private int runPostInstallationCommand(String command) throws InvalidCommandException,

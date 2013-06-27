@@ -23,7 +23,7 @@ import java.util.TreeSet;
 import com.autoupdater.client.Paths;
 import com.autoupdater.client.Values;
 
-public class Mocks {
+public class MockSettings {
     public static ClientSettings clientSettings() {
         return ClientSettingsBuilder.builder().setClientName(Values.ClientSettings.clientName)
                 .setClientExecutableName(Values.ClientSettings.clientExecutableName)

@@ -101,11 +101,11 @@ public class TestInstallationRunnable {
     }
 
     private SortedSet<Update> getUpdates() {
-        return com.autoupdater.client.models.Mocks.updates();
+        return com.autoupdater.client.models.MockModels.updates();
     }
 
     private EnvironmentData getEnvironmentData() throws ProgramSettingsNotFoundException {
-        return com.autoupdater.client.environment.Mocks.environmentData();
+        return com.autoupdater.client.environment.MockEnvironment.environmentData();
     }
 
     private void mockReader(EnvironmentData environmentData, String[] lines)

@@ -83,11 +83,23 @@ public class Values {
     public static class Update {
         public static final String packageName = "Package 1";
         public static final String packageID = "1";
-        public static final VersionNumber version = new VersionNumber(1, 2, 3, 4);
+        public static final VersionNumber version = new VersionNumber(1, 8, 3, 4);
         public static final boolean developmentVersion = true;
         public static final String changelog = "Some changes";
         public static final EUpdateStrategy type = EUpdateStrategy.UNZIP;
         public static final String originalName = "name.zip";
+        public static final String relativePath = "/";
+        public static final String updaterCommand = "";
+    }
+
+    public static class Update2 {
+        public static final String packageName = "Package 2";
+        public static final String packageID = "1";
+        public static final VersionNumber version = new VersionNumber(1, 7, 3, 4);
+        public static final boolean developmentVersion = false;
+        public static final String changelog = "Some changes";
+        public static final EUpdateStrategy type = EUpdateStrategy.COPY;
+        public static final String originalName = "name.jar";
         public static final String relativePath = "/";
         public static final String updaterCommand = "";
     }

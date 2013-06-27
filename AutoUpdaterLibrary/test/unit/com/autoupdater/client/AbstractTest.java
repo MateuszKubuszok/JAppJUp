@@ -33,30 +33,30 @@ public abstract class AbstractTest {
     }
 
     protected ClientSettings clientSettings() {
-        return com.autoupdater.client.environment.settings.Mocks.clientSettings();
+        return com.autoupdater.client.environment.settings.MockSettings.clientSettings();
     }
 
     protected ProgramSettings programSettings() {
-        return com.autoupdater.client.environment.settings.Mocks.programSettings();
+        return com.autoupdater.client.environment.settings.MockSettings.programSettings();
     }
 
     protected ProgramSettings programSettings2() {
-        return com.autoupdater.client.environment.settings.Mocks.programSettings2();
+        return com.autoupdater.client.environment.settings.MockSettings.programSettings2();
     }
 
     protected SortedSet<ProgramSettings> programsSettings() {
-        return com.autoupdater.client.environment.settings.Mocks.programsSettings();
+        return com.autoupdater.client.environment.settings.MockSettings.programsSettings();
     }
 
     protected EnvironmentData environmentData() throws ProgramSettingsNotFoundException {
-        return com.autoupdater.client.environment.Mocks.environmentData();
+        return com.autoupdater.client.environment.MockEnvironment.environmentData();
     }
 
     protected ProcessQueue processQueue(String... resultsToReturn) {
-        return net.jsdpu.process.executors.Mocks.processQueue(resultsToReturn);
+        return net.jsdpu.process.executors.MockExecutors.processQueue(resultsToReturn);
     }
 
     protected ExecutionQueueReader executionQueueReader(String... resultsToReturn) {
-        return net.jsdpu.process.executors.Mocks.executionQueueReader(resultsToReturn);
+        return net.jsdpu.process.executors.MockExecutors.executionQueueReader(resultsToReturn);
     }
 }

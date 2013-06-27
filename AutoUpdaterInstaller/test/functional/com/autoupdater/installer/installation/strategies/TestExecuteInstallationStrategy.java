@@ -15,7 +15,7 @@ public class TestExecuteInstallationStrategy {
     public void testProcess() {
         try {
             // given
-            String testCommand = EOperatingSystem.current().getTestCommand();
+            String testCommand = EOperatingSystem.currentOperatingSystem().getTestCommand();
 
             // when
             new ExecuteInstallationStrategy().process(null, testCommand);

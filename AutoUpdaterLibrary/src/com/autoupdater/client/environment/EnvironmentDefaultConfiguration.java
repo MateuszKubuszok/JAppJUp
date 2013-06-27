@@ -30,7 +30,7 @@ public class EnvironmentDefaultConfiguration {
     /**
      * Operating system Client is working on.
      */
-    public static final IOperatingSystem os = EOperatingSystem.current();
+    public static final IOperatingSystem os = EOperatingSystem.currentOperatingSystem();
 
     /**
      * Defines client name used on server/in repository.

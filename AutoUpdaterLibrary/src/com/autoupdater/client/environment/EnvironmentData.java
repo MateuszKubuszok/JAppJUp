@@ -73,7 +73,7 @@ public class EnvironmentData {
             SortedSet<ProgramSettings> programsSettings) {
         this.clientSettings = clientSettings;
         this.programsSettings = programsSettings;
-        this.system = EOperatingSystem.current();
+        this.system = EOperatingSystem.currentOperatingSystem();
         setInstallationsData(null);
     }
 

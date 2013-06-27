@@ -1,7 +1,7 @@
 package com.autoupdater.client;
 
 import static com.autoupdater.client.download.ConnectionConfiguration.DOWNLOAD_DIRECTORY;
-import static com.autoupdater.client.environment.Mocks.environmentData;
+import static com.autoupdater.client.environment.MockEnvironment.environmentData;
 import static com.autoupdater.client.models.EUpdateStatus.*;
 import static com.autoupdater.commons.installer.configuration.InstallerConfiguration.BACKUP_DIRECTORY;
 import static org.fest.assertions.api.Assertions.assertThat;
@@ -23,7 +23,7 @@ import com.autoupdater.client.environment.ClientEnvironmentException;
 import com.autoupdater.client.environment.EnvironmentData;
 import com.autoupdater.client.environment.ProgramSettingsNotFoundException;
 import com.autoupdater.client.installation.aggregated.services.AggregatedInstallationService;
-import com.autoupdater.client.models.Mocks;
+import com.autoupdater.client.models.MockModels;
 import com.autoupdater.client.models.Package;
 import com.autoupdater.client.models.Program;
 import com.autoupdater.client.models.Update;
@@ -97,7 +97,7 @@ public class TestClient {
     public void testCreateUpdateInfoAggregatedDownloadService() throws IOException,
             ProgramSettingsNotFoundException {
         // given
-        SortedSet<Package> packages = Mocks.packages();
+        SortedSet<Package> packages = MockModels.packages();
 
         // when
         UpdateInfoAggregatedDownloadService aggregatedService = client
@@ -113,7 +113,7 @@ public class TestClient {
     public void testCreateChangelogInfoAggregatedDownloadService() throws IOException,
             ProgramSettingsNotFoundException {
         // given
-        SortedSet<Package> packages = Mocks.packages();
+        SortedSet<Package> packages = MockModels.packages();
 
         // when
         ChangelogInfoAggregatedDownloadService aggregatedService = client
@@ -129,7 +129,7 @@ public class TestClient {
     public void testCreateBugsInfoAggregatedDownloadService() throws IOException,
             ProgramSettingsNotFoundException {
         // given
-        SortedSet<Program> programs = Mocks.programs();
+        SortedSet<Program> programs = MockModels.programs();
 
         // when
         BugsInfoAggregatedDownloadService aggregatedService = client
@@ -145,7 +145,7 @@ public class TestClient {
     public void testCreateFileAggregatedDownloadService() throws IOException,
             ProgramSettingsNotFoundException {
         // given
-        SortedSet<Update> updates = Mocks.updates();
+        SortedSet<Update> updates = MockModels.updates();
         for (Update update : updates)
             update.setStatus(SELECTED);
 
@@ -162,7 +162,7 @@ public class TestClient {
     @Test
     public void testCreateInstallationAggregatedService() {
         // given
-        SortedSet<Update> updates = Mocks.updates();
+        SortedSet<Update> updates = MockModels.updates();
         for (Update update : updates) {
             update.setStatus(DOWNLOADED);
             update.setFile(new File("mock"));

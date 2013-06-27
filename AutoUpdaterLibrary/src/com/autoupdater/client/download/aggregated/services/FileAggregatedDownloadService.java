@@ -17,6 +17,7 @@ package com.autoupdater.client.download.aggregated.services;
 
 import static com.autoupdater.client.models.EUpdateStatus.DOWNLOADED;
 import static com.autoupdater.client.models.Models.equal;
+import static com.google.common.collect.Iterables.filter;
 import static net.jsdpu.logger.Logger.getLogger;
 
 import java.io.File;
@@ -30,6 +31,7 @@ import com.autoupdater.client.download.aggregated.notifiers.FileAggregatedNotifi
 import com.autoupdater.client.download.services.FileDownloadService;
 import com.autoupdater.client.models.Models;
 import com.autoupdater.client.models.Update;
+import com.google.common.base.Predicate;
 
 /**
  * Aggregator that downloads several files at the same time.
@@ -71,13 +73,20 @@ public class FileAggregatedDownloadService
                 try {
                     update.setFile(service.getResult());
                     update.setStatus(DOWNLOADED);
-                    if (allUpdates != null)
-                        for (Update filledUpdate : allUpdates)
-                            if (equal(update, filledUpdate, Models.EComparisionType.LOCAL_TO_SERVER)) {
-                                filledUpdate.setFile(service.getResult());
-                                if (filledUpdate.getStatus().isIntendedToBeChanged())
-                                    filledUpdate.setStatus(DOWNLOADED);
+                    if (allUpdates != null) {
+                        final Update downloadedUpdate = update;
+                        for (Update filledUpdate : filter(allUpdates, new Predicate<Update>() {
+                            @Override
+                            public boolean apply(Update filledUpdate) {
+                                return equal(downloadedUpdate, filledUpdate,
+                                        Models.EComparisionType.LOCAL_TO_SERVER);
                             }
+                        })) {
+                            filledUpdate.setFile(service.getResult());
+                            if (filledUpdate.getStatus().isIntendedToBeChanged())
+                                filledUpdate.setStatus(DOWNLOADED);
+                        }
+                    }
                     updates.add(update);
                 } catch (DownloadResultException e) {
                     exception = e;

@@ -20,6 +20,7 @@ import static com.autoupdater.client.models.Models.*;
 import static com.autoupdater.client.models.Models.EComparisionType.LOCAL_INSTALLATIONS;
 import static com.autoupdater.client.utils.comparables.Comparables.compare;
 import static com.google.common.base.Objects.equal;
+import static com.google.common.collect.Iterables.all;
 import static java.lang.Math.pow;
 
 import java.util.Comparator;
@@ -28,6 +29,7 @@ import java.util.TreeSet;
 
 import com.autoupdater.client.environment.settings.ProgramSettings;
 import com.autoupdater.client.utils.comparables.Comparables;
+import com.google.common.base.Predicate;
 
 /**
  * Class representing Program - either on server or installed one.
@@ -215,10 +217,12 @@ public class Program implements IModel<Program> {
      * @return true if there are no new Updates to install
      */
     public boolean isNotOutdated() {
-        for (Package _package : packages)
-            if (!_package.isNotOutdated())
-                return false;
-        return true;
+        return all(packages, new Predicate<Package>() {
+            @Override
+            public boolean apply(Package _package) {
+                return _package.isNotOutdated();
+            }
+        });
     }
 
     @Override

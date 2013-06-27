@@ -20,9 +20,9 @@ public class TestCopyCommandGenerator {
     public void testGenerateCommand() throws InvalidCommandException {
         // given
         File file = new File("mock file");
-        Update update = UpdateBuilder.builder().copy(com.autoupdater.client.models.Mocks.update())
+        Update update = UpdateBuilder.builder().copy(com.autoupdater.client.models.MockModels.update())
                 .setFile(file).setUpdateStrategy(COPY).setCommand("{F}").build();
-        ProgramSettings programSettings = com.autoupdater.client.environment.settings.Mocks
+        ProgramSettings programSettings = com.autoupdater.client.environment.settings.MockSettings
                 .programSettings();
         String pathToInstaller = "./Installer.jar";
 

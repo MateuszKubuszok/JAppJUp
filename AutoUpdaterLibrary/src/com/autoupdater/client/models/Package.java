@@ -201,8 +201,11 @@ public class Package implements IModel<Package>, IModelWithVersionNumber {
      */
     public void setUpdates(SortedSet<Update> updates) {
         this.updates.clear();
-        if (updates != null)
+        if (updates != null) {
             this.updates.addAll(updates);
+            for (Update update : updates)
+                update.setPackage(this);
+        }
     }
 
     /**

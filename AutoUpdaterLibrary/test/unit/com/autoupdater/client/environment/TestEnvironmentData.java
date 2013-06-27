@@ -17,7 +17,11 @@ package com.autoupdater.client.environment;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.SortedSet;
+
+import net.jsdpu.EOperatingSystem;
 
 import org.junit.Test;
 
@@ -42,5 +46,78 @@ public class TestEnvironmentData extends AbstractTest {
         assertThat(environmentData.getProgramsSettings())
                 .as("Constructor should set programs' settings properly").isNotNull()
                 .isEqualTo(programsSettings);
+    }
+
+    @Test(expected = ClientEnvironmentException.class)
+    public void testSave() throws ClientEnvironmentException, IOException {
+        forSetEnvironmentDataManagerShouldSave();
+        forNotSetEnvironmentDataManagerShouldNotSave();
+    }
+
+    private void forSetEnvironmentDataManagerShouldSave() throws ClientEnvironmentException,
+            IOException {
+        // given
+        EnvironmentContext context = new EnvironmentContext();
+        File settingsFile = new File(context.getTemporaryDirectory() + "settings.xml");
+        File installationDataFile = new File(context.getTemporaryDirectory()
+                + "installationData.xml");
+        context.setSettingsXMLPath(settingsFile.getPath());
+        context.setInstallationDataXMLPath(installationDataFile.getPath());
+        EnvironmentDataManager edm = new EnvironmentDataManager(context);
+
+        // when
+        edm.createDefaultSettings().save();
+        EnvironmentData environmentData = edm.getEnvironmentData();
+
+        // then
+        assertThat(settingsFile).as("save() should create settings file").exists();
+        assertThat(installationDataFile).as("save() should create installation data file").exists();
+        assertThat(environmentData).as("save should persist data").isNotNull();
+
+        // clean
+        settingsFile.delete();
+        installationDataFile.delete();
+    }
+
+    private void forNotSetEnvironmentDataManagerShouldNotSave() throws ClientEnvironmentException,
+            IOException {
+        // given
+        ClientSettings clientSettings = clientSettings();
+        SortedSet<ProgramSettings> programsSettings = programsSettings();
+
+        // when
+        EnvironmentData environmentData = new EnvironmentData(clientSettings, programsSettings);
+        environmentData.save();
+
+        // then
+        // exception
+    }
+
+    @Test
+    public void testGetSystem() {
+        // given
+        ClientSettings clientSettings = clientSettings();
+        SortedSet<ProgramSettings> programsSettings = programsSettings();
+
+        // when
+        EnvironmentData environmentData = new EnvironmentData(clientSettings, programsSettings);
+
+        // when
+        assertThat(environmentData.getSystem()).as(
+                "getSystem() should return current system handler").isEqualTo(
+                EOperatingSystem.currentOperatingSystem());
+    }
+
+    @Test
+    public void testToString() {
+        // given
+        ClientSettings clientSettings = clientSettings();
+        SortedSet<ProgramSettings> programsSettings = programsSettings();
+
+        // when
+        EnvironmentData environmentData = new EnvironmentData(clientSettings, programsSettings);
+
+        // then
+        assertThat(environmentData.toString()).as("toString should not be null").isNotNull();
     }
 }

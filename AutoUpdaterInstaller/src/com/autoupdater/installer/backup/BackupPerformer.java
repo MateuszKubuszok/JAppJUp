@@ -15,6 +15,7 @@
  */
 package com.autoupdater.installer.backup;
 
+import static com.autoupdater.commons.error.codes.EErrorCode.*;
 import static com.autoupdater.commons.installer.configuration.InstallerConfiguration.BACKUP_DIRECTORY;
 import static com.google.common.io.Files.*;
 import static java.io.File.separator;
@@ -81,13 +82,13 @@ public class BackupPerformer {
             to.mkdirs();
 
         if (from.listFiles() == null)
-            return EErrorCode.INVALID_ARGUMENT;
+            return INVALID_ARGUMENT;
 
         for (File file : from.listFiles()) {
             File newFile = new File(to.getAbsoluteFile() + separator + file.getName());
             if (file.isFile()) {
-                if (copyFile(file, newFile) != EErrorCode.SUCCESS)
-                    return EErrorCode.BACKUP_ERROR;
+                if (copyFile(file, newFile) != SUCCESS)
+                    return BACKUP_ERROR;
             } else if (file.isDirectory())
                 copyDirectory(file, newFile);
         }
@@ -107,15 +108,15 @@ public class BackupPerformer {
     private EErrorCode copyFile(File from, File to) {
         try {
             if (!from.exists())
-                return EErrorCode.SUCCESS;
+                return SUCCESS;
 
             createParentDirs(to);
             copy(from, to);
 
-            return EErrorCode.SUCCESS;
+            return SUCCESS;
         } catch (IOException e) {
             logger.error("Couldn't create backup of: " + from.getPath(), e);
-            return EErrorCode.BACKUP_ERROR;
+            return BACKUP_ERROR;
         }
     }
 }
