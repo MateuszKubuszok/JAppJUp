@@ -1,0 +1,10 @@
+language:       java
+script:         gradle build
+jdk:
+              - openjdk7
+              - oraclejdk7
+notifications:
+  email:
+    on_success: change
+    on_failure: always
+
