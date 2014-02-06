@@ -15,6 +15,7 @@
  */
 package com.autoupdater.client.environment;
 
+import static java.io.File.separator;
 import static org.fest.assertions.api.Assertions.assertThat;
 
 import java.io.File;
@@ -58,8 +59,8 @@ public class TestEnvironmentData extends AbstractTest {
             IOException {
         // given
         EnvironmentContext context = new EnvironmentContext();
-        File settingsFile = new File(context.getTemporaryDirectory() + "settings.xml");
-        File installationDataFile = new File(context.getTemporaryDirectory()
+        File settingsFile = new File(context.getTemporaryDirectory() + separator + "settings.xml");
+        File installationDataFile = new File(context.getTemporaryDirectory() + separator
                 + "installationData.xml");
         context.setSettingsXMLPath(settingsFile.getPath());
         context.setInstallationDataXMLPath(installationDataFile.getPath());

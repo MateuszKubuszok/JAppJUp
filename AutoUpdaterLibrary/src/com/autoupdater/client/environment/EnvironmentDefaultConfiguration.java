@@ -46,7 +46,7 @@ public class EnvironmentDefaultConfiguration {
      * Defines default
      */
     public static final String DEFAULT_TEMPORARY_DIRECTORY = getProperty("java.io.tmpdir")
-            + DEFAULT_CLIENT_NAME;
+            + separator + DEFAULT_CLIENT_NAME;
 
     /**
      * Defines default localization of local app data for client.
